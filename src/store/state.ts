@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { name } from '@/../package.json'
-import Player from '@/services/enum/Player'
 
 export const useStateStore = defineStore(`${name}.state`, {
   state: () => {
@@ -32,7 +31,6 @@ export interface State {
   gameStatsSend?: boolean
 }
 export interface Setup {
-  startPlayer?: Player
   debugMode?: boolean
 }
 
@@ -41,6 +39,7 @@ export interface Round {
 }
 
 export interface CardDeckPersistence {
-  pile: number[]
-  discard: number[]
+  pile: string[]
+  played: string[]
+  discard: string[]
 }
