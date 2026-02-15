@@ -6,6 +6,18 @@
     "play2": "This application replaces the Automa cards, and guides you through the game flow.",
     "feedback": "Discussion and Feedback:"
   },
+  "setup": {
+    "title": "Setup Game",
+    "botMode": {
+      "title": "Solo Mode",
+      "base": "Base Mode (without Player Power)",
+      "advanced": "Advanced Mode (with Player Power)",
+      "advancedNote": "Choose any Player Power you wish to play. See if you can beat Lady Pei with every character!"
+    }
+  },
+  "setupBot": {
+    "title": "Setup Opponent"
+  },
   "notfound": {
     "title": "Not Found"
   },

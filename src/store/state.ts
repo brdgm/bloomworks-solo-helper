@@ -1,12 +1,15 @@
 import { defineStore } from 'pinia'
 import { name } from '@/../package.json'
+import BotMode from '@/services/enum/BotMode'
 
 export const useStateStore = defineStore(`${name}.state`, {
   state: () => {
     return {
       language: 'en',
       baseFontSize: 1,
-      setup: {},
+      setup: {
+        botMode: BotMode.BASE
+      },
       rounds: []
     } as State
   },
@@ -31,6 +34,7 @@ export interface State {
   gameStatsSend?: boolean
 }
 export interface Setup {
+  botMode: BotMode,
   debugMode?: boolean
 }
 

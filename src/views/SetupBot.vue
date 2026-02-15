@@ -1,10 +1,10 @@
 <template>
-  <h1>{{t('setup.title')}}</h1>
+  <h1>{{t('setupBot.title')}}</h1>
 
-  <BotModeSelection/>
+  <p>...</p>
 
-  <button class="btn btn-primary btn-lg mt-4" @click="setupBot()">
-    {{t('setupBot.title')}}
+  <button class="btn btn-primary btn-lg mt-4" @click="startGame()">
+    {{t('action.startGame')}}
   </button>
 
   <FooterButtons endGameButtonType="abortGame"/>
@@ -14,12 +14,10 @@
 import { defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FooterButtons from '@/components/structure/FooterButtons.vue'
-import BotModeSelection from '@/components/setup/BotModeSelection.vue'
 
 export default defineComponent({
-  name: 'SetupGame',
+  name: 'SetupBot',
   components: {
-    BotModeSelection,
     FooterButtons
   },
   setup() {
@@ -27,8 +25,8 @@ export default defineComponent({
     return { t }
   },
   methods: {
-    setupBot() : void {
-      this.$router.push('/setupBot')
+    startGame() : void {
+      this.$router.push('/round/0/turn/0')
     }
   }
 })
