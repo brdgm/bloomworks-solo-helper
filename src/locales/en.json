@@ -7,7 +7,7 @@
     "feedback": "Discussion and Feedback:"
   },
   "setup": {
-    "title": "Setup Game",
+    "title": "Setup",
     "botMode": {
       "title": "Solo Mode",
       "base": "Base Mode (without Player Power)",
@@ -16,7 +16,14 @@
     }
   },
   "setupBot": {
-    "title": "Setup Opponent"
+    "title": "Game Setup",
+    "instructions": {
+      "intro": "Set up a complete two-player game, with the following changes:",
+      "ladyPeiNoStartingResources": "Your opponent, Lady Pei, doesn't receive any starting money or Pots.",
+      "youAreFirstPlayer": "You are always the first player. Take the First Player token as a reminder. You receive ${startingMoney} as starting money.",
+      "chooseSetupCard": "Draw three Setup cards. Choose your Setup card and place the flowers shown into their matching seasons in your garden. Then choose one flower from any family to add to your garden in the Autumn.",
+      "ladyPeiStartingGarden": "Take two flowers from each of the Flower Families that are not currently in your garden and one flower from each Flower Family that is. Randomly select one flower from this set and place it in Lady Pei's garden for each season until one flower has been placed in each season. Return the remaining flowers to the supply."
+    }
   },
   "notfound": {
     "title": "Not Found"
