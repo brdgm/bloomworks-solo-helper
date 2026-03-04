@@ -49,9 +49,9 @@ export default class CardDeck {
       this._discard.value = []
     }
     const card = this._pile.value.shift()
-      if (!card) {
-        throw new Error('No cards left to draw.')
-      }
+    if (!card) {
+      throw new Error('No cards left to draw.')
+    }
     this._played.value.push(card)
     return card
   }

@@ -157,7 +157,6 @@ export default {
   /**
    * Get all cards
    * @param cardType Card type
-   * @param expansion Expansions
    * @returns Cards
    */
   getAll(cardType: CardType) : Card[] {

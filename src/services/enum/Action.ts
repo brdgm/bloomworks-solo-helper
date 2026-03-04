@@ -8,6 +8,8 @@ enum Action {
   PRICE = 'price',
   XP = 'xp',
   WINDOW_BOX = 'window-box',
-  DELIVERY = 'delivery'
+  DELIVERY = 'delivery',
+  VP_5 = 'vp-5',
+  BILLBOARD = 'billboard'
 }
 export default Action
