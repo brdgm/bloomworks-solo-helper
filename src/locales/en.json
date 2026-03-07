@@ -22,7 +22,8 @@
       "ladyPeiNoStartingResources": "Your opponent, Lady Pei, doesn't receive any starting money or Pots.",
       "youAreFirstPlayer": "You are always the first player. Take the First Player token as a reminder. You receive <b>${startingMoney}</b> as starting money.",
       "chooseSetupCard": "Draw three Setup cards. Choose your Setup card and place the flowers shown into their matching seasons in your garden. Then choose one flower from any family to add to your garden in the Autumn.",
-      "ladyPeiStartingGarden": "Take two flowers from each of the Flower Families that are not currently in your garden and one flower from each Flower Family that is. Randomly select one flower from this set and place it in Lady Pei's garden for each season until one flower has been placed in each season. Return the remaining flowers to the supply."
+      "ladyPeiStartingGarden": "Take two flowers from each of the Flower Families that are <i>not currently in your garden</i> and one flower from each Flower Family that is. Randomly select one flower from this set and place it in Lady Pei's garden for each season until one flower has been placed in each season. Return the remaining flowers to the supply.",
+      "automaComponentsNotRequired": "The Automa card deck and the solo board is not required. You can keep the solo board nearby for reference if you like."
     }
   },
   "notfound": {

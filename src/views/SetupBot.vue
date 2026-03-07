@@ -4,11 +4,12 @@
   <div class="mt-3 instructions">
     <p v-html="t('setupBot.instructions.intro')"></p>
     <ol>
-      <li v-html="t('setupBot.instructions.ladyPeiNoStartingResources')"></li>
       <li v-html="t('setupBot.instructions.youAreFirstPlayer', {startingMoney})"></li>
       <li v-html="t('setupBot.instructions.chooseSetupCard')"></li>
+      <li v-html="t('setupBot.instructions.ladyPeiNoStartingResources')"></li>
       <li v-html="t('setupBot.instructions.ladyPeiStartingGarden')"></li>
     </ol>
+    <p v-html="t('setupBot.instructions.automaComponentsNotRequired')"/>
   </div>
 
   <button class="btn btn-primary btn-lg mt-4" @click="startGame()">
