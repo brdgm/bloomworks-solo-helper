@@ -10,6 +10,10 @@
       <li v-html="t('setupBot.instructions.ladyPeiStartingGarden')"></li>
     </ol>
     <p v-html="t('setupBot.instructions.automaComponentsNotRequired')"/>
+    <p>
+      Lady Pei's flower priority:
+      <FlowerIcon v-for="flower in flowerOrder" :key="flower" :flower="flower" class="flowerIcon"/>
+    </p>  
   </div>
 
   <button class="btn btn-primary btn-lg mt-4" @click="startGame()">
@@ -25,16 +29,21 @@ import { useI18n } from 'vue-i18n'
 import FooterButtons from '@/components/structure/FooterButtons.vue'
 import { useStateStore } from '@/store/state'
 import BotMode from '@/services/enum/BotMode'
+import MarketPrices from '@/services/MarketPrices'
+import Flower from '@/services/enum/Flower'
+import FlowerIcon from '@/components/structure/FlowerIcon.vue'
 
 export default defineComponent({
   name: 'SetupBot',
   components: {
-    FooterButtons
+    FooterButtons,
+    FlowerIcon
   },
   setup() {
     const { t } = useI18n()
     const state = useStateStore()
-    return { t, state }
+    const marketPrices = MarketPrices.new()
+    return { t, state, marketPrices }
   },
   computed: {
     startingMoney() : number {
@@ -42,10 +51,14 @@ export default defineComponent({
         return 6
       }
       return 8
+    },
+    flowerOrder() : Flower[] {
+      return this.marketPrices.prices.map(item => item.flower)
     }
   },
   methods: {
     startGame() : void {
+      this.state.setup.initialMarketPrices = this.marketPrices.toPersistence()
       this.$router.push('/round/0/turn/0')
     }
   }
@@ -58,5 +71,8 @@ export default defineComponent({
   ol > li {
     margin-top: 0.5rem;
   }
+}
+.flowerIcon {
+  margin-left: 0.25rem;
 }
 </style>
