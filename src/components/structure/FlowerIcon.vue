@@ -1,6 +1,6 @@
 <template>
   <svg width="28" height="28" viewBox="0 0 28 28">
-    <circle cx="14" cy="14" r="13" :fill="color" stroke="#333" stroke-width="1"/>
+    <circle cx="14" cy="14" r="13" :fill="color" stroke="#aaa" stroke-width="0.5"/>
     <text x="14" y="14" text-anchor="middle" dominant-baseline="central"
         :fill="textColor" font-size="15" font-weight="bold">{{letter}}</text>
   </svg>

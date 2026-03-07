@@ -15,6 +15,8 @@ import { defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FooterButtons from '@/components/structure/FooterButtons.vue'
 import BotModeSelection from '@/components/setup/BotModeSelection.vue'
+import { useStateStore } from '@/store/state'
+import MarketPrices from '@/services/MarketPrices'
 
 export default defineComponent({
   name: 'SetupGame',
@@ -24,10 +26,12 @@ export default defineComponent({
   },
   setup() {
     const { t } = useI18n()
-    return { t }
+    const state = useStateStore()
+    return { t, state }
   },
   methods: {
     setupBot() : void {
+      this.state.setup.initialMarketPrices = MarketPrices.new().toPersistence()
       this.$router.push('/setupBot')
     }
   }

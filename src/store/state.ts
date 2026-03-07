@@ -53,6 +53,8 @@ export interface Setup {
 
 export interface Round {
   round: number
+  year: number
+  season: Season
   turns: RoundTurn[]
 }
 
@@ -78,6 +80,8 @@ export interface BotPersistence {
 export interface GardenSeason {
   season: Season
   flowers: Flower[]
+  bigExtension: number
+  smallExtensions: number
 }
 
 export interface CardDeckPersistence {

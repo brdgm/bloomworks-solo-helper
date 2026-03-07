@@ -11,7 +11,7 @@
     </ol>
     <p v-html="t('setupBot.instructions.automaComponentsNotRequired')"/>
     <p>
-      Lady Pei's flower priority:
+      {{t('setupBot.instructions.flowerPriority')}}
       <FlowerIcon v-for="flower in flowerOrder" :key="flower" :flower="flower" class="flowerIcon"/>
     </p>  
   </div>
@@ -32,6 +32,7 @@ import BotMode from '@/services/enum/BotMode'
 import MarketPrices from '@/services/MarketPrices'
 import Flower from '@/services/enum/Flower'
 import FlowerIcon from '@/components/structure/FlowerIcon.vue'
+import Season from '@/services/enum/Season'
 
 export default defineComponent({
   name: 'SetupBot',
@@ -42,8 +43,7 @@ export default defineComponent({
   setup() {
     const { t } = useI18n()
     const state = useStateStore()
-    const marketPrices = MarketPrices.new()
-    return { t, state, marketPrices }
+    return { t, state }
   },
   computed: {
     startingMoney() : number {
@@ -53,13 +53,14 @@ export default defineComponent({
       return 8
     },
     flowerOrder() : Flower[] {
-      return this.marketPrices.prices.map(item => item.flower)
+      const marketPrices = this.state.setup.initialMarketPrices ? MarketPrices.fromPersistence(this.state.setup.initialMarketPrices) : MarketPrices.new()
+      return marketPrices.prices.map(item => item.flower)
     }
   },
   methods: {
     startGame() : void {
-      this.state.setup.initialMarketPrices = this.marketPrices.toPersistence()
-      this.$router.push('/round/0/turn/0')
+      this.state.storeRound({round:1, year:1, season:Season.AUTUMN, turns:[]})
+      this.$router.push('/round/1/turn/1/player')
     }
   }
 })
