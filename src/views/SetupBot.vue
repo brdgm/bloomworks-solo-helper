@@ -4,19 +4,25 @@
   <div class="mt-3 instructions">
     <p v-html="t('setupBot.instructions.intro')"></p>
     <ol>
-      <li v-html="t('setupBot.instructions.youAreFirstPlayer', {startingMoney})"></li>
-      <li v-html="t('setupBot.instructions.chooseSetupCard')"></li>
-      <li v-html="t('setupBot.instructions.ladyPeiNoStartingResources')"></li>
-      <li v-html="t('setupBot.instructions.ladyPeiStartingGarden')"></li>
+      <li v-html="t('setupBot.instructions.botUnusedComponents')"></li>
+      <li v-html="t('setupBot.instructions.firstPlayer')"></li>
+      <li v-html="t('setupBot.instructions.startingMoney', {startingMoney})"></li>
+      <li>
+        <span v-html="t('setupBot.instructions.chooseSetupCard')"></span>
+        <PlayerFlowerSelection v-model="playerFlowers"/>
+      </li>
+      <li v-html="t('setupBot.instructions.marketPricesManaged')"></li>
     </ol>
-    <p v-html="t('setupBot.instructions.automaComponentsNotRequired')"/>
-    <p>
-      {{t('setupBot.instructions.flowerPriority')}}
-      <FlowerIcon v-for="flower in flowerOrder" :key="flower" :flower="flower" class="flowerIcon"/>
-    </p>  
+    <p v-html="t('setupBot.instructions.botComponentsNotRequired')"/>
   </div>
 
-  <button class="btn btn-primary btn-lg mt-4" @click="startGame()">
+  <div class="row" v-if="!isPlayerFlowerSelectionValid">
+    <div class="col">
+       <p v-if="!isPlayerFlowerSelectionValid" class="alert alert-warning" v-html="t('setupBot.playerFlowerSelection.validationHint')"></p>
+    </div>
+  </div>
+
+  <button class="btn btn-primary btn-lg" @click="startGame()" :disabled="!isPlayerFlowerSelectionValid">
     {{t('action.startGame')}}
   </button>
 
@@ -31,21 +37,30 @@ import { useStateStore } from '@/store/state'
 import BotMode from '@/services/enum/BotMode'
 import MarketPrices from '@/services/MarketPrices'
 import Flower from '@/services/enum/Flower'
-import FlowerIcon from '@/components/structure/FlowerIcon.vue'
 import Season from '@/services/enum/Season'
+import PlayerFlowerSelection from '@/components/setup/PlayerFlowerSelection.vue'
+import BotGarden from '@/services/BotGarden'
 
 export default defineComponent({
   name: 'SetupBot',
   components: {
     FooterButtons,
-    FlowerIcon
+    PlayerFlowerSelection
   },
   setup() {
     const { t } = useI18n()
     const state = useStateStore()
     return { t, state }
   },
+  data() {
+    return {
+      playerFlowers: [] as Flower[]
+    }
+  },
   computed: {
+    isPlayerFlowerSelectionValid() : boolean {
+      return this.playerFlowers.length >= 3 && this.playerFlowers.length <= 4
+    },
     startingMoney() : number {
       if (this.state.setup.botMode == BotMode.ADVANCED) {
         return 6
@@ -59,6 +74,8 @@ export default defineComponent({
   },
   methods: {
     startGame() : void {
+      const botGarden = BotGarden.new(this.playerFlowers, this.flowerOrder)
+      this.state.setup.initialBotGarden = botGarden.toPersistence()
       this.state.storeRound({round:1, year:1, season:Season.AUTUMN, turns:[]})
       this.$router.push('/round/1/turn/1/player')
     }
