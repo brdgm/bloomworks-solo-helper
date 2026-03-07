@@ -22,6 +22,10 @@ export default class MarketPrices {
     return this._prices.value
   }
 
+  public get flowerOrder() : Flower[] {
+    return this._prices.value.map(item => item.flower)
+  }
+
   public getPrice(flower : Flower) : number {
     const price = this._prices.value.find(item => item.flower === flower)
     if (!price) {

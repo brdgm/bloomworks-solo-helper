@@ -15,8 +15,22 @@ describe('services/MarketPrices', () => {
   it('new - contains all flowers', () => {
     const marketPrices = MarketPrices.new()
 
-    const flowers = marketPrices.prices.map(item => item.flower)
+    const flowers = marketPrices.flowerOrder
     expect(flowers).to.include.members([Flower.RED, Flower.PURPLE, Flower.YELLOW, Flower.BLUE, Flower.ORANGE])
+  })
+
+  it('flowerOrder', () => {
+    const marketPrices = MarketPrices.fromPersistence([
+      { flower: Flower.ORANGE, price: 4 },
+      { flower: Flower.BLUE, price: 4 },
+      { flower: Flower.RED, price: 4 },
+      { flower: Flower.YELLOW, price: 4 },
+      { flower: Flower.PURPLE, price: 4 },
+    ])
+
+    expect(marketPrices.flowerOrder).to.eql([
+      Flower.ORANGE, Flower.BLUE, Flower.RED, Flower.YELLOW, Flower.PURPLE
+    ])
   })
 
   it('getPrice', () => {
@@ -93,6 +107,6 @@ describe('services/MarketPrices', () => {
     const restored = MarketPrices.fromPersistence(marketPrices.toPersistence())
     expect(restored.getPrice(Flower.RED)).to.eq(marketPrices.getPrice(Flower.RED))
     expect(restored.getPrice(Flower.BLUE)).to.eq(marketPrices.getPrice(Flower.BLUE))
-    expect(restored.prices.map(p => p.flower)).to.eql(marketPrices.prices.map(p => p.flower))
+    expect(restored.flowerOrder).to.eql(marketPrices.flowerOrder)
   })
 })

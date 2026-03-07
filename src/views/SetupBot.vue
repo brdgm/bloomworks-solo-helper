@@ -54,7 +54,7 @@ export default defineComponent({
     },
     flowerOrder() : Flower[] {
       const marketPrices = this.state.setup.initialMarketPrices ? MarketPrices.fromPersistence(this.state.setup.initialMarketPrices) : MarketPrices.new()
-      return marketPrices.prices.map(item => item.flower)
+      return marketPrices.flowerOrder
     }
   },
   methods: {
