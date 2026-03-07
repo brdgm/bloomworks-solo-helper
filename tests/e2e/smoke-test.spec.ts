@@ -8,8 +8,14 @@ test('smoke test', async ({ page }) => {
   await page.getByRole('link', { name: 'Play Game' }).click()
 
   // setup game
-  await page.getByText('Player', { exact: true }).click()
-  await page.getByRole('button', { name: 'Setup Automa' }).click()
+  await page.getByRole('button', { name: 'Game Setup' }).click()
+
+  // select first 3 flower colors
+  const flowerButtons = page.locator('.flower-btn')
+  await flowerButtons.nth(0).click()
+  await flowerButtons.nth(1).click()
+  await flowerButtons.nth(2).click()
+
   await page.getByRole('button', { name: 'Start Game' }).click()
 
   // play 1 round
@@ -22,6 +28,7 @@ test('smoke test', async ({ page }) => {
   await page.getByRole('button', { name: 'Next' }).click()
   await page.getByRole('button', { name: 'Next' }).click()
   await page.getByRole('button', { name: 'Pass' }).click()
+  //await page.getByRole('button', { name: 'Pass' }).click()
   await page.getByRole('button', { name: 'Next' }).click()
   await page.getByRole('button', { name: 'Next' }).click()
   await page.getByRole('button', { name: 'Next' }).click()

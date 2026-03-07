@@ -1,8 +1,8 @@
 <template>
   <div class="sidebar">
     <div>
-      <span class="fw-bold">{{t('sideBar.round', {round})}}</span><br/>
-      <span class="small fst-italic">{{t(`age.${round}`)}}</span>
+      <span>{{t('sideBar.round', {round})}}</span><br/>
+      <span>{{t('sideBar.turn', {turn})}}</span>
     </div>
   </div>
 </template>
@@ -29,6 +29,9 @@ export default defineComponent({
   computed: {
     round() : number {
       return this.navigationState.round
+    },
+    turn() : number {
+      return this.navigationState.turn
     }
   }
 })

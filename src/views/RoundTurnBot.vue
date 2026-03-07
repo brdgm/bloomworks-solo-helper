@@ -4,6 +4,10 @@
 
   <p>...</p>
 
+  <button class="btn btn-primary btn-lg mt-4" @click="next">
+    {{t('action.next')}}
+  </button>
+
   <DebugInfo :navigationState="navigationState"/>
 
   <FooterButtons :backButtonRouteTo="backButtonRouteTo" endGameButtonType="abortGame"/>
@@ -39,6 +43,9 @@ export default defineComponent({
   },
   computed: {
     backButtonRouteTo() : string {
+      if (this.turn > 1) {
+        return `/round/${this.round}/turn/${this.turn - 1}/bot`
+      }
       return ''
     }
   },
