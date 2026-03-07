@@ -5,6 +5,8 @@ import AppHome from '@/views/AppHome.vue'
 import NotFound from '@/views/NotFound.vue'
 import SetupGame from '@/views/SetupGame.vue'
 import SetupBot from '@/views/SetupBot.vue'
+import RoundTurnPlayer from '@/views/RoundTurnPlayer.vue'
+import RoundTurnBot from '@/views/RoundTurnBot.vue'
 
 const LOCALSTORAGE_KEY = `${name}.route`
 
@@ -23,6 +25,16 @@ const routes: Array<RouteRecordRaw> = [
     path: '/setupBot',
     name: 'SetupBot',
     component: SetupBot
+  },
+  {
+    path: '/round/:round/turn/:turn/player',
+    name: 'RoundTurnPlayer',
+    component: RoundTurnPlayer
+  },
+  {
+    path: '/round/:round/turn/:turn/bot',
+    name: 'RoundTurnBot',
+    component: RoundTurnBot
   },
   {
     path: '/:pathMatch(.*)*',

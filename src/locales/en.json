@@ -48,7 +48,8 @@
     "back": "Back",
     "close": "Close",
     "ok": "OK",
-    "reset": "Reset"
+    "reset": "Reset",
+    "pass": "Pass"
   },
   "footer": {
     "credits": "Credits"
