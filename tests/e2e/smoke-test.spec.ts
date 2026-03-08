@@ -28,7 +28,7 @@ test('smoke test', async ({ page }) => {
   await page.getByRole('button', { name: 'Next' }).click()
   await page.getByRole('button', { name: 'Next' }).click()
   await page.getByRole('button', { name: 'Pass' }).click()
-  //await page.getByRole('button', { name: 'Pass' }).click()
+  await page.locator('#passModal').getByRole('button', { name: 'Pass' }).click()
   await page.getByRole('button', { name: 'Next' }).click()
   await page.getByRole('button', { name: 'Next' }).click()
   await page.getByRole('button', { name: 'Next' }).click()
