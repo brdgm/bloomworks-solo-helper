@@ -36,6 +36,10 @@
     "round": "Year {round}",
     "turn": "Turn {turn}"
   },
+  "player": {
+    "player": "Player",
+    "bot": "Lady Pei"
+  },
   "season": {
     "autumn": "Autumn",
     "winter": "Winter",

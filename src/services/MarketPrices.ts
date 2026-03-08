@@ -11,6 +11,7 @@ export default class MarketPrices {
 
   static readonly MIN_PRICE = 1
   static readonly MAX_PRICE = 12
+  static readonly STARTING_PRICE = 4
 
   private readonly _prices
 
@@ -18,8 +19,12 @@ export default class MarketPrices {
     this._prices = ref(prices)
   }
 
-  public get prices() : readonly FlowerPrice[] {
-    return this._prices.value
+  public get prices() : readonly FlowerPriceInfo[] {
+    return this._prices.value.map(item => ({
+      flower: item.flower,
+      price: item.price,
+      priceSell: Math.max(MarketPrices.MIN_PRICE, item.price - 1),
+    }))
   }
 
   public get flowerOrder() : Flower[] {
@@ -28,10 +33,7 @@ export default class MarketPrices {
 
   public getPrice(flower : Flower) : number {
     const price = this._prices.value.find(item => item.flower === flower)
-    if (!price) {
-      throw new Error(`Flower ${flower} not found in market prices.`)
-    }
-    return price.price
+    return price?.price ?? MarketPrices.STARTING_PRICE
   }
 
   /**
@@ -69,7 +71,7 @@ export default class MarketPrices {
    */
   public static new() : MarketPrices {
     const flowers = shuffle(getAllEnumValues(Flower))
-    const prices : FlowerPrice[] = flowers.map(flower => ({ flower, price: 4 }))
+    const prices : FlowerPrice[] = flowers.map(flower => ({ flower, price: MarketPrices.STARTING_PRICE }))
     return new MarketPrices(prices)
   }
 
@@ -80,4 +82,10 @@ export default class MarketPrices {
     return new MarketPrices(cloneDeep(persistence))
   }
 
+}
+
+export interface FlowerPriceInfo {
+  flower: Flower
+  price: number
+  priceSell: number
 }

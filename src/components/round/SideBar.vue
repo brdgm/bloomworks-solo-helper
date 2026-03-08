@@ -1,9 +1,18 @@
 <template>
   <div class="sidebar">
     <div>
-      <span>{{t('sideBar.round', {round})}}</span><br/>
-      <span class="fw-bold">{{t(`season.${season}`)}}</span><br/>
-      <span>{{t('sideBar.turn', {turn})}}</span>
+      {{t('sideBar.round', {round})}}: <span class="fw-bold">{{t(`season.${season}`)}}</span><br/>
+      {{t('sideBar.turn', {turn})}}
+
+      <hr/>
+
+      <div v-for="price in marketPrices.prices" :key="price.flower" class="flowerPrice">
+        <FlowerIcon :flower="price.flower"/>
+        <div class="price buy">$<span class="value">{{price.price}}</span></div>
+        <div class="price sell">$<span class="value">{{price.priceSell}}</span></div>
+      </div>
+
+
     </div>
   </div>
 </template>
@@ -14,9 +23,14 @@ import { useI18n } from 'vue-i18n'
 import { useStateStore } from '@/store/state'
 import NavigationState from '@/util/NavigationState'
 import Season from '@/services/enum/Season'
+import MarketPrices from '@/services/MarketPrices'
+import FlowerIcon from '../structure/FlowerIcon.vue'
 
 export default defineComponent({
   name: 'SideBar',
+  components: {
+    FlowerIcon
+  },
   setup() {
     const { t } = useI18n()
     const state = useStateStore()
@@ -37,6 +51,9 @@ export default defineComponent({
     },
     turn() : number {
       return this.navigationState.turn
+    },
+    marketPrices() : MarketPrices {
+      return this.navigationState.marketPrices
     }
   }
 })
@@ -53,5 +70,21 @@ export default defineComponent({
   background-color: #ddd;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
+}
+.flowerPrice {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+  .price {
+    &.buy {
+      color: darkgreen;
+    }
+    &.sell {
+      color: red;
+    }
+    .value {
+      font-weight: bold;
+    }
+  }
 }
 </style>
