@@ -4,6 +4,7 @@
     <p class="debug">
       <b>Card Deck</b>: {{ navigationState.cardDeck.toPersistence() }}<br/>
       <b>Bot Garden</b>: {{ navigationState.botGarden.toPersistence() }}<br/>
+      <b>Player Turns:</b> {{ navigationState.playerTurns }}, <b>Delivery Floor:</b> {{ navigationState.playerDeliveryFloor }}<br/>
     </p>
   </div>
 </template>

@@ -32,6 +32,12 @@
       "validationHint": "Please select the flower colors you planted in your garden."
     }
   },
+  "roundTurnPlayer": {
+    "passInfo": {
+      "nextTurn": "Pass next turn",
+      "billboard": "M{floor}"
+    }
+  },
   "sideBar": {
     "round": "Year {round}",
     "turn": "Turn {turn}",

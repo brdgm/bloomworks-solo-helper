@@ -1,11 +1,12 @@
+import BotMode from '@/services/enum/BotMode'
 import SoloBoards from '@/services/SoloBoards'
 import { expect } from 'chai'
 
 describe('services/SoloBoards', () => {
   it('get', () => {
-    const soloBoard = SoloBoards.get('base')
+    const soloBoard = SoloBoards.get(BotMode.BASE)
 
-    expect(soloBoard?.id).to.eq('base')
+    expect(soloBoard?.id).to.eq(BotMode.BASE)
   })
 
   it('getAll', () => {

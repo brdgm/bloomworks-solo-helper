@@ -146,10 +146,10 @@ export default defineComponent({
   margin-bottom: 0.25rem;
   .price {
     &.buy {
-      color: darkgreen;
+      color: darkred;
     }
     &.sell {
-      color: red;
+      color: darkgreen;
     }
     .value {
       font-weight: bold;

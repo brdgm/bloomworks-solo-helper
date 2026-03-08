@@ -1,7 +1,8 @@
 import Action from './enum/Action'
+import BotMode from './enum/BotMode'
 
 export default interface SoloBoard {
-  id: string
+  id: BotMode
   floorActions: FloorActions[]
   // index = number of actions taken by user
   botCardCount: number[]

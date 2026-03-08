@@ -7,6 +7,9 @@ import BotGarden from '@/services/BotGarden'
 import getAllEnumValues from '@brdgm/brdgm-commons/src/util/enum/getAllEnumValues'
 import Flower from '@/services/enum/Flower'
 import MarketPrices from '@/services/MarketPrices'
+import Player from '@/services/enum/Player'
+import SoloBoard from '@/services/SoloBoard'
+import SoloBoards from '@/services/SoloBoards'
 
 export default class NavigationState {
 
@@ -14,18 +17,26 @@ export default class NavigationState {
   readonly turn : number
   readonly season : Season
 
+  readonly playerTurns: number
+  readonly playerDeliveryFloor: number
+
   readonly marketPrices : MarketPrices
   readonly cardDeck : CardDeck
   readonly botGarden : BotGarden
+  readonly soloBoard : SoloBoard
 
   constructor(route: RouteLocation, state: State) {    
     this.round = getIntRouteParam(route, 'round')
     this.season = getSeason(this.round, state)
     this.turn = getIntRouteParam(route, 'turn')
 
+    this.playerTurns = getPlayerTurns(this.round, this.turn, state)
+    this.playerDeliveryFloor = getPlayerDeliveryFloor(this.round, this.turn, state)
+
     this.marketPrices = MarketPrices.fromPersistence(getFlowerPrices(this.round, this.turn, state))
     this.cardDeck = CardDeck.fromPersistence(getBotPersistence(this.round, this.turn, state).cardDeck)
     this.botGarden = BotGarden.fromPersistence(getBotPersistence(this.round, this.turn, state).garden, this.marketPrices.flowerOrder)
+    this.soloBoard = SoloBoards.get(state.setup.botMode)
   }
 
 }
@@ -33,6 +44,14 @@ export default class NavigationState {
 function getSeason(round: number, state: State) : Season {
   const roundData = state.rounds.find(r => r.round === round)
   return roundData ? roundData.season : Season.AUTUMN
+}
+
+function getPlayerTurns(round: number, turn: number, state: State) : number {
+  return getTurns(round, turn, state).filter(t => t.player == Player.PLAYER).length
+}
+
+function getPlayerDeliveryFloor(round: number, turn: number, state: State) : number {
+  return getTurns(round, turn, state).find(t => t.player == Player.PLAYER)?.playerDeliveryFloor ?? 1
 }
 
 function getFlowerPrices(round: number, turn: number, state: State) : FlowerPrice[] {

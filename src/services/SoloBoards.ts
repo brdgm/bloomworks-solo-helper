@@ -1,13 +1,14 @@
 import findMandatory from '@brdgm/brdgm-commons/src/util/map/findMandatory'
 import SoloBoard from './SoloBoard'
 import Action from './enum/Action'
+import BotMode from './enum/BotMode'
 
 /**
  * Solo boards
  */
 const soloBoards : SoloBoard[] = [
   {
-    id: 'base',
+    id: BotMode.BASE,
     floorActions: [
       {
         floor: 5,
@@ -68,7 +69,7 @@ const soloBoards : SoloBoard[] = [
     botCardCount: [2, 3, 4, 4, 5, 5]
   },
   {
-    id: 'advanced',
+    id: BotMode.ADVANCED,
     floorActions: [
       {
         floor: 5,
@@ -130,7 +131,7 @@ const soloBoards : SoloBoard[] = [
   }
 ]
 
-const soloBoardsMap = new Map<string,SoloBoard>()
+const soloBoardsMap = new Map<BotMode,SoloBoard>()
 for (const soloBoard of soloBoards) {
   soloBoardsMap.set(soloBoard.id, soloBoard)
 }
@@ -142,7 +143,7 @@ export default {
    * @param id ID
    * @returns Solo board
    */
-  get(id: string) : SoloBoard {
+  get(id: BotMode) : SoloBoard {
     return findMandatory(soloBoardsMap, id)
   },
 
