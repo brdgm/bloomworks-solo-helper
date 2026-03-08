@@ -1,5 +1,6 @@
 <template>
-  <span v-if="income || actions || burnCardCount">: </span>
+  <span>:</span>
+  <span v-if="!(income || actions || burnCardCount)" class="noAction">-</span>
   <span v-if="income"><span class="income">$<span class="value">{{income}}</span></span></span>
   <div class="actions">
     <template v-for="action of actions" :key="action">
@@ -86,7 +87,10 @@ export default defineComponent({
   }
 }
 .burnCards {
-  margin-left: 0.5rem;
+  margin-left: 0.25rem;
   color: #000;
+}
+.noAction {
+  margin-left: 0.25rem;
 }
 </style>

@@ -5,9 +5,14 @@
   <p class="mt-4">Select your action:</p>
 
   <div class="actions">
-    <button class="btn btn-primary btn-lg" @click="next">
+    <button class="btn btn-primary btn-lg" v-if="!showDeliveryActions" @click="showDeliveryActions = true">
       Make Delivery
     </button>
+    <div class="deliveryActions" v-if="showDeliveryActions">
+      <button class="btn btn-primary btn-lg" v-for="floor of floors" :key="floor" @click="deliverToFloor(floor)">
+        Delivered to Floor {{floor}}
+      </button>
+    </div>
     <button class="btn btn-primary btn-lg" @click="next">
       Buy Flower
     </button>
@@ -15,18 +20,14 @@
       Other Action
     </button>
     <div>
-      <button class="btn btn-outline-danger btn-lg w-100 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#passModal">
+      <button class="btn btn-outline-danger btn-lg passButton" data-bs-toggle="modal" data-bs-target="#passModal">
         {{t('action.pass')}}<SoloBoardPassActionInfo :soloBoardPassAction="soloBoardPassAction"/>
       </button>
-      <div class="small mt-1 fst-italic d-flex align-items-center">
+      <div class="small mt-1 fst-italic passNextTurnInfo">
         <span>{{t('roundTurnPlayer.passInfo.nextTurn')}}</span><SoloBoardPassActionInfo :soloBoardPassAction="soloBoardPassActionNextTurn" :small="true"/>
       </div>
     </div>
   </div>
-
-  <button class="btn btn-primary btn-lg mt-4" @click="next">
-    {{t('action.next')}}
-  </button>
 
   <ModalDialog id="passModal" :title="t('action.pass')">
     <template #body>
@@ -74,9 +75,11 @@ export default defineComponent({
 
     const navigationState = new NavigationState(route, state)
     const { round, turn } = navigationState
+    
     const playerDeliveryFloor = ref(navigationState.playerDeliveryFloor)
+    const showDeliveryActions = ref(false)
 
-    return { t, router, navigationState, state, round, turn, playerDeliveryFloor }
+    return { t, router, navigationState, state, round, turn, playerDeliveryFloor, showDeliveryActions }
   },
   computed: {
     backButtonRouteTo() : string {
@@ -84,6 +87,9 @@ export default defineComponent({
         return `/round/${this.round}/turn/${this.turn - 1}/player`
       }
       return ''
+    },
+    floors() : number[] {
+      return [5,4,3,2,1]
     },
     soloBoardPassAction() : SoloBoardPassAction {
       const { soloBoard, playerTurns, playerDeliveryFloor } = this.navigationState
@@ -95,6 +101,10 @@ export default defineComponent({
     }
   },
   methods: {
+    deliverToFloor(floor: number) : void {
+      this.playerDeliveryFloor = floor
+      this.next()
+    },
     next() : void {
       this.nextWithPassed(false)
     },
@@ -125,6 +135,22 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-width: 15rem;
+  max-width: 18rem;
+}
+.deliveryActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.passButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.passNextTurnInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
