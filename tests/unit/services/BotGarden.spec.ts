@@ -119,7 +119,7 @@ describe('services/BotGarden', () => {
     it('adds big extension to next eligible season when first already has one', () => {
       const garden = BotGarden.fromPersistence(makeGarden({
         [Season.SPRING]: { flowers: [Flower.RED, Flower.BLUE] },
-        [Season.SUMMER]: { flowers: Array(9).fill(Flower.RED), bigExtension: 1, smallExtensions: 2 },
+        [Season.SUMMER]: { flowers: new Array(9).fill(Flower.RED), bigExtension: 1, smallExtensions: 2 },
         [Season.AUTUMN]: { flowers: [Flower.RED, Flower.BLUE] },
         [Season.WINTER]: { flowers: [Flower.RED, Flower.BLUE] },
       }), FLOWER_ORDER)
@@ -222,9 +222,9 @@ describe('services/BotGarden', () => {
       // But only 3 big ext and 3 small ext available
       // Max = 3 seasons * (2+3+4) + 1 season * 2 = 3*9 + 2 = 29
       const garden = BotGarden.fromPersistence(makeGarden({
-        [Season.SPRING]: { flowers: Array(9).fill(Flower.RED), bigExtension: 1, smallExtensions: 2 },
-        [Season.SUMMER]: { flowers: Array(7).fill(Flower.RED), bigExtension: 1, smallExtensions: 1 },
-        [Season.AUTUMN]: { flowers: Array(5).fill(Flower.RED), bigExtension: 1 },
+        [Season.SPRING]: { flowers: new Array(9).fill(Flower.RED), bigExtension: 1, smallExtensions: 2 },
+        [Season.SUMMER]: { flowers: new Array(7).fill(Flower.RED), bigExtension: 1, smallExtensions: 1 },
+        [Season.AUTUMN]: { flowers: new Array(5).fill(Flower.RED), bigExtension: 1 },
         [Season.WINTER]: { flowers: [Flower.RED, Flower.RED] },
       }), FLOWER_ORDER)
 
