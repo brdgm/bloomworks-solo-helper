@@ -6,15 +6,33 @@
 
       <hr/>
 
-      <div v-for="price in marketPrices.prices" :key="price.flower" class="flowerPrice">
+      <div v-for="price in marketPrices.prices" :key="price.flower" class="flowerPrice"
+          data-bs-toggle="modal" data-bs-target="#marketPriceModal" role="button"
+          @click="openPriceEdit(price.flower, price.price)">
         <FlowerIcon :flower="price.flower"/>
         <div class="price buy">$<span class="value">{{price.price}}</span></div>
         <div class="price sell">$<span class="value">{{price.priceSell}}</span></div>
       </div>
 
-
     </div>
   </div>
+
+  <ModalDialog id="marketPriceModal" :title="t('sideBar.marketPrice.title')">
+    <template #body>
+      <div v-if="selectedFlower" class="d-flex align-items-center gap-3">
+        <FlowerIcon :flower="selectedFlower"/>
+        <div>
+        $&nbsp;<NumberInput v-model="editPrice" :min="1" :max="12" class="numberInput"/>
+        </div>
+        <button class="btn btn-sm btn-outline-success" @click="increasePrice">{{t('sideBar.marketPrice.increase')}}</button>
+        <button class="btn btn-sm btn-outline-danger" @click="decreasePrice">{{t('sideBar.marketPrice.decrease')}}</button>
+      </div>
+    </template>
+    <template #footer>
+      <button class="btn btn-primary" data-bs-dismiss="modal" @click="applyPrice">{{t('action.ok')}}</button>
+      <button class="btn btn-secondary" data-bs-dismiss="modal">{{t('action.cancel')}}</button>
+    </template>
+  </ModalDialog>
 </template>
 
 <script lang="ts">
@@ -24,17 +42,28 @@ import { useStateStore } from '@/store/state'
 import NavigationState from '@/util/NavigationState'
 import Season from '@/services/enum/Season'
 import MarketPrices from '@/services/MarketPrices'
+import Flower from '@/services/enum/Flower'
 import FlowerIcon from '../structure/FlowerIcon.vue'
+import ModalDialog from '@brdgm/brdgm-commons/src/components/structure/ModalDialog.vue'
+import NumberInput from '@brdgm/brdgm-commons/src/components/form/NumberInput.vue'
 
 export default defineComponent({
   name: 'SideBar',
   components: {
-    FlowerIcon
+    FlowerIcon,
+    ModalDialog,
+    NumberInput
   },
   setup() {
     const { t } = useI18n()
     const state = useStateStore()
     return { t, state }
+  },
+  data() {
+    return {
+      selectedFlower: undefined as Flower|undefined,
+      editPrice: 0
+    }
   },
   props: {
     navigationState: {
@@ -54,6 +83,27 @@ export default defineComponent({
     },
     marketPrices() : MarketPrices {
       return this.navigationState.marketPrices
+    }
+  },
+  methods: {
+    openPriceEdit(flower: Flower, price: number) {
+      this.selectedFlower = flower
+      this.editPrice = price
+    },
+    increasePrice() {
+      if (this.editPrice < 12) {
+        this.editPrice++
+      }
+    },
+    decreasePrice() {
+      if (this.editPrice > 1) {
+        this.editPrice--
+      }
+    },
+    applyPrice() {
+      if (this.selectedFlower) {
+        this.marketPrices.setPrice(this.selectedFlower, this.editPrice)
+      }
     }
   }
 })
@@ -86,5 +136,8 @@ export default defineComponent({
       font-weight: bold;
     }
   }
+}
+.numberInput {
+  width: 4rem;
 }
 </style>

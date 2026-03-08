@@ -47,35 +47,24 @@ describe('services/MarketPrices', () => {
     expect(marketPrices.getPrice(Flower.YELLOW)).to.eq(7)
   })
 
-  it('increasePrice', () => {
+  it('setPrice', () => {
     const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
 
-    marketPrices.increasePrice(Flower.RED)
-    expect(marketPrices.getPrice(Flower.RED)).to.eq(5)
+    marketPrices.setPrice(Flower.RED, 7)
+    expect(marketPrices.getPrice(Flower.RED)).to.eq(7)
   })
 
-  it('increasePrice - capped at max', () => {
-    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices([
-      { flower: Flower.RED, price: MarketPrices.MAX_PRICE },
-    ]))
+  it('setPrice - capped at max', () => {
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
 
-    marketPrices.increasePrice(Flower.RED)
+    marketPrices.setPrice(Flower.RED, 15)
     expect(marketPrices.getPrice(Flower.RED)).to.eq(MarketPrices.MAX_PRICE)
   })
 
-  it('decreasePrice', () => {
+  it('setPrice - capped at min', () => {
     const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
 
-    marketPrices.decreasePrice(Flower.RED)
-    expect(marketPrices.getPrice(Flower.RED)).to.eq(3)
-  })
-
-  it('decreasePrice - capped at min', () => {
-    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices([
-      { flower: Flower.RED, price: MarketPrices.MIN_PRICE },
-    ]))
-
-    marketPrices.decreasePrice(Flower.RED)
+    marketPrices.setPrice(Flower.RED, -3)
     expect(marketPrices.getPrice(Flower.RED)).to.eq(MarketPrices.MIN_PRICE)
   })
 
@@ -102,8 +91,8 @@ describe('services/MarketPrices', () => {
 
   it('toPersistence/fromPersistence', () => {
     const marketPrices = MarketPrices.new()
-    marketPrices.increasePrice(Flower.RED)
-    marketPrices.decreasePrice(Flower.BLUE)
+    marketPrices.setPrice(Flower.RED, marketPrices.getPrice(Flower.RED) + 1)
+    marketPrices.setPrice(Flower.BLUE, marketPrices.getPrice(Flower.BLUE) - 1)
 
     const restored = MarketPrices.fromPersistence(marketPrices.toPersistence())
     expect(restored.getPrice(Flower.RED)).to.eq(marketPrices.getPrice(Flower.RED))

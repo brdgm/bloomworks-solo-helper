@@ -37,25 +37,14 @@ export default class MarketPrices {
   }
 
   /**
-   * Increase price (not beyond 12).
+   * Set price, clamped to min/max bounds.
    */
-  public increasePrice(flower : Flower) {
+  public setPrice(flower : Flower, newPrice : number) {
     const price = this._prices.value.find(item => item.flower === flower)
     if (!price) {
       throw new Error(`Flower ${flower} not found in market prices.`)
     }
-    price.price = Math.min(MarketPrices.MAX_PRICE, price.price + 1)
-  }
-
-  /**
-   * Decrease price (not below 1).
-   */
-  public decreasePrice(flower : Flower) {
-    const price = this._prices.value.find(item => item.flower === flower)
-    if (!price) {
-      throw new Error(`Flower ${flower} not found in market prices.`)
-    }
-    price.price = Math.max(MarketPrices.MIN_PRICE, price.price - 1)
+    price.price = Math.min(MarketPrices.MAX_PRICE, Math.max(MarketPrices.MIN_PRICE, newPrice))
   }
 
   /**
