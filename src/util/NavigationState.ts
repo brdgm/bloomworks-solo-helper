@@ -55,7 +55,7 @@ function getPlayerDeliveryFloor(round: number, turn: number, state: State) : num
 }
 
 function getFlowerPrices(round: number, turn: number, state: State) : FlowerPrice[] {
-  const prices = getTurns(round, turn, state).find(t => t.botPersistence)?.marketPrices
+  const prices = getTurns(round, turn, state)[0]?.marketPrices
   if (prices) {
     return prices
   }

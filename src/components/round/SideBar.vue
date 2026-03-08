@@ -1,8 +1,7 @@
 <template>
   <div class="sidebar">
     <div>
-      {{t('sideBar.round', {round})}}: <span class="fw-bold">{{t(`season.${season}`)}}</span><br/>
-      {{t('sideBar.turn', {turn})}}
+      <span class="fw-bold">{{t(`season.${season}`)}}</span> {{t('sideBar.round', {round})}}
 
       <hr/>
 

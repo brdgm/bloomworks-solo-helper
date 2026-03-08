@@ -33,6 +33,17 @@
     }
   },
   "roundTurnPlayer": {
+    "selectAction": "Select your action:",
+    "makeDelivery": "Make Delivery",
+    "deliveredToFloor": "Delivered to Floor ${floor}",
+    "otherAction": "Other Action",
+    "passConfirm": "Do you really want to pass?",
+    "buyFlower": {
+      "title": "Buy Flower",
+      "selectFlower": "Select Flower:",
+      "numberOfFlowers": "Number of Flowers:",
+      "totalCost": "Total Cost:"
+    },
     "passInfo": {
       "nextTurn": "Pass next turn",
       "billboard": "M{floor}"

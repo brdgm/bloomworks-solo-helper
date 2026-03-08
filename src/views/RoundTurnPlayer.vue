@@ -1,23 +1,23 @@
 <template>
   <SideBar :navigationState="navigationState"/>
-  <h1>{{t('player.player')}}</h1>
+  <h1>{{t('player.player')}}: {{t('sideBar.turn', {turn})}}</h1>
 
-  <p class="mt-4">Select your action:</p>
+  <p class="mt-4" v-html="t('roundTurnPlayer.selectAction')"/>
 
   <div class="actions">
     <button class="btn btn-primary btn-lg" v-if="!showDeliveryActions" @click="showDeliveryActions = true">
-      Make Delivery
+      {{t('roundTurnPlayer.makeDelivery')}}
     </button>
     <div class="deliveryActions" v-if="showDeliveryActions">
       <button class="btn btn-primary btn-lg" v-for="floor of floors" :key="floor" @click="deliverToFloor(floor)">
-        Delivered to Floor {{floor}}
+        {{t('roundTurnPlayer.deliveredToFloor', {floor})}}
       </button>
     </div>
-    <button class="btn btn-primary btn-lg" @click="next">
-      Buy Flower
+    <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#buyFlowerModal">
+      {{t('roundTurnPlayer.buyFlower.title')}}
     </button>
     <button class="btn btn-primary btn-lg" @click="next">
-      Other Action
+      {{t('roundTurnPlayer.otherAction')}}
     </button>
     <div>
       <button class="btn btn-outline-danger btn-lg passButton" data-bs-toggle="modal" data-bs-target="#passModal">
@@ -28,6 +28,31 @@
       </div>
     </div>
   </div>
+
+  <ModalDialog id="buyFlowerModal" :title="t('roundTurnPlayer.buyFlower.title')">
+    <template #body>
+      <div>{{t('roundTurnPlayer.buyFlower.selectFlower')}}</div>
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        <button v-for="flower in allFlowers" :key="flower" type="button"
+            class="btn flower-btn" :class="buyFlowerType === flower ? 'btn-dark' : 'btn-outline-secondary'"
+            @click="buyFlowerType = flower">
+          <FlowerIcon :flower="flower"/>
+        </button>
+      </div>
+      <div>
+        {{t('roundTurnPlayer.buyFlower.numberOfFlowers')}}<br/>
+        <NumberInput v-model="buyFlowerCount" :min="1" :max="20" class="numberInput"/>
+      </div>
+      <div class="mt-3">
+        <span>{{t('roundTurnPlayer.buyFlower.totalCost')}}</span>
+        <span class="cost">$<span class="value">{{buyFlowerTotalCost}}</span></span>
+      </div>
+    </template>
+    <template #footer>
+      <button class="btn btn-primary" :disabled="!buyFlowerType || !buyFlowerCount" @click="buyFlower()" data-bs-dismiss="modal">{{t('action.ok')}}</button>
+      <button class="btn btn-secondary" data-bs-dismiss="modal">{{t('action.cancel')}}</button>
+    </template>
+  </ModalDialog>
 
   <ModalDialog id="passModal" :title="t('action.pass')">
     <template #body>
@@ -52,19 +77,25 @@ import NavigationState from '@/util/NavigationState'
 import FooterButtons from '@/components/structure/FooterButtons.vue'
 import { useStateStore } from '@/store/state'
 import ModalDialog from '@brdgm/brdgm-commons/src/components/structure/ModalDialog.vue'
+import NumberInput from '@brdgm/brdgm-commons/src/components/form/NumberInput.vue'
 import SideBar from '@/components/round/SideBar.vue'
 import DebugInfo from '@/components/round/DebugInfo.vue'
 import getSoloBoardPassAction, { SoloBoardPassAction } from '@/util/getSoloBoardPassAction'
 import SoloBoardPassActionInfo from '@/components/round/SoloBoardPassActionInfo.vue'
+import FlowerIcon from '@/components/structure/FlowerIcon.vue'
 import Player from '@/services/enum/Player'
+import Flower from '@/services/enum/Flower'
+import getBuyFlowerCost from '@/util/getBuyFlowerCost'
 
 export default defineComponent({
   name: 'RoundTurnPlayer',
   components: {
     FooterButtons,
     ModalDialog,
+    NumberInput,
     SideBar,
     SoloBoardPassActionInfo,
+    FlowerIcon,
     DebugInfo
   },
   setup() {
@@ -78,8 +109,10 @@ export default defineComponent({
     
     const playerDeliveryFloor = ref(navigationState.playerDeliveryFloor)
     const showDeliveryActions = ref(false)
+    const buyFlowerType = ref(undefined as Flower|undefined)
+    const buyFlowerCount = ref(1)
 
-    return { t, router, navigationState, state, round, turn, playerDeliveryFloor, showDeliveryActions }
+    return { t, router, navigationState, state, round, turn, playerDeliveryFloor, showDeliveryActions, buyFlowerType, buyFlowerCount }
   },
   computed: {
     backButtonRouteTo() : string {
@@ -90,6 +123,13 @@ export default defineComponent({
     },
     floors() : number[] {
       return [5,4,3,2,1]
+    },
+    allFlowers() : Flower[] {
+      return this.navigationState.marketPrices.flowerOrder
+    },
+    buyFlowerTotalCost() : number {
+      const price = this.navigationState.marketPrices.getPrice(this.buyFlowerType!)
+      return getBuyFlowerCost(price, this.buyFlowerCount)
     },
     soloBoardPassAction() : SoloBoardPassAction {
       const { soloBoard, playerTurns, playerDeliveryFloor } = this.navigationState
@@ -104,6 +144,13 @@ export default defineComponent({
     deliverToFloor(floor: number) : void {
       this.playerDeliveryFloor = floor
       this.next()
+    },
+    buyFlower() : void {
+      if (this.buyFlowerType && this.buyFlowerCount) {
+        const newPrice = this.navigationState.marketPrices.getPrice(this.buyFlowerType) + this.buyFlowerCount
+        this.navigationState.marketPrices.setPrice(this.buyFlowerType, newPrice)
+        this.next()
+      }
     },
     next() : void {
       this.nextWithPassed(false)
@@ -152,5 +199,18 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.flower-btn {
+  padding: 0.4rem 0.6rem;
+}
+.cost {
+  color: darkred;
+  margin-left: 0.25rem;
+  .value {
+    font-weight: bold;
+  }
+}
+.numberInput {
+  width: 4rem;
 }
 </style>
