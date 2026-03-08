@@ -6,10 +6,13 @@ import WindowSelection from './enum/WindowSelection'
 export default interface Card {
   id: string
   cardType: CardType
-  action: Action
-  count?: number
-  windowSelection?: WindowSelection
-  priceSelection?: PriceSelection
+  actions: CardAction[]
   remove?: boolean
   advanced?: boolean
+}
+
+export interface CardAction {
+  action: Action
+  windowSelection?: WindowSelection
+  priceSelection?: PriceSelection
 }

@@ -1,8 +1,12 @@
 <template>
   <SideBar :navigationState="navigationState"/>
-  <h1>{{t('player.bot')}}</h1>
+  <h1>
+    {{t('player.bot')}}: 
+    <template v-if="navigationState.botTurn==0">{{t('roundTurnBot.bonusActions')}}</template>
+    <template v-else>{{navigationState.botTurn}} / {{navigationState.botTurns}}</template>
+  </h1>
 
-  <p>...</p>
+  <p>{{actions}}</p>
 
   <button class="btn btn-primary btn-lg mt-4" @click="next">
     {{t('action.next')}}
@@ -22,6 +26,8 @@ import FooterButtons from '@/components/structure/FooterButtons.vue'
 import { useStateStore } from '@/store/state'
 import SideBar from '@/components/round/SideBar.vue'
 import DebugInfo from '@/components/round/DebugInfo.vue'
+import { CardAction } from '@/services/Card'
+import Player from '@/services/enum/Player'
 
 export default defineComponent({
   name: 'RoundTurnBot',
@@ -43,14 +49,37 @@ export default defineComponent({
   },
   computed: {
     backButtonRouteTo() : string {
-      if (this.turn > 1) {
-        return `/round/${this.round}/turn/${this.turn - 1}/bot`
+      if (this.navigationState.botTurn == 0 
+          || (this.navigationState.botTurn == 1 && this.navigationState.soloBoardPassAction.action.length == 0)) {
+        return `/round/${this.round}/turn/${this.turn - 1}/player`
       }
-      return ''
+      return `/round/${this.round}/turn/${this.turn - 1}/bot`
+    },
+    actions() : CardAction[] {
+      if (this.navigationState.botTurn == 0) {
+        return this.navigationState.soloBoardPassAction.action.map(action => {
+          return {
+            action
+          }          
+        })
+      }
+      else {
+        return this.navigationState.cardDeck.currentCard?.actions || []
+      }
     }
   },
   methods: {
     next() : void {
+      this.state.storeRoundTurn({
+        round: this.round,
+        turn: this.turn,
+        player: Player.BOT,
+        marketPrices: this.navigationState.marketPrices.toPersistence(),
+        botPersistence: {
+          cardDeck: this.navigationState.cardDeck.toPersistence(),
+          garden: this.navigationState.botGarden.toPersistence()
+        }
+      })
       this.router.push(`/round/${this.round}/turn/${this.turn + 1}/bot`)
     }
   }

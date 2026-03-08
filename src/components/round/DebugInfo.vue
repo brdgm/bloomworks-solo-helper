@@ -4,7 +4,9 @@
     <p class="debug">
       <b>Card Deck</b>: {{ navigationState.cardDeck.toPersistence() }}<br/>
       <b>Bot Garden</b>: {{ navigationState.botGarden.toPersistence() }}<br/>
-      <b>Player Turns:</b> {{ navigationState.playerTurns }}, <b>Delivery Floor:</b> {{ navigationState.playerDeliveryFloor }}<br/>
+      <b>Player Turn:</b> {{ navigationState.playerTurn}}/{{ navigationState.playerTurns }}, <b>Delivery Floor:</b> {{ navigationState.playerDeliveryFloor }}<br/>
+      <b>Bot Turn:</b> {{ navigationState.botTurn}}/{{ navigationState.botTurns }}<br/>
+      <b>Solo Board Pass Action</b>: {{ navigationState.soloBoardPassAction }}
     </p>
   </div>
 </template>

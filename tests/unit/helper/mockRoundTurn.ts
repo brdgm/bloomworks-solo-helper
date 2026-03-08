@@ -9,6 +9,7 @@ export default function mockRoundTurn(params?: MockRoundTurnParams) : RoundTurn 
     player: params?.player ?? Player.PLAYER,
     marketPrices: mockMarketPrices(params?.marketPrices),
     playerDeliveryFloor: params?.playerDeliveryFloor,
+    playerPass: params?.playerPass,
     botPersistence: params?.botPersistence
   }
 }
@@ -19,5 +20,6 @@ export interface MockRoundTurnParams {
   player? : Player,
   marketPrices?: FlowerPrice[],
   playerDeliveryFloor? : number,
+  playerPass? : boolean,
   botPersistence?: BotPersistence
 }

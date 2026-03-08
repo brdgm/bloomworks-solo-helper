@@ -14,7 +14,7 @@ import mockBotGarden from '../helper/mockBotGarden'
 describe('util/NavigationState', () => {
 
   it('round and turn', () => {
-    const route = mockRouteLocation({ params: { round: '1', turn: '3' } })
+    const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '3' } })
     const state = mockState({ rounds: [
       mockRound({ round: 1 }),
     ] })
@@ -26,7 +26,7 @@ describe('util/NavigationState', () => {
 
   describe('season', () => {
     it('returns season from round data', () => {
-      const route = mockRouteLocation({ params: { round: '2', turn: '1' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '2', turn: '1' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, season: Season.SPRING }),
         mockRound({ round: 2, season: Season.SUMMER }),
@@ -37,7 +37,7 @@ describe('util/NavigationState', () => {
     })
 
     it('defaults to AUTUMN when round not found', () => {
-      const route = mockRouteLocation({ params: { round: '5', turn: '1' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '5', turn: '1' } })
       const state = mockState({ rounds: [] })
       const navigationState = new NavigationState(route, state)
 
@@ -47,7 +47,7 @@ describe('util/NavigationState', () => {
 
   describe('marketPrices', () => {
     it('uses market prices from previous bot turn in same round', () => {
-      const route = mockRouteLocation({ params: { round: '1', turn: '3' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '3' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [
           mockRoundTurn({ turn: 1, player: Player.PLAYER }),
@@ -70,7 +70,7 @@ describe('util/NavigationState', () => {
     })
 
     it('falls back to previous round when no bot turn in current round', () => {
-      const route = mockRouteLocation({ params: { round: '2', turn: '1' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '2', turn: '1' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [
           mockRoundTurn({ turn: 1, player: Player.BOT,
@@ -100,7 +100,7 @@ describe('util/NavigationState', () => {
         { flower: Flower.PURPLE, price: 4 },
         { flower: Flower.ORANGE, price: 4 },
       ]
-      const route = mockRouteLocation({ params: { round: '1', turn: '1' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '1' } })
       const state = mockState({
         initialMarketPrices: initialPrices,
         rounds: [
@@ -117,7 +117,7 @@ describe('util/NavigationState', () => {
   describe('cardDeck', () => {
     it('uses card deck from previous bot turn in same round', () => {
       const cardDeck = mockCardDeck({ pile: ['window-box-1', 'delivery-1'], played: ['price-1'] })
-      const route = mockRouteLocation({ params: { round: '1', turn: '3' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '3' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [
           mockRoundTurn({ turn: 1, player: Player.PLAYER }),
@@ -134,7 +134,7 @@ describe('util/NavigationState', () => {
 
     it('falls back to previous round when no bot turn in current round', () => {
       const cardDeck = mockCardDeck({ pile: ['window-box-2'], discard: ['price-2'] })
-      const route = mockRouteLocation({ params: { round: '2', turn: '1' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '2', turn: '1' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [
           mockRoundTurn({ turn: 1, player: Player.BOT,
@@ -151,7 +151,7 @@ describe('util/NavigationState', () => {
 
     it('falls back to initial bot persistence from setup', () => {
       const cardDeck = mockCardDeck({ pile: ['window-box-3', 'window-box-4'] })
-      const route = mockRouteLocation({ params: { round: '1', turn: '1' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '1' } })
       const state = mockState({
         initialBotPersistence: mockBotPersistence({ cardDeck }),
         rounds: [
@@ -162,6 +162,23 @@ describe('util/NavigationState', () => {
 
       expect(navigationState.cardDeck.pile.map(c => c.id)).to.eql(['window-box-3', 'window-box-4'])
     })
+
+    it('draws a card on bot turns', () => {
+      const cardDeck = mockCardDeck({ pile: ['window-box-1', 'delivery-1', 'price-1'], played: [] })
+      const route = mockRouteLocation({ name: 'RoundTurnBot', params: { round: '1', turn: '3' } })
+      const state = mockState({ rounds: [
+        mockRound({ round: 1, turns: [
+          mockRoundTurn({ turn: 1, player: Player.PLAYER }),
+          mockRoundTurn({ turn: 2, player: Player.BOT,
+            botPersistence: mockBotPersistence({ cardDeck }),
+          }),
+        ] }),
+      ] })
+      const navigationState = new NavigationState(route, state)
+
+      expect(navigationState.cardDeck.pile.map(c => c.id)).to.eql(['delivery-1', 'price-1'])
+      expect(navigationState.cardDeck.played.map(c => c.id)).to.eql(['window-box-1'])
+    })
   })
 
   describe('botGarden', () => {
@@ -169,7 +186,7 @@ describe('util/NavigationState', () => {
       const garden = mockBotGarden({ seasons: [
         { season: Season.SPRING, flowers: [Flower.RED, Flower.BLUE] },
       ] })
-      const route = mockRouteLocation({ params: { round: '1', turn: '3' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '3' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [
           mockRoundTurn({ turn: 1, player: Player.PLAYER }),
@@ -188,7 +205,7 @@ describe('util/NavigationState', () => {
       const garden = mockBotGarden({ seasons: [
         { season: Season.SUMMER, flowers: [Flower.YELLOW] },
       ] })
-      const route = mockRouteLocation({ params: { round: '2', turn: '1' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '2', turn: '1' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [
           mockRoundTurn({ turn: 1, player: Player.BOT,
@@ -207,7 +224,7 @@ describe('util/NavigationState', () => {
       const garden = mockBotGarden({ seasons: [
         { season: Season.WINTER, flowers: [Flower.ORANGE] },
       ] })
-      const route = mockRouteLocation({ params: { round: '1', turn: '1' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '1' } })
       const state = mockState({
         initialBotPersistence: mockBotPersistence({ garden }),
         rounds: [
@@ -223,7 +240,7 @@ describe('util/NavigationState', () => {
 
   describe('playerTurns', () => {
     it('returns 0 when no turns exist', () => {
-      const route = mockRouteLocation({ params: { round: '1', turn: '1' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '1' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [] }),
       ] })
@@ -233,7 +250,7 @@ describe('util/NavigationState', () => {
     })
 
     it('counts only player turns before current turn', () => {
-      const route = mockRouteLocation({ params: { round: '1', turn: '5' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '5' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [
           mockRoundTurn({ turn: 1, player: Player.PLAYER }),
@@ -248,7 +265,7 @@ describe('util/NavigationState', () => {
     })
 
     it('does not count turns at or after current turn', () => {
-      const route = mockRouteLocation({ params: { round: '1', turn: '3' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '3' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [
           mockRoundTurn({ turn: 1, player: Player.PLAYER }),
@@ -261,11 +278,28 @@ describe('util/NavigationState', () => {
 
       expect(navigationState.playerTurns).to.eq(1)
     })
+
+    it('does not count player turns with playerPass', () => {
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '7' } })
+      const state = mockState({ rounds: [
+        mockRound({ round: 1, turns: [
+          mockRoundTurn({ turn: 1, player: Player.PLAYER }),
+          mockRoundTurn({ turn: 2, player: Player.BOT, botPersistence: mockBotPersistence() }),
+          mockRoundTurn({ turn: 3, player: Player.PLAYER, playerPass: true }),
+          mockRoundTurn({ turn: 4, player: Player.BOT, botPersistence: mockBotPersistence() }),
+          mockRoundTurn({ turn: 5, player: Player.PLAYER }),
+          mockRoundTurn({ turn: 6, player: Player.BOT, botPersistence: mockBotPersistence() }),
+        ] }),
+      ] })
+      const navigationState = new NavigationState(route, state)
+
+      expect(navigationState.playerTurns).to.eq(2)
+    })
   })
 
   describe('playerDeliveryFloor', () => {
     it('defaults to 1 when no player turns exist', () => {
-      const route = mockRouteLocation({ params: { round: '1', turn: '1' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '1' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [] }),
       ] })
@@ -275,7 +309,7 @@ describe('util/NavigationState', () => {
     })
 
     it('returns delivery floor from most recent player turn', () => {
-      const route = mockRouteLocation({ params: { round: '1', turn: '5' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '5' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [
           mockRoundTurn({ turn: 1, player: Player.PLAYER, playerDeliveryFloor: 2 }),
@@ -290,7 +324,7 @@ describe('util/NavigationState', () => {
     })
 
     it('defaults to 1 when player turn has no delivery floor set', () => {
-      const route = mockRouteLocation({ params: { round: '1', turn: '3' } })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '3' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [
           mockRoundTurn({ turn: 1, player: Player.PLAYER }),
@@ -300,6 +334,112 @@ describe('util/NavigationState', () => {
       const navigationState = new NavigationState(route, state)
 
       expect(navigationState.playerDeliveryFloor).to.eq(1)
+    })
+  })
+
+  describe('playerTurn', () => {
+    it('returns turn number for player turns', () => {
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '3' } })
+      const state = mockState({ rounds: [
+        mockRound({ round: 1, turns: [
+          mockRoundTurn({ turn: 1, player: Player.PLAYER }),
+          mockRoundTurn({ turn: 2, player: Player.BOT, botPersistence: mockBotPersistence() }),
+        ] }),
+      ] })
+      const navigationState = new NavigationState(route, state)
+
+      expect(navigationState.playerTurn).to.eq(3)
+    })
+
+    it('returns playerTurns count for bot turns', () => {
+      const route = mockRouteLocation({ name: 'RoundTurnBot', params: { round: '1', turn: '5' } })
+      const state = mockState({ rounds: [
+        mockRound({ round: 1, turns: [
+          mockRoundTurn({ turn: 1, player: Player.PLAYER }),
+          mockRoundTurn({ turn: 2, player: Player.BOT, botPersistence: mockBotPersistence() }),
+          mockRoundTurn({ turn: 3, player: Player.PLAYER }),
+          mockRoundTurn({ turn: 4, player: Player.BOT, botPersistence: mockBotPersistence() }),
+        ] }),
+      ] })
+      const navigationState = new NavigationState(route, state)
+
+      expect(navigationState.playerTurn).to.eq(2)
+    })
+  })
+
+  describe('botTurn', () => {
+    it('returns 0 for player turns', () => {
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '3' } })
+      const state = mockState({ rounds: [
+        mockRound({ round: 1, turns: [
+          mockRoundTurn({ turn: 1, player: Player.PLAYER }),
+          mockRoundTurn({ turn: 2, player: Player.BOT, botPersistence: mockBotPersistence() }),
+        ] }),
+      ] })
+      const navigationState = new NavigationState(route, state)
+
+      expect(navigationState.botTurn).to.eq(0)
+    })
+
+    it('returns bot turn number without pass actions', () => {
+      // playerTurns=1, floor=1, floorAction[1]={income:5} → no pass actions
+      // botTurn = 3 - 1 - 1 - 0 = 1
+      const route = mockRouteLocation({ name: 'RoundTurnBot', params: { round: '1', turn: '3' } })
+      const state = mockState({ rounds: [
+        mockRound({ round: 1, turns: [
+          mockRoundTurn({ turn: 1, player: Player.PLAYER }),
+          mockRoundTurn({ turn: 2, player: Player.BOT, botPersistence: mockBotPersistence() }),
+        ] }),
+      ] })
+      const navigationState = new NavigationState(route, state)
+
+      expect(navigationState.botTurn).to.eq(1)
+    })
+
+    it('returns bot turn number with pass actions', () => {
+      // playerTurns=2, floor=1, floorAction[2]={income:4, action:[XP]} → has pass actions
+      // botTurn = 5 - 2 - 1 - 1 = 1
+      const route = mockRouteLocation({ name: 'RoundTurnBot', params: { round: '1', turn: '5' } })
+      const state = mockState({ rounds: [
+        mockRound({ round: 1, turns: [
+          mockRoundTurn({ turn: 1, player: Player.PLAYER }),
+          mockRoundTurn({ turn: 2, player: Player.BOT, botPersistence: mockBotPersistence() }),
+          mockRoundTurn({ turn: 3, player: Player.PLAYER }),
+          mockRoundTurn({ turn: 4, player: Player.BOT, botPersistence: mockBotPersistence() }),
+        ] }),
+      ] })
+      const navigationState = new NavigationState(route, state)
+
+      expect(navigationState.botTurn).to.eq(1)
+    })
+  })
+
+  describe('botTurns', () => {
+    it('returns bot card count for 0 player turns', () => {
+      // BASE mode botCardCount[0] = 2
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '1' } })
+      const state = mockState({ rounds: [
+        mockRound({ round: 1, turns: [] }),
+      ] })
+      const navigationState = new NavigationState(route, state)
+
+      expect(navigationState.botTurns).to.eq(2)
+    })
+
+    it('returns bot card count for 2 player turns', () => {
+      // BASE mode botCardCount[2] = 4
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '5' } })
+      const state = mockState({ rounds: [
+        mockRound({ round: 1, turns: [
+          mockRoundTurn({ turn: 1, player: Player.PLAYER }),
+          mockRoundTurn({ turn: 2, player: Player.BOT, botPersistence: mockBotPersistence() }),
+          mockRoundTurn({ turn: 3, player: Player.PLAYER }),
+          mockRoundTurn({ turn: 4, player: Player.BOT, botPersistence: mockBotPersistence() }),
+        ] }),
+      ] })
+      const navigationState = new NavigationState(route, state)
+
+      expect(navigationState.botTurns).to.eq(4)
     })
   })
 

@@ -10,12 +10,14 @@ import MarketPrices from '@/services/MarketPrices'
 import Player from '@/services/enum/Player'
 import SoloBoard from '@/services/SoloBoard'
 import SoloBoards from '@/services/SoloBoards'
+import getSoloBoardPassAction, { SoloBoardPassAction } from './getSoloBoardPassAction'
 
 export default class NavigationState {
 
   readonly round : number
   readonly turn : number
   readonly season : Season
+  readonly player : Player
 
   readonly playerTurns: number
   readonly playerDeliveryFloor: number
@@ -24,11 +26,13 @@ export default class NavigationState {
   readonly cardDeck : CardDeck
   readonly botGarden : BotGarden
   readonly soloBoard : SoloBoard
+  readonly soloBoardPassAction : SoloBoardPassAction
 
   constructor(route: RouteLocation, state: State) {    
     this.round = getIntRouteParam(route, 'round')
     this.season = getSeason(this.round, state)
     this.turn = getIntRouteParam(route, 'turn')
+    this.player = route.name=="RoundTurnPlayer" ? Player.PLAYER : Player.BOT
 
     this.playerTurns = getPlayerTurns(this.round, this.turn, state)
     this.playerDeliveryFloor = getPlayerDeliveryFloor(this.round, this.turn, state)
@@ -37,6 +41,31 @@ export default class NavigationState {
     this.cardDeck = CardDeck.fromPersistence(getBotPersistence(this.round, this.turn, state).cardDeck)
     this.botGarden = BotGarden.fromPersistence(getBotPersistence(this.round, this.turn, state).garden, this.marketPrices.flowerOrder)
     this.soloBoard = SoloBoards.get(state.setup.botMode)
+    this.soloBoardPassAction = getSoloBoardPassAction(this.soloBoard, this.playerTurns, this.playerDeliveryFloor)
+
+    if (this.player == Player.BOT && this.botTurn > 0) {
+      this.cardDeck.draw()
+    }
+  }
+
+  get playerTurn() : number {
+    if (this.player == Player.PLAYER) {
+      return this.turn
+    }
+    return this.playerTurns
+  }
+
+  get botTurn() : number {
+    if (this.player == Player.BOT) {
+      return this.turn - this.playerTurns
+        - 1  // player pass turn
+        - (this.soloBoardPassAction.action.length > 0 ? 1 : 0)  // bot pass turn actions
+    }
+    return 0
+  }
+
+  get botTurns() : number {
+    return this.soloBoardPassAction.botCardCount
   }
 
 }
@@ -47,7 +76,7 @@ function getSeason(round: number, state: State) : Season {
 }
 
 function getPlayerTurns(round: number, turn: number, state: State) : number {
-  return getTurns(round, turn, state).filter(t => t.player == Player.PLAYER).length
+  return getTurns(round, turn, state).filter(t => t.player == Player.PLAYER && !t.playerPass).length
 }
 
 function getPlayerDeliveryFloor(round: number, turn: number, state: State) : number {

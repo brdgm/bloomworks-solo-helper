@@ -56,9 +56,11 @@
       "billboard": "M{floor}"
     }
   },
+  "roundTurnBot": {
+    "bonusActions": "Bonus Actions"
+  },
   "sideBar": {
     "round": "Year {round}",
-    "turn": "Turn {turn}",
     "marketPrice": {
       "title": "Market Price",
       "decrease": "Decrease",

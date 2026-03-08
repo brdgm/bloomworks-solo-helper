@@ -1,6 +1,6 @@
 <template>
   <SideBar :navigationState="navigationState"/>
-  <h1>{{t('player.player')}}: {{t('sideBar.turn', {turn})}}</h1>
+  <h1>{{t('player.player')}}: {{navigationState.playerTurn}}</h1>
 
   <p class="mt-4" v-html="t('roundTurnPlayer.selectAction')"/>
 
@@ -43,7 +43,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import NavigationState from '@/util/NavigationState'
 import FooterButtons from '@/components/structure/FooterButtons.vue'
-import { useStateStore } from '@/store/state'
+import { RoundTurn, useStateStore } from '@/store/state'
 import SideBar from '@/components/round/SideBar.vue'
 import DebugInfo from '@/components/round/DebugInfo.vue'
 import PlayerPassSellFlowerModal from '@/components/round/PlayerPassSellFlowerModal.vue'
@@ -87,8 +87,7 @@ export default defineComponent({
       return [5,4,3,2,1]
     },
     soloBoardPassAction() : SoloBoardPassAction {
-      const { soloBoard, playerTurns, playerDeliveryFloor } = this.navigationState
-      return getSoloBoardPassAction(soloBoard, playerTurns, playerDeliveryFloor)
+      return this.navigationState.soloBoardPassAction
     },
     soloBoardPassActionNextTurn() : SoloBoardPassAction {
       const { soloBoard, playerTurns, playerDeliveryFloor } = this.navigationState
@@ -107,13 +106,17 @@ export default defineComponent({
       this.nextWithPassed(true)
     },
     nextWithPassed(passed : boolean) {
-      this.state.storeRoundTurn({
+      const turnData : RoundTurn = {
         round: this.round,
         turn: this.turn,
         player: Player.PLAYER,
         marketPrices: this.navigationState.marketPrices.toPersistence(),
         playerDeliveryFloor: this.playerDeliveryFloor
-      })
+      }
+      if (passed) {
+        turnData.playerPass = true
+      }
+      this.state.storeRoundTurn(turnData)
       if (passed) {
         this.router.push(`/round/${this.round}/turn/${this.turn + 1}/bot`)
       }
