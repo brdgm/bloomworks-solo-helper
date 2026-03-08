@@ -1,12 +1,18 @@
-import { Round } from '@/store/state'
+import Season from '@/services/enum/Season'
+import { Round, RoundTurn } from '@/store/state'
 
 export default function mockRound(params?: MockRoundParams) : Round {
-  const round : Round = {
-    round: params?.round ?? 1
+  return {
+    round: params?.round ?? 1,
+    year: params?.year ?? 1,
+    season: params?.season ?? Season.AUTUMN,
+    turns: params?.turns ?? []
   }
-  return round
 }
 
 export interface MockRoundParams {
   round? : number,
+  year? : number,
+  season? : Season,
+  turns? : RoundTurn[]
 }

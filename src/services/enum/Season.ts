@@ -2,9 +2,9 @@
  * Season
  */
 enum Season {
-  SPRING = 'spring',
-  SUMMER = 'summer',
   AUTUMN = 'autumn',
-  WINTER = 'winter'
+  WINTER = 'winter',
+  SPRING = 'spring',
+  SUMMER = 'summer'
 }
 export default Season

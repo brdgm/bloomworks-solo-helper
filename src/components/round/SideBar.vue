@@ -2,6 +2,7 @@
   <div class="sidebar">
     <div>
       <span>{{t('sideBar.round', {round})}}</span><br/>
+      <span class="fw-bold">{{t(`season.${season}`)}}</span><br/>
       <span>{{t('sideBar.turn', {turn})}}</span>
     </div>
   </div>
@@ -12,6 +13,7 @@ import { defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStateStore } from '@/store/state'
 import NavigationState from '@/util/NavigationState'
+import Season from '@/services/enum/Season'
 
 export default defineComponent({
   name: 'SideBar',
@@ -29,6 +31,9 @@ export default defineComponent({
   computed: {
     round() : number {
       return this.navigationState.round
+    },
+    season() : Season {
+      return this.navigationState.season
     },
     turn() : number {
       return this.navigationState.turn

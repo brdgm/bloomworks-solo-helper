@@ -40,6 +40,7 @@ import Flower from '@/services/enum/Flower'
 import Season from '@/services/enum/Season'
 import PlayerFlowerSelection from '@/components/setup/PlayerFlowerSelection.vue'
 import BotGarden from '@/services/BotGarden'
+import CardDeck from '@/services/CardDeck'
 
 export default defineComponent({
   name: 'SetupBot',
@@ -75,7 +76,10 @@ export default defineComponent({
   methods: {
     startGame() : void {
       const botGarden = BotGarden.new(this.playerFlowers, this.flowerOrder)
-      this.state.setup.initialBotGarden = botGarden.toPersistence()
+      this.state.setup.initialBotPersistence = {
+        cardDeck: CardDeck.new().toPersistence(),
+        garden: botGarden.toPersistence()
+      }
       this.state.storeRound({round:1, year:1, season:Season.AUTUMN, turns:[]})
       this.$router.push('/round/1/turn/1/player')
     }

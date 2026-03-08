@@ -32,6 +32,16 @@
       "validationHint": "Please select the flower colors you planted in your garden."
     }
   },
+  "sideBar": {
+    "round": "Year {round}",
+    "turn": "Turn {turn}"
+  },
+  "season": {
+    "autumn": "Autumn",
+    "winter": "Winter",
+    "spring": "Spring",
+    "summer": "Summer"
+  },
   "notfound": {
     "title": "Not Found"
   },
