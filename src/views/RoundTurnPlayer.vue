@@ -30,7 +30,7 @@
   </div>
 
   <PlayerBuyFlowerModal :marketPrices="navigationState.marketPrices" @next="next"/>
-  <PlayerPassModal :marketPrices="navigationState.marketPrices" :soloBoardPassAction="soloBoardPassAction" @pass="pass"/>
+  <PlayerPassSellFlowerModal :marketPrices="navigationState.marketPrices" :soloBoardPassAction="soloBoardPassAction" @pass="pass"/>
 
   <DebugInfo :navigationState="navigationState"/>
 
@@ -46,7 +46,7 @@ import FooterButtons from '@/components/structure/FooterButtons.vue'
 import { useStateStore } from '@/store/state'
 import SideBar from '@/components/round/SideBar.vue'
 import DebugInfo from '@/components/round/DebugInfo.vue'
-import PlayerPassModal from '@/components/round/PlayerPassModal.vue'
+import PlayerPassSellFlowerModal from '@/components/round/PlayerPassSellFlowerModal.vue'
 import PlayerBuyFlowerModal from '@/components/round/PlayerBuyFlowerModal.vue'
 import getSoloBoardPassAction, { SoloBoardPassAction } from '@/util/getSoloBoardPassAction'
 import SoloBoardPassActionInfo from '@/components/round/SoloBoardPassActionInfo.vue'
@@ -59,7 +59,7 @@ export default defineComponent({
     SideBar,
     SoloBoardPassActionInfo,
     PlayerBuyFlowerModal,
-    PlayerPassModal,
+    PlayerPassSellFlowerModal,
     DebugInfo
   },
   setup() {

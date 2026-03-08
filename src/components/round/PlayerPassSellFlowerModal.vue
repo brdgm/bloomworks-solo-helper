@@ -56,7 +56,7 @@ import getSellFlowerRevenue from '@/util/getSellFlowerRevenue'
 import { SoloBoardPassAction } from '@/util/getSoloBoardPassAction'
 
 export default defineComponent({
-  name: 'PlayerPassModal',
+  name: 'PlayerPassSellFlowerModal',
   components: {
     ModalDialog,
     FlowerIcon
