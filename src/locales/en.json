@@ -3,7 +3,7 @@
   "home": {
     "title": "Bloomworks Solo Helper",
     "play1": "Play <a href='https://boardgamegeek.com/boardgame/462920/bloomworks' target='_blank' rel='noopener'><b>Bloomworks</b></a> against Lady Pei, the solo opponent.",
-    "play2": "This application replaces the Automa cards, and guides you through the game flow.",
+    "play2": "This application replaces the Automa cards, the Solo Board, manages the market prices and Lady Pei's garden and guides you through the game flow.",
     "feedback": "Discussion and Feedback:"
   },
   "setup": {
@@ -23,7 +23,7 @@
       "firstPlayer": "You are always the first player.",
       "startingMoney": "You receive <b>${startingMoney}</b> as starting money.",
       "chooseSetupCard": "Draw three Setup cards. Choose your Setup card and place the flowers shown into their matching seasons in your garden. Then choose one flower from any family to add to your garden in the Autumn.",
-      "marketPricesManaged": "The flower market prices are managed by this application. Whenever you do an action that affects prices (buying, selling, price change) you need to adjust the price in the application by clicking on the related price in the sidebar.",
+      "marketPricesManaged": "The flower market prices are managed by this application. Whenever you do an action that affects prices (buying, selling) the price needs to be adjusted in the application. You can do that by clicking on the related price row in the sidebar of the application.",
       "botComponentsNotRequired": "The Automa card deck and the solo board is not required. You can keep the solo board nearby for reference if you like."      
     },
     "playerFlowerSelection": {

@@ -14,6 +14,16 @@
         <div class="price sell">$<span class="value">{{price.priceSell}}</span></div>
       </div>
 
+      <hr/>
+
+      <div class="small fw-bold">Lady Pei</div>
+      <div v-for="season in gardenSeasons" :key="season.season" class="gardenSeason" :class="{active:isActiveSeason(season.season)}">
+        <div class="title small">{{t(`season.${season.season}`)}}</div>
+        <div class="flowers">
+          <FlowerIcon v-for="flower in season.flowers" :key="flower" :flower="flower" class="flowerIcon"/>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -38,7 +48,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useStateStore } from '@/store/state'
+import { GardenSeason, useStateStore } from '@/store/state'
 import NavigationState from '@/util/NavigationState'
 import Season from '@/services/enum/Season'
 import MarketPrices from '@/services/MarketPrices'
@@ -83,9 +93,15 @@ export default defineComponent({
     },
     marketPrices() : MarketPrices {
       return this.navigationState.marketPrices
+    },
+    gardenSeasons() : readonly GardenSeason[] {
+      return this.navigationState.botGarden.seasons
     }
   },
   methods: {
+    isActiveSeason(season: Season) : boolean {
+      return season === this.season
+    },
     openPriceEdit(flower: Flower, price: number) {
       this.selectedFlower = flower
       this.editPrice = price
@@ -120,6 +136,9 @@ export default defineComponent({
   background-color: #ddd;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
+  hr {
+    margin: 0.6rem 0;
+  }
 }
 .flowerPrice {
   display: flex;
@@ -139,5 +158,20 @@ export default defineComponent({
 }
 .numberInput {
   width: 4rem;
+}
+.gardenSeason {
+  padding: 0.25rem;
+  margin-top: 0.1rem;
+  &.active {
+    background-color: #bbb;
+    border-radius: 4px;
+  }
+  .flowers {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .flowerIcon {
+    width: 1.5rem;
+  }
 }
 </style>
