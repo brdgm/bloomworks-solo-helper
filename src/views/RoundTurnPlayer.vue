@@ -57,6 +57,41 @@
   <ModalDialog id="passModal" :title="t('action.pass')">
     <template #body>
       <p v-html="t('roundTurnPlayer.passConfirm')"></p>
+      <div class="mt-3">
+        <div class="fw-bold">{{t('roundTurnPlayer.sellFlower.title')}}</div>
+        <div class="d-flex flex-wrap gap-2 mt-2">
+          <button v-for="flower in allFlowers" :key="flower" type="button"
+              class="btn flower-btn btn-outline-secondary"
+              @click="addSellFlower(flower)">
+            <FlowerIcon :flower="flower"/>
+          </button>
+        </div>
+        <div v-if="sellFlowers.length > 0" class="mt-2">
+          <div>{{t('roundTurnPlayer.sellFlower.selectedFlowers')}}</div>
+          <div class="d-flex flex-wrap gap-1 align-items-center">
+            <span v-for="(flower, index) in sellFlowers" :key="index" class="sell-flower-item">
+              <FlowerIcon :flower="flower"/>
+            </span>
+            <button class="btn btn-sm btn-outline-secondary ms-2" @click="resetSellFlowers">
+              {{t('action.reset')}}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mt-3">
+        <div v-if="sellFlowers.length > 0">
+          <span>{{t('roundTurnPlayer.sellFlower.sellRevenue')}}</span>
+          <span class="revenue">$<span class="value">{{sellFlowerTotalRevenue}}</span></span>
+        </div>
+        <div v-if="soloBoardPassAction.income > 0">
+          <span>{{t('roundTurnPlayer.sellFlower.passingBonus')}}</span>
+          <span class="revenue">$<span class="value">{{soloBoardPassAction.income}}</span></span>
+        </div>
+        <div v-if="sellFlowers.length > 0 || soloBoardPassAction.income > 0" class="mt-1 fw-bold">
+          <span>{{t('roundTurnPlayer.sellFlower.totalRevenue')}}</span>
+          <span class="revenue">$<span class="value">{{passTotalRevenue}}</span></span>
+        </div>
+      </div>
     </template>
     <template #footer>
       <button class="btn btn-danger" @click="pass" data-bs-dismiss="modal">{{t('action.pass')}}</button>
@@ -86,6 +121,7 @@ import FlowerIcon from '@/components/structure/FlowerIcon.vue'
 import Player from '@/services/enum/Player'
 import Flower from '@/services/enum/Flower'
 import getBuyFlowerCost from '@/util/getBuyFlowerCost'
+import getSellFlowerRevenue from '@/util/getSellFlowerRevenue'
 
 export default defineComponent({
   name: 'RoundTurnPlayer',
@@ -111,8 +147,9 @@ export default defineComponent({
     const showDeliveryActions = ref(false)
     const buyFlowerType = ref(undefined as Flower|undefined)
     const buyFlowerCount = ref(1)
+    const sellFlowers = ref([] as Flower[])
 
-    return { t, router, navigationState, state, round, turn, playerDeliveryFloor, showDeliveryActions, buyFlowerType, buyFlowerCount }
+    return { t, router, navigationState, state, round, turn, playerDeliveryFloor, showDeliveryActions, buyFlowerType, buyFlowerCount, sellFlowers }
   },
   computed: {
     backButtonRouteTo() : string {
@@ -130,6 +167,21 @@ export default defineComponent({
     buyFlowerTotalCost() : number {
       const price = this.navigationState.marketPrices.getPrice(this.buyFlowerType!)
       return getBuyFlowerCost(price, this.buyFlowerCount)
+    },
+    sellFlowerTotalRevenue() : number {
+      const countByFlower = new Map<Flower, number>()
+      for (const flower of this.sellFlowers) {
+        countByFlower.set(flower, (countByFlower.get(flower) ?? 0) + 1)
+      }
+      let total = 0
+      for (const [flower, count] of countByFlower) {
+        const price = this.navigationState.marketPrices.getPrice(flower)
+        total += getSellFlowerRevenue(price, count)
+      }
+      return total
+    },
+    passTotalRevenue() : number {
+      return this.sellFlowerTotalRevenue + this.soloBoardPassAction.income
     },
     soloBoardPassAction() : SoloBoardPassAction {
       const { soloBoard, playerTurns, playerDeliveryFloor } = this.navigationState
@@ -155,7 +207,22 @@ export default defineComponent({
     next() : void {
       this.nextWithPassed(false)
     },
+    addSellFlower(flower: Flower) : void {
+      this.sellFlowers.push(flower)
+    },
+    resetSellFlowers() : void {
+      this.sellFlowers = []
+    },
     pass() : void {
+      // Adjust market prices for sold flowers
+      const countByFlower = new Map<Flower, number>()
+      for (const flower of this.sellFlowers) {
+        countByFlower.set(flower, (countByFlower.get(flower) ?? 0) + 1)
+      }
+      for (const [flower, count] of countByFlower) {
+        const currentPrice = this.navigationState.marketPrices.getPrice(flower)
+        this.navigationState.marketPrices.setPrice(flower, currentPrice - count)
+      }
       this.nextWithPassed(true)
     },
     nextWithPassed(passed : boolean) {
@@ -212,5 +279,15 @@ export default defineComponent({
 }
 .numberInput {
   width: 4rem;
+}
+.sell-flower-item {
+  display: inline-flex;
+}
+.revenue {
+  color: darkgreen;
+  margin-left: 0.25rem;
+  .value {
+    font-weight: bold;
+  }
 }
 </style>

@@ -38,6 +38,13 @@
     "deliveredToFloor": "Delivered to Floor ${floor}",
     "otherAction": "Other Action",
     "passConfirm": "Do you really want to pass?",
+    "sellFlower": {
+      "title": "Sell Flowers (optional):",
+      "selectedFlowers": "Selected Flowers:",
+      "sellRevenue": "Sell Revenue:",
+      "passingBonus": "Passing Bonus:",
+      "totalRevenue": "Total Revenue:"
+    },
     "buyFlower": {
       "title": "Buy Flower",
       "selectFlower": "Select Flower:",
