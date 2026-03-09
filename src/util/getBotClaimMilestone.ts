@@ -15,7 +15,7 @@ const SEASON_MILESTONE : Record<Season, Milestone> = {
  * (fifth floor first, then milestones in milestone season order).
  * Returns undefined if all milestones are already claimed.
  */
-export default function getBotClaimedMilestone(claimedMilestones: Milestone[],
+export default function getBotClaimMilestone(claimedMilestones: readonly Milestone[],
     currentSeason: Season, milestoneSeasonOrder: Season[]) : Milestone | undefined {
   // try milestone matching the current season
   const currentMilestone = SEASON_MILESTONE[currentSeason]

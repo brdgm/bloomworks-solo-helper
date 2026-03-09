@@ -12,6 +12,8 @@ import SoloBoard from '@/services/SoloBoard'
 import SoloBoards from '@/services/SoloBoards'
 import getSoloBoardPassAction, { SoloBoardPassAction } from './getSoloBoardPassAction'
 import BotPersistenceWrapper from '@/services/BotPersistenceWrapper'
+import Milestone from '@/services/enum/Milestone'
+import getBotClaimMilestone from './getBotClaimMilestone'
 
 export default class NavigationState {
 
@@ -28,7 +30,7 @@ export default class NavigationState {
   readonly soloBoard : SoloBoard
   readonly soloBoardPassAction : SoloBoardPassAction
 
-  readonly botClaimMilestones : number
+  readonly botClaimMilestones : Milestone[]
 
   constructor(route: RouteLocation, state: State) {    
     this.round = getIntRouteParam(route, 'round')
@@ -54,8 +56,18 @@ export default class NavigationState {
       // draw next card for bot turn
       this.botPersistence.cardDeck.draw()
     }
+
     // check if bot should claim any milestones
-    this.botClaimMilestones = this.botPersistence.cardDeck.deckShuffleCount
+    const botClaimMilestoneCount = this.botPersistence.cardDeck.deckShuffleCount
+    const claimedMilestones : Milestone[] = []
+    for (let i = 0; i < botClaimMilestoneCount; i++) {
+      const milestoneToClaim = getBotClaimMilestone(this.botPersistence.claimedMilestones, this.season, state.setup.milestoneSeasonOrder ?? [])
+      if (milestoneToClaim) {
+        claimedMilestones.push(milestoneToClaim)
+        this.botPersistence.setClaimedMilestones([...this.botPersistence.claimedMilestones, milestoneToClaim])
+      }
+    }
+    this.botClaimMilestones = claimedMilestones
   }
 
   get playerTurn() : number {

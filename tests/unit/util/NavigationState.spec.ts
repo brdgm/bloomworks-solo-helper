@@ -1,5 +1,6 @@
 import NavigationState from '@/util/NavigationState'
 import Flower from '@/services/enum/Flower'
+import Milestone from '@/services/enum/Milestone'
 import Player from '@/services/enum/Player'
 import Season from '@/services/enum/Season'
 import { expect } from 'chai'
@@ -444,7 +445,7 @@ describe('util/NavigationState', () => {
   })
 
   describe('botClaimMilestones', () => {
-    it('returns 0 when no deck reshuffle occurred', () => {
+    it('returns empty array when no deck reshuffle occurred', () => {
       const cardDeck = mockCardDeck({ pile: ['window-box-1', 'delivery-1'], played: [] })
       const route = mockRouteLocation({ name: 'RoundTurnBot', params: { round: '1', turn: '3' } })
       const state = mockState({ rounds: [
@@ -457,11 +458,12 @@ describe('util/NavigationState', () => {
       ] })
       const navigationState = new NavigationState(route, state)
 
-      expect(navigationState.botClaimMilestones).to.eq(0)
+      expect(navigationState.botClaimMilestones).to.eql([])
     })
 
-    it('returns 1 when deck reshuffles on draw', () => {
+    it('returns claimed milestone when deck reshuffles on draw', () => {
       // empty pile + cards in discard → draw triggers reshuffle → deckShuffleCount = 1
+      // default season is AUTUMN → claims Milestone.AUTUMN
       const cardDeck = mockCardDeck({ pile: [], discard: ['window-box-1', 'delivery-1'] })
       const route = mockRouteLocation({ name: 'RoundTurnBot', params: { round: '1', turn: '3' } })
       const state = mockState({ rounds: [
@@ -474,10 +476,10 @@ describe('util/NavigationState', () => {
       ] })
       const navigationState = new NavigationState(route, state)
 
-      expect(navigationState.botClaimMilestones).to.eq(1)
+      expect(navigationState.botClaimMilestones).to.eql([Milestone.AUTUMN])
     })
 
-    it('returns 0 for player turns without reshuffle', () => {
+    it('returns empty array for player turns without reshuffle', () => {
       const cardDeck = mockCardDeck({ pile: ['window-box-1'], played: ['delivery-1'] })
       const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '3' } })
       const state = mockState({ rounds: [
@@ -490,7 +492,7 @@ describe('util/NavigationState', () => {
       ] })
       const navigationState = new NavigationState(route, state)
 
-      expect(navigationState.botClaimMilestones).to.eq(0)
+      expect(navigationState.botClaimMilestones).to.eql([])
     })
   })
 

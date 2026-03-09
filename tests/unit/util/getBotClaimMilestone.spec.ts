@@ -1,19 +1,19 @@
 import { expect } from 'chai'
 import Milestone from '@/services/enum/Milestone'
 import Season from '@/services/enum/Season'
-import getBotClaimedMilestone from '@/util/getBotClaimedMilestone'
+import getBotClaimMilestone from '@/util/getBotClaimMilestone'
 
 const milestoneSeasonOrder = [Season.SPRING, Season.SUMMER, Season.AUTUMN, Season.WINTER]
 
-describe('util/getBotClaimedMilestone', () => {
+describe('util/getBotClaimMilestone', () => {
 
   it('should return current season milestone if not claimed', () => {
-    const result = getBotClaimedMilestone([], Season.SPRING, milestoneSeasonOrder)
+    const result = getBotClaimMilestone([], Season.SPRING, milestoneSeasonOrder)
     expect(result).to.eq(Milestone.SPRING)
   })
 
   it('should return current season milestone even when others are claimed', () => {
-    const result = getBotClaimedMilestone(
+    const result = getBotClaimMilestone(
       [Milestone.FIFTH_FLOOR, Milestone.AUTUMN],
       Season.WINTER, milestoneSeasonOrder
     )
@@ -21,7 +21,7 @@ describe('util/getBotClaimedMilestone', () => {
   })
 
   it('should fall back to fifth floor if current season milestone is claimed', () => {
-    const result = getBotClaimedMilestone(
+    const result = getBotClaimMilestone(
       [Milestone.SPRING],
       Season.SPRING, milestoneSeasonOrder
     )
@@ -29,7 +29,7 @@ describe('util/getBotClaimedMilestone', () => {
   })
 
   it('should fall back to first milestone season order if fifth floor and current are claimed', () => {
-    const result = getBotClaimedMilestone(
+    const result = getBotClaimMilestone(
       [Milestone.SPRING, Milestone.FIFTH_FLOOR],
       Season.SPRING, milestoneSeasonOrder
     )
@@ -39,7 +39,7 @@ describe('util/getBotClaimedMilestone', () => {
   })
 
   it('should skip already claimed milestones in priority order', () => {
-    const result = getBotClaimedMilestone(
+    const result = getBotClaimMilestone(
       [Milestone.AUTUMN, Milestone.FIFTH_FLOOR, Milestone.SPRING, Milestone.SUMMER],
       Season.AUTUMN, milestoneSeasonOrder
     )
@@ -47,7 +47,7 @@ describe('util/getBotClaimedMilestone', () => {
   })
 
   it('should return undefined if all milestones are claimed', () => {
-    const result = getBotClaimedMilestone(
+    const result = getBotClaimMilestone(
       [Milestone.FIFTH_FLOOR, Milestone.SPRING, Milestone.SUMMER, Milestone.AUTUMN, Milestone.WINTER],
       Season.AUTUMN, milestoneSeasonOrder
     )
@@ -56,7 +56,7 @@ describe('util/getBotClaimedMilestone', () => {
 
   it('should respect different milestone season orders', () => {
     const customOrder = [Season.WINTER, Season.AUTUMN, Season.SUMMER, Season.SPRING]
-    const result = getBotClaimedMilestone(
+    const result = getBotClaimMilestone(
       [Milestone.SUMMER, Milestone.FIFTH_FLOOR, Milestone.WINTER],
       Season.SUMMER, customOrder
     )

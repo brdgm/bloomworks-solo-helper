@@ -29,7 +29,7 @@ export default class BotPersistenceWrapper {
     return this._garden
   }
 
-  public get claimedMilestones() : Milestone[] {
+  public get claimedMilestones() : readonly Milestone[] {
     return this._claimedMilestones.value
   }
 
