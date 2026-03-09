@@ -28,6 +28,7 @@ import SideBar from '@/components/round/SideBar.vue'
 import DebugInfo from '@/components/round/DebugInfo.vue'
 import { CardAction } from '@/services/Card'
 import Player from '@/services/enum/Player'
+import Action from '@/services/enum/Action'
 
 export default defineComponent({
   name: 'RoundTurnBot',
@@ -58,9 +59,13 @@ export default defineComponent({
     actions() : CardAction[] {
       if (this.navigationState.botTurn == 0) {
         return this.navigationState.soloBoardPassAction.action.map(action => {
-          return {
-            action
-          }          
+          if (action == Action.BILLBOARD) {
+            const { floor } = this.navigationState.soloBoardPassAction
+            return { action, floor }
+          }
+          else {
+            return { action }
+          }
         })
       }
       else {
