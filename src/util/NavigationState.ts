@@ -11,6 +11,7 @@ import Player from '@/services/enum/Player'
 import SoloBoard from '@/services/SoloBoard'
 import SoloBoards from '@/services/SoloBoards'
 import getSoloBoardPassAction, { SoloBoardPassAction } from './getSoloBoardPassAction'
+import BotPersistenceWrapper from '@/services/BotPersistenceWrapper'
 
 export default class NavigationState {
 
@@ -23,8 +24,7 @@ export default class NavigationState {
   readonly playerDeliveryFloor: number
 
   readonly marketPrices : MarketPrices
-  readonly cardDeck : CardDeck
-  readonly botGarden : BotGarden
+  readonly botPersistence : BotPersistenceWrapper
   readonly soloBoard : SoloBoard
   readonly soloBoardPassAction : SoloBoardPassAction
 
@@ -38,13 +38,12 @@ export default class NavigationState {
     this.playerDeliveryFloor = getPlayerDeliveryFloor(this.round, this.turn, state)
 
     this.marketPrices = MarketPrices.fromPersistence(getFlowerPrices(this.round, this.turn, state))
-    this.cardDeck = CardDeck.fromPersistence(getBotPersistence(this.round, this.turn, state).cardDeck)
-    this.botGarden = BotGarden.fromPersistence(getBotPersistence(this.round, this.turn, state).garden, this.marketPrices.flowerOrder)
+    this.botPersistence = BotPersistenceWrapper.fromPersistence(getBotPersistence(this.round, this.turn, state), this.marketPrices.flowerOrder)
     this.soloBoard = SoloBoards.get(state.setup.botMode)
     this.soloBoardPassAction = getSoloBoardPassAction(this.soloBoard, this.playerTurns, this.playerDeliveryFloor)
 
     if (this.player == Player.BOT && this.botTurn > 0) {
-      this.cardDeck.draw()
+      this.botPersistence.cardDeck.draw()
     }
   }
 
@@ -107,7 +106,8 @@ function getBotPersistence(round: number, turn: number, state: State) : BotPersi
   else {
     return state.setup.initialBotPersistence ?? {
       cardDeck: CardDeck.new().toPersistence(),
-      garden: BotGarden.new([], getAllEnumValues(Flower)).toPersistence()
+      garden: BotGarden.new([], getAllEnumValues(Flower)).toPersistence(),
+      claimedMilestones: []
     }
   }
 }

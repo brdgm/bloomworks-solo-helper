@@ -100,10 +100,10 @@ export default defineComponent({
       return this.navigationState.marketPrices
     },
     cardDeck() : CardDeck {
-      return this.navigationState.cardDeck
+      return this.navigationState.botPersistence.cardDeck
     },
     gardenSeasons() : readonly GardenSeason[] {
-      return this.navigationState.botGarden.seasons
+      return this.navigationState.botPersistence.garden.seasons
     }
   },
   methods: {

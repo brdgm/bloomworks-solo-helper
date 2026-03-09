@@ -64,7 +64,7 @@ export default defineComponent({
         })
       }
       else {
-        return this.navigationState.cardDeck.currentCard?.actions || []
+        return this.navigationState.botPersistence.cardDeck.currentCard?.actions || []
       }
     }
   },
@@ -75,10 +75,7 @@ export default defineComponent({
         turn: this.turn,
         player: Player.BOT,
         marketPrices: this.navigationState.marketPrices.toPersistence(),
-        botPersistence: {
-          cardDeck: this.navigationState.cardDeck.toPersistence(),
-          garden: this.navigationState.botGarden.toPersistence()
-        }
+        botPersistence: this.navigationState.botPersistence.toPersistence()
       })
       this.router.push(`/round/${this.round}/turn/${this.turn + 1}/bot`)
     }

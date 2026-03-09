@@ -112,10 +112,7 @@ export default defineComponent({
         player: Player.PLAYER,
         marketPrices: this.navigationState.marketPrices.toPersistence(),
         playerDeliveryFloor: this.playerDeliveryFloor,
-        botPersistence: {
-          cardDeck: this.navigationState.cardDeck.toPersistence(),
-          garden: this.navigationState.botGarden.toPersistence()
-        }
+        botPersistence: this.navigationState.botPersistence.toPersistence()
       }
       if (passed) {
         turnData.playerPass = true

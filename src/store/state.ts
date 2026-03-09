@@ -4,6 +4,7 @@ import BotMode from '@/services/enum/BotMode'
 import Player from '@/services/enum/Player'
 import Flower from '@/services/enum/Flower'
 import Season from '@/services/enum/Season'
+import Milestone from '@/services/enum/Milestone'
 
 export const useStateStore = defineStore(`${name}.state`, {
   state: () => {
@@ -80,6 +81,7 @@ export interface FlowerPrice {
 export interface BotPersistence {
   garden: GardenSeason[]
   cardDeck: CardDeckPersistence
+  claimedMilestones: Milestone[]
 }
 
 export interface GardenSeason {
