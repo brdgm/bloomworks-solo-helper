@@ -93,6 +93,5 @@ export interface GardenSeason {
 
 export interface CardDeckPersistence {
   pile: string[]
-  played: string[]
   discard: string[]
 }

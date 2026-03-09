@@ -11,26 +11,20 @@ import CardType from './enum/CardType'
 export default class CardDeck {
 
   private readonly _pile
-  private readonly _played
   private readonly _discard
   private readonly _deckShuffleCount = ref(0)
 
-  private constructor(pile : Card[], played : Card[], discard : Card[]) {
+  private constructor(pile : Card[], discard : Card[]) {
     this._pile = ref(pile)
-    this._played = ref(played)
     this._discard = ref(discard)
   }
 
   public get currentCard() : Card|undefined {
-    return this._played.value.at(-1)
+    return this._discard.value.at(0)
   }
 
   public get pile() : readonly Card[] {
     return this._pile.value
-  }
-
-  public get played() : readonly Card[] {
-    return this._played.value
   }
 
   public get discard() : readonly Card[] {
@@ -58,18 +52,17 @@ export default class CardDeck {
     if (!card) {
       throw new Error('No cards left to draw.')
     }
-    this._played.value.push(card)
+    this._discard.value.unshift(card)
     return card
   }
 
   /**
-   * Discards all played cards to the discard pile.
-   * Removes cards marked as "remove" from the game instead of discarding them.
+   * Removes the current card from the discard pile if it is marked for removal.
    */
-  public discardPlayed() : void {
-    this._discard.value.unshift(...this._played.value
-        .filter(card => !card.remove))
-    this._played.value = []
+  public checkCurrentCardRemove() : void {
+    if (this.currentCard?.remove) {
+      this._discard.value.shift()
+    }
   }
 
   /**
@@ -78,7 +71,6 @@ export default class CardDeck {
   public toPersistence() : CardDeckPersistence {
     return {
       pile: this._pile.value.map(card => card.id),
-      played: this._played.value.map(card => card.id),
       discard: this._discard.value.map(card => card.id)
     }
   }
@@ -91,7 +83,7 @@ export default class CardDeck {
    */
   public static new() : CardDeck {
     const cards = shuffle(Cards.getAll(CardType.STANDARD))
-    return new CardDeck(cards, [], [])
+    return new CardDeck(cards, [])
   }
 
   /**
@@ -100,7 +92,6 @@ export default class CardDeck {
   public static fromPersistence(persistence : CardDeckPersistence) : CardDeck {
     return new CardDeck(
       persistence.pile.map(Cards.get),
-      persistence.played.map(Cards.get),
       persistence.discard.map(Cards.get)
     )
   }

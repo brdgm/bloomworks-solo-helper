@@ -117,7 +117,7 @@ describe('util/NavigationState', () => {
 
   describe('cardDeck', () => {
     it('uses card deck from previous bot turn in same round', () => {
-      const cardDeck = mockCardDeck({ pile: ['window-box-1', 'delivery-1'], played: ['price-1'] })
+      const cardDeck = mockCardDeck({ pile: ['window-box-1', 'delivery-1'], discard: ['price-1'] })
       const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '3' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [
@@ -130,7 +130,7 @@ describe('util/NavigationState', () => {
       const navigationState = new NavigationState(route, state)
 
       expect(navigationState.botPersistence.cardDeck.pile.map(c => c.id)).to.eql(['window-box-1', 'delivery-1'])
-      expect(navigationState.botPersistence.cardDeck.played.map(c => c.id)).to.eql(['price-1'])
+      expect(navigationState.botPersistence.cardDeck.discard.map(c => c.id)).to.eql(['price-1'])
     })
 
     it('falls back to previous round when no bot turn in current round', () => {
@@ -165,7 +165,7 @@ describe('util/NavigationState', () => {
     })
 
     it('draws a card on bot turns', () => {
-      const cardDeck = mockCardDeck({ pile: ['window-box-1', 'delivery-1', 'price-1'], played: [] })
+      const cardDeck = mockCardDeck({ pile: ['window-box-1', 'delivery-1', 'price-1'] })
       const route = mockRouteLocation({ name: 'RoundTurnBot', params: { round: '1', turn: '3' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [
@@ -178,7 +178,7 @@ describe('util/NavigationState', () => {
       const navigationState = new NavigationState(route, state)
 
       expect(navigationState.botPersistence.cardDeck.pile.map(c => c.id)).to.eql(['delivery-1', 'price-1'])
-      expect(navigationState.botPersistence.cardDeck.played.map(c => c.id)).to.eql(['window-box-1'])
+      expect(navigationState.botPersistence.cardDeck.discard.map(c => c.id)).to.eql(['window-box-1'])
     })
   })
 
@@ -446,7 +446,7 @@ describe('util/NavigationState', () => {
 
   describe('botClaimMilestones', () => {
     it('returns empty array when no deck reshuffle occurred', () => {
-      const cardDeck = mockCardDeck({ pile: ['window-box-1', 'delivery-1'], played: [] })
+      const cardDeck = mockCardDeck({ pile: ['window-box-1', 'delivery-1'] })
       const route = mockRouteLocation({ name: 'RoundTurnBot', params: { round: '1', turn: '3' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [
@@ -480,7 +480,7 @@ describe('util/NavigationState', () => {
     })
 
     it('returns empty array for player turns without reshuffle', () => {
-      const cardDeck = mockCardDeck({ pile: ['window-box-1'], played: ['delivery-1'] })
+      const cardDeck = mockCardDeck({ pile: ['window-box-1'], discard: ['delivery-1'] })
       const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '3' } })
       const state = mockState({ rounds: [
         mockRound({ round: 1, turns: [

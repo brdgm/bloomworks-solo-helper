@@ -2,6 +2,7 @@
   <div class="mt-4" v-if="state.setup.debugMode">
     <hr/>
     <p class="debug">
+      <b>Current Card</b>: {{navigationState.botPersistence.cardDeck.currentCard}}<br/>
       <b>Card Deck</b>: {{ navigationState.botPersistence.cardDeck.toPersistence() }}<br/>
       <b>Bot Garden</b>: {{ navigationState.botPersistence.garden.toPersistence() }}<br/>
       <b>Player Turn:</b> {{ navigationState.playerTurn}}/{{ navigationState.playerTurns }}, <b>Delivery Floor:</b> {{ navigationState.playerDeliveryFloor }}<br/>

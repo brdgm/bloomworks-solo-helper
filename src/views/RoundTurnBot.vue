@@ -70,6 +70,9 @@ export default defineComponent({
   },
   methods: {
     next() : void {
+      if (this.navigationState.botTurn > 0) {
+        this.navigationState.botPersistence.cardDeck.checkCurrentCardRemove()
+      }
       this.state.storeRoundTurn({
         round: this.round,
         turn: this.turn,

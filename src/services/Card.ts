@@ -15,4 +15,5 @@ export interface CardAction {
   action: Action
   windowSelection?: WindowSelection
   priceSelection?: PriceSelection
+  floor?: number
 }
