@@ -97,7 +97,7 @@ function getFlowerPrices(round: number, turn: number, state: State) : FlowerPric
 }
 
 function getBotPersistence(round: number, turn: number, state: State) : BotPersistence {
-  const botPersistence = getTurns(round, turn, state).find(t => t.botPersistence)?.botPersistence
+  const botPersistence = getTurns(round, turn, state)[0]?.botPersistence
   if (botPersistence) {
     return botPersistence
   }

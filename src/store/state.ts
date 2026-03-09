@@ -67,7 +67,7 @@ export interface RoundTurn {
   marketPrices: FlowerPrice[]
   playerDeliveryFloor?: number
   playerPass?: boolean
-  botPersistence?: BotPersistence
+  botPersistence: BotPersistence
 }
 
 export interface FlowerPrice {
