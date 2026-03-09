@@ -1,6 +1,7 @@
 <template>
   <h1>{{t('setup.title')}}</h1>
 
+  <MilestoneSeasonOrder/>
   <BotModeSelection/>
 
   <button class="btn btn-primary btn-lg mt-4" @click="setupBot()">
@@ -15,6 +16,7 @@ import { defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FooterButtons from '@/components/structure/FooterButtons.vue'
 import BotModeSelection from '@/components/setup/BotModeSelection.vue'
+import MilestoneSeasonOrder from '@/components/setup/MilestoneSeasonOrder.vue'
 import { useStateStore } from '@/store/state'
 import MarketPrices from '@/services/MarketPrices'
 
@@ -22,6 +24,7 @@ export default defineComponent({
   name: 'SetupGame',
   components: {
     BotModeSelection,
+    MilestoneSeasonOrder,
     FooterButtons
   },
   setup() {

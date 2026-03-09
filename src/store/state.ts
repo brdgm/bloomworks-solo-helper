@@ -19,6 +19,7 @@ export const useStateStore = defineStore(`${name}.state`, {
   actions: {
     resetGame() {
       this.rounds = []
+      this.setup.milestoneSeasonOrder = undefined
       this.setup.initialMarketPrices = undefined
       this.setup.initialBotPersistence = undefined
       this.gameStatsSend = false
@@ -48,6 +49,7 @@ export interface State {
 }
 export interface Setup {
   botMode: BotMode,
+  milestoneSeasonOrder?: Season[]
   initialMarketPrices?: FlowerPrice[]
   initialBotPersistence?: BotPersistence
   debugMode?: boolean

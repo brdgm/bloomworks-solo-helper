@@ -8,6 +8,11 @@
   },
   "setup": {
     "title": "Setup",
+    "milestoneSeasonOrder": {
+      "title": "Milestone Board: Season Order",
+      "description": "Arrange the <b>season tiles</b> on the milestone board in this order:",
+      "randomize": "Randomize"
+    },
     "botMode": {
       "title": "Solo Mode",
       "base": "Base Mode (without Player Power)",
