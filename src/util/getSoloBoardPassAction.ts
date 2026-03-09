@@ -16,7 +16,7 @@ export default function getSoloBoardPassAction(soloBoard: SoloBoard, playerTurns
   const income = floorActions?.floorAction[turnsUpTo5]?.income ?? 0
   const action = floorActions?.floorAction[turnsUpTo5]?.action ?? []
   const botCardCount = soloBoard.botCardCount[turnsUpTo5] ?? 0
-  const botBurnCardCount = turnsBeyond5 * 3
+  const botBurnCardCount = turnsBeyond5 > 0 ? 3 : 0
   const floor = playerDeliveryFloor
 
   return {

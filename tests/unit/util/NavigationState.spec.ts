@@ -128,8 +128,8 @@ describe('util/NavigationState', () => {
       ] })
       const navigationState = new NavigationState(route, state)
 
-      expect(navigationState.cardDeck.pile.map(c => c.id)).to.eql(['window-box-1', 'delivery-1'])
-      expect(navigationState.cardDeck.played.map(c => c.id)).to.eql(['price-1'])
+      expect(navigationState.botPersistence.cardDeck.pile.map(c => c.id)).to.eql(['window-box-1', 'delivery-1'])
+      expect(navigationState.botPersistence.cardDeck.played.map(c => c.id)).to.eql(['price-1'])
     })
 
     it('falls back to previous round when no bot turn in current round', () => {
@@ -145,8 +145,8 @@ describe('util/NavigationState', () => {
       ] })
       const navigationState = new NavigationState(route, state)
 
-      expect(navigationState.cardDeck.pile.map(c => c.id)).to.eql(['window-box-2'])
-      expect(navigationState.cardDeck.discard.map(c => c.id)).to.eql(['price-2'])
+      expect(navigationState.botPersistence.cardDeck.pile.map(c => c.id)).to.eql(['window-box-2'])
+      expect(navigationState.botPersistence.cardDeck.discard.map(c => c.id)).to.eql(['price-2'])
     })
 
     it('falls back to initial bot persistence from setup', () => {
@@ -160,7 +160,7 @@ describe('util/NavigationState', () => {
       })
       const navigationState = new NavigationState(route, state)
 
-      expect(navigationState.cardDeck.pile.map(c => c.id)).to.eql(['window-box-3', 'window-box-4'])
+      expect(navigationState.botPersistence.cardDeck.pile.map(c => c.id)).to.eql(['window-box-3', 'window-box-4'])
     })
 
     it('draws a card on bot turns', () => {
@@ -176,8 +176,8 @@ describe('util/NavigationState', () => {
       ] })
       const navigationState = new NavigationState(route, state)
 
-      expect(navigationState.cardDeck.pile.map(c => c.id)).to.eql(['delivery-1', 'price-1'])
-      expect(navigationState.cardDeck.played.map(c => c.id)).to.eql(['window-box-1'])
+      expect(navigationState.botPersistence.cardDeck.pile.map(c => c.id)).to.eql(['delivery-1', 'price-1'])
+      expect(navigationState.botPersistence.cardDeck.played.map(c => c.id)).to.eql(['window-box-1'])
     })
   })
 
@@ -197,7 +197,7 @@ describe('util/NavigationState', () => {
       ] })
       const navigationState = new NavigationState(route, state)
 
-      const spring = navigationState.botGarden.seasons.find(s => s.season === Season.SPRING)!
+      const spring = navigationState.botPersistence.garden.seasons.find(s => s.season === Season.SPRING)!
       expect(spring.flowers).to.eql([Flower.RED, Flower.BLUE])
     })
 
@@ -216,7 +216,7 @@ describe('util/NavigationState', () => {
       ] })
       const navigationState = new NavigationState(route, state)
 
-      const summer = navigationState.botGarden.seasons.find(s => s.season === Season.SUMMER)!
+      const summer = navigationState.botPersistence.garden.seasons.find(s => s.season === Season.SUMMER)!
       expect(summer.flowers).to.eql([Flower.YELLOW])
     })
 
@@ -233,7 +233,7 @@ describe('util/NavigationState', () => {
       })
       const navigationState = new NavigationState(route, state)
 
-      const winter = navigationState.botGarden.seasons.find(s => s.season === Season.WINTER)!
+      const winter = navigationState.botPersistence.garden.seasons.find(s => s.season === Season.WINTER)!
       expect(winter.flowers).to.eql([Flower.ORANGE])
     })
   })
@@ -440,6 +440,57 @@ describe('util/NavigationState', () => {
       const navigationState = new NavigationState(route, state)
 
       expect(navigationState.botTurns).to.eq(4)
+    })
+  })
+
+  describe('botClaimMilestones', () => {
+    it('returns 0 when no deck reshuffle occurred', () => {
+      const cardDeck = mockCardDeck({ pile: ['window-box-1', 'delivery-1'], played: [] })
+      const route = mockRouteLocation({ name: 'RoundTurnBot', params: { round: '1', turn: '3' } })
+      const state = mockState({ rounds: [
+        mockRound({ round: 1, turns: [
+          mockRoundTurn({ turn: 1, player: Player.PLAYER }),
+          mockRoundTurn({ turn: 2, player: Player.BOT,
+            botPersistence: mockBotPersistence({ cardDeck }),
+          }),
+        ] }),
+      ] })
+      const navigationState = new NavigationState(route, state)
+
+      expect(navigationState.botClaimMilestones).to.eq(0)
+    })
+
+    it('returns 1 when deck reshuffles on draw', () => {
+      // empty pile + cards in discard → draw triggers reshuffle → deckShuffleCount = 1
+      const cardDeck = mockCardDeck({ pile: [], discard: ['window-box-1', 'delivery-1'] })
+      const route = mockRouteLocation({ name: 'RoundTurnBot', params: { round: '1', turn: '3' } })
+      const state = mockState({ rounds: [
+        mockRound({ round: 1, turns: [
+          mockRoundTurn({ turn: 1, player: Player.PLAYER }),
+          mockRoundTurn({ turn: 2, player: Player.BOT,
+            botPersistence: mockBotPersistence({ cardDeck }),
+          }),
+        ] }),
+      ] })
+      const navigationState = new NavigationState(route, state)
+
+      expect(navigationState.botClaimMilestones).to.eq(1)
+    })
+
+    it('returns 0 for player turns without reshuffle', () => {
+      const cardDeck = mockCardDeck({ pile: ['window-box-1'], played: ['delivery-1'] })
+      const route = mockRouteLocation({ name: 'RoundTurnPlayer', params: { round: '1', turn: '3' } })
+      const state = mockState({ rounds: [
+        mockRound({ round: 1, turns: [
+          mockRoundTurn({ turn: 1, player: Player.PLAYER }),
+          mockRoundTurn({ turn: 2, player: Player.BOT,
+            botPersistence: mockBotPersistence({ cardDeck }),
+          }),
+        ] }),
+      ] })
+      const navigationState = new NavigationState(route, state)
+
+      expect(navigationState.botClaimMilestones).to.eq(0)
     })
   })
 

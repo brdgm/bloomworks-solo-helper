@@ -28,6 +28,8 @@ export default class NavigationState {
   readonly soloBoard : SoloBoard
   readonly soloBoardPassAction : SoloBoardPassAction
 
+  readonly botClaimMilestones : number
+
   constructor(route: RouteLocation, state: State) {    
     this.round = getIntRouteParam(route, 'round')
     this.season = getSeason(this.round, state)
@@ -42,9 +44,18 @@ export default class NavigationState {
     this.soloBoard = SoloBoards.get(state.setup.botMode)
     this.soloBoardPassAction = getSoloBoardPassAction(this.soloBoard, this.playerTurns, this.playerDeliveryFloor)
 
+    if (this.player == Player.PLAYER && this.soloBoardPassAction.botBurnCardCount > 0) {
+      // burn bot cards
+      for (let i = 0; i < this.soloBoardPassAction.botBurnCardCount; i++) {
+        this.botPersistence.cardDeck.draw()
+      }
+    }
     if (this.player == Player.BOT && this.botTurn > 0) {
+      // draw next card for bot turn
       this.botPersistence.cardDeck.draw()
     }
+    // check if bot should claim any milestones
+    this.botClaimMilestones = this.botPersistence.cardDeck.deckShuffleCount
   }
 
   get playerTurn() : number {

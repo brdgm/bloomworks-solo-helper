@@ -33,6 +33,10 @@ export default class BotPersistenceWrapper {
     return this._claimedMilestones.value
   }
 
+  public setClaimedMilestones(claimedMilestones: Milestone[]) {
+    this._claimedMilestones.value = claimedMilestones
+  }
+
   /**
    * Gets persistence view.
    */

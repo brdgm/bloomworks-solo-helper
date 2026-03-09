@@ -52,7 +52,7 @@ describe('util/getSoloBoardPassAction', () => {
     expect(result.income).to.eq(0)
     expect(result.action).to.eql([Action.VP_5])
     expect(result.botCardCount).to.eq(5)
-    expect(result.botBurnCardCount).to.eq(6)
+    expect(result.botBurnCardCount).to.eq(3)
   })
 
   it('turns beyond 5 caps turnsUpTo5 at 5', () => {
@@ -60,7 +60,7 @@ describe('util/getSoloBoardPassAction', () => {
     expect(result.income).to.eq(0)
     expect(result.action).to.eql([Action.BILLBOARD])
     expect(result.botCardCount).to.eq(5)
-    expect(result.botBurnCardCount).to.eq(9)
+    expect(result.botBurnCardCount).to.eq(3)
   })
 
   it('invalid floor returns defaults', () => {

@@ -13,6 +13,7 @@ export default class CardDeck {
   private readonly _pile
   private readonly _played
   private readonly _discard
+  private readonly _deckShuffleCount = ref(0)
 
   private constructor(pile : Card[], played : Card[], discard : Card[]) {
     this._pile = ref(pile)
@@ -36,6 +37,10 @@ export default class CardDeck {
     return this._discard.value
   }
 
+  public get deckShuffleCount() : number {
+    return this._deckShuffleCount.value
+  }
+
   /**
    * Draws next card and puts it in the played area.
    * Shuffles the discard pile back to the pile if the pile is empty and adds two new advanced cards.
@@ -47,6 +52,7 @@ export default class CardDeck {
       this._discard.value.push(...Cards.getAll(CardType.ADVANCED))
       this._pile.value = shuffle(this._discard.value)
       this._discard.value = []
+      this._deckShuffleCount.value++
     }
     const card = this._pile.value.shift()
     if (!card) {
