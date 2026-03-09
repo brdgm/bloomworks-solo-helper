@@ -15,7 +15,10 @@
 
       <hr/>
 
-      <div class="small fw-bold">Lady Pei</div>
+      <div class="small fw-bold d-flex align-items-center gap-1 mb-1">
+        <span>{{t('player.bot')}}</span>
+        <CardStackIcon :count="cardDeck.pile.length"/>
+      </div>
       <div v-for="season in gardenSeasons" :key="season.season" class="gardenSeason" :class="{active:isActiveSeason(season.season)}">
         <div class="title small">{{t(`season.${season.season}`)}}</div>
         <div class="flowers">
@@ -51,8 +54,10 @@ import { GardenSeason, useStateStore } from '@/store/state'
 import NavigationState from '@/util/NavigationState'
 import Season from '@/services/enum/Season'
 import MarketPrices from '@/services/MarketPrices'
+import CardDeck from '@/services/CardDeck'
 import Flower from '@/services/enum/Flower'
 import FlowerIcon from '../structure/FlowerIcon.vue'
+import CardStackIcon from '../structure/CardStackIcon.vue'
 import ModalDialog from '@brdgm/brdgm-commons/src/components/structure/ModalDialog.vue'
 import NumberInput from '@brdgm/brdgm-commons/src/components/form/NumberInput.vue'
 
@@ -60,6 +65,7 @@ export default defineComponent({
   name: 'SideBar',
   components: {
     FlowerIcon,
+    CardStackIcon,
     ModalDialog,
     NumberInput
   },
@@ -92,6 +98,9 @@ export default defineComponent({
     },
     marketPrices() : MarketPrices {
       return this.navigationState.marketPrices
+    },
+    cardDeck() : CardDeck {
+      return this.navigationState.cardDeck
     },
     gardenSeasons() : readonly GardenSeason[] {
       return this.navigationState.botGarden.seasons
