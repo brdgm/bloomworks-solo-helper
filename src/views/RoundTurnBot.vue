@@ -6,6 +6,8 @@
     <template v-else>{{navigationState.botTurn}} / {{navigationState.botTurns}}</template>
   </h1>
 
+  <BotClaimMilestones :milestones="navigationState.botClaimMilestones" v-if="navigationState.botClaimMilestones.length"/>
+
   <p>{{actions}}</p>
 
   <button class="btn btn-primary btn-lg mt-4" @click="next">
@@ -29,12 +31,14 @@ import DebugInfo from '@/components/round/DebugInfo.vue'
 import { CardAction } from '@/services/Card'
 import Player from '@/services/enum/Player'
 import Action from '@/services/enum/Action'
+import BotClaimMilestones from '@/components/round/BotClaimMilestones.vue'
 
 export default defineComponent({
   name: 'RoundTurnBot',
   components: {
     FooterButtons,
     SideBar,
+    BotClaimMilestones,
     DebugInfo
   },
   setup() {

@@ -2,6 +2,8 @@
   <SideBar :navigationState="navigationState"/>
   <h1>{{t('player.player')}}: {{navigationState.playerTurn}}</h1>
 
+  <BotClaimMilestones :milestones="navigationState.botClaimMilestones" v-if="navigationState.botClaimMilestones.length"/>
+
   <p class="mt-4" v-html="t('roundTurnPlayer.selectAction')"/>
 
   <div class="actions">
@@ -51,6 +53,7 @@ import PlayerBuyFlowerModal from '@/components/round/PlayerBuyFlowerModal.vue'
 import getSoloBoardPassAction, { SoloBoardPassAction } from '@/util/getSoloBoardPassAction'
 import SoloBoardPassActionInfo from '@/components/round/SoloBoardPassActionInfo.vue'
 import Player from '@/services/enum/Player'
+import BotClaimMilestones from '@/components/round/BotClaimMilestones.vue'
 
 export default defineComponent({
   name: 'RoundTurnPlayer',
@@ -60,6 +63,7 @@ export default defineComponent({
     SoloBoardPassActionInfo,
     PlayerBuyFlowerModal,
     PlayerPassSellFlowerModal,
+    BotClaimMilestones,
     DebugInfo
   },
   setup() {
