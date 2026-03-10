@@ -86,6 +86,43 @@
     "spring": "Spring",
     "summer": "Summer"
   },
+  "rules": {
+    "action": {
+      "managedByApp": "This action is managed by the application.",
+      "billboard": {
+        "title": "Billboard"
+      },
+      "delivery": {
+        "title": "Delivery"
+      },
+      "paid": {
+        "title": "Paid"
+      },
+      "plant": {
+        "title": "Plant",
+        "plant": "Lady Pei adds the most expensive flower to her garden.",
+        "reducePrice": "The price of that flower is reduced by 1."
+      },
+      "price": {
+        "title": "Price"
+      },
+      "sold": {
+        "title": "Sold"
+      },
+      "vp5": {
+        "title": "5 VP"
+      },
+      "windowBox": {
+        "title": "Window Box"
+      },
+      "xp": {
+        "title": "XP",
+        "receiveXP": "Lady Pei receives one XP in the Flower Family in which <b>your Player Marker is the greatest distance ahead</b> of Lady Pei’s.",
+        "priority": "If you aren’t ahead of Lady Pei in any tracks, she follows this priority:",
+        "stars": "<b>Stars</b> - Whenever Lady Pei reaches a star on the Floriculture Track or her Garden, she scores points equal to her XP in that flower less your XP in that flower. If you are further along the track than she is, Lady Pei receives no points."
+      }
+    }
+  },
   "notfound": {
     "title": "Not Found"
   },

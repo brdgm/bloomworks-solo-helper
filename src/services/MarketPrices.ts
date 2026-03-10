@@ -37,6 +37,22 @@ export default class MarketPrices {
   }
 
   /**
+   * Gets the most expensive flower, and if tied, the one that comes first in the current order.
+  * @returns Flower
+   */
+  public getMostExpensiveFlower() : Flower {
+    let mostExpensiveFlower = this._prices.value[0].flower
+    let highestPrice = this._prices.value[0].price
+    for (const item of this._prices.value) {
+      if (item.price > highestPrice) {
+        mostExpensiveFlower = item.flower
+        highestPrice = item.price
+      }
+    }
+    return mostExpensiveFlower
+  }
+
+  /**
    * Set price, clamped to min/max bounds.
    */
   public setPrice(flower : Flower, newPrice : number) {

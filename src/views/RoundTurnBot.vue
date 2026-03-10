@@ -8,7 +8,10 @@
 
   <BotClaimMilestones :milestones="navigationState.botClaimMilestones" v-if="navigationState.botClaimMilestones.length"/>
 
-  <p>{{actions}}</p>
+  <div class="actions">
+    <BotAction v-for="(action, index) in actions" :key="index" :action="action"
+        :navigationState="navigationState" :currentCard="currentCard"/>
+  </div>
 
   <button class="btn btn-primary btn-lg mt-4" @click="next">
     {{t('action.next')}}
@@ -28,10 +31,11 @@ import FooterButtons from '@/components/structure/FooterButtons.vue'
 import { useStateStore } from '@/store/state'
 import SideBar from '@/components/round/SideBar.vue'
 import DebugInfo from '@/components/round/DebugInfo.vue'
-import { CardAction } from '@/services/Card'
+import Card, { CardAction } from '@/services/Card'
 import Player from '@/services/enum/Player'
 import Action from '@/services/enum/Action'
 import BotClaimMilestones from '@/components/round/BotClaimMilestones.vue'
+import BotAction from '@/components/round/BotAction.vue'
 
 export default defineComponent({
   name: 'RoundTurnBot',
@@ -39,6 +43,7 @@ export default defineComponent({
     FooterButtons,
     SideBar,
     BotClaimMilestones,
+    BotAction,
     DebugInfo
   },
   setup() {
@@ -75,6 +80,12 @@ export default defineComponent({
       else {
         return this.navigationState.botPersistence.cardDeck.currentCard?.actions || []
       }
+    },
+    currentCard() : Card|undefined {
+      if (this.navigationState.botTurn == 0) {
+        return undefined
+      }
+      return this.navigationState.botPersistence.cardDeck.currentCard
     }
   },
   methods: {
