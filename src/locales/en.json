@@ -100,8 +100,8 @@
       },
       "plant": {
         "title": "Plant",
-        "plant": "Lady Pei adds the most expensive flower to her garden.",
-        "reducePrice": "The price of that flower is reduced by 1."
+        "plant": "Lady Pei added the most expensive flower to her garden.",
+        "reducePrice": "The price of that flower was reduced by 1."
       },
       "price": {
         "title": "Price"
@@ -119,7 +119,7 @@
         "title": "XP",
         "receiveXP": "Lady Pei receives one XP in the Flower Family in which <b>your Player Marker is the greatest distance ahead</b> of Lady Pei’s.",
         "priority": "If you aren’t ahead of Lady Pei in any tracks, she follows this priority:",
-        "stars": "<b>Stars</b> - Whenever Lady Pei reaches a star on the Floriculture Track or her Garden, she scores points equal to her XP in that flower less your XP in that flower. If you are further along the track than she is, Lady Pei receives no points."
+        "stars": "<b>Stars</b> - Whenever Lady Pei reaches a star on the Floriculture Track or her Garden, she <b>scores points</b> equal to her XP in that flower less your XP in that flower. If you are further along the track than she is, Lady Pei receives no points."
       }
     }
   },
