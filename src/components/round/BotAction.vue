@@ -8,7 +8,7 @@
 import { defineComponent, PropType } from 'vue'
 import NavigationState from '@/util/NavigationState'
 import { useI18n } from 'vue-i18n'
-import Card, { CardAction } from '@/services/Card'
+import Card from '@/services/Card'
 import ActionPlant from './botAction/ActionPlant.vue'
 import ActionXp from './botAction/ActionXp.vue'
 import ActionBillboard from './botAction/ActionBillboard.vue'
@@ -18,6 +18,7 @@ import ActionPrice from './botAction/ActionPrice.vue'
 import ActionSold from './botAction/ActionSold.vue'
 import ActionVp5 from './botAction/ActionVp5.vue'
 import ActionWindowBox from './botAction/ActionWindowBox.vue'
+import { BotAction } from '@/services/BotActions'
 
 export default defineComponent({
   name: 'BotAction',
@@ -38,7 +39,7 @@ export default defineComponent({
   },
   props: {
     action: {
-      type: Object as PropType<CardAction>,
+      type: Object as PropType<BotAction>,
       required: true
     },
     navigationState: {

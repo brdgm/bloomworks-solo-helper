@@ -2,7 +2,7 @@
   <ActionBox :instruction-title="t('rules.action.plant.title')" :currentCard="currentCard" :managedByApp="true">
     <template #action>
       <div class="action">
-        <AppIcon type="action" name="plant" class="icon"/>: <FlowerIcon :flower="flowerToPlant" class="icon"/>
+        <AppIcon type="action" name="plant" class="icon"/>: <FlowerIcon v-if="action.flower" :flower="action.flower" class="icon"/>
       </div>
     </template>
     <template #instruction>
@@ -16,10 +16,10 @@
 import { defineComponent, PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import NavigationState from '@/util/NavigationState'
-import Card, { CardAction } from '@/services/Card'
+import Card from '@/services/Card'
+import { BotAction } from '@/services/BotActions'
 import ActionBox from '../ActionBox.vue'
 import AppIcon from '@/components/structure/AppIcon.vue'
-import Flower from '@/services/enum/Flower'
 import FlowerIcon from '@/components/structure/FlowerIcon.vue'
 
 export default defineComponent({
@@ -36,7 +36,7 @@ export default defineComponent({
   },
   props: {
     action: {
-      type: Object as PropType<CardAction>,
+      type: Object as PropType<BotAction>,
       required: true
     },
     navigationState: {
@@ -46,11 +46,6 @@ export default defineComponent({
     currentCard: {
       type: Object as PropType<Card>,
       required: false
-    }
-  },
-  computed: {
-    flowerToPlant() : Flower {
-      return this.navigationState.marketPrices.getMostExpensiveFlower()
     }
   }
 })

@@ -111,6 +111,42 @@ describe('services/MarketPrices', () => {
     expect(marketPrices.getMostExpensiveFlower()).to.eq(Flower.ORANGE)
   })
 
+  it('increase', () => {
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices([
+      { flower: Flower.RED, price: 5 },
+    ]))
+
+    marketPrices.increase(Flower.RED)
+    expect(marketPrices.getPrice(Flower.RED)).to.eq(6)
+  })
+
+  it('increase - capped at max', () => {
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices([
+      { flower: Flower.RED, price: MarketPrices.MAX_PRICE },
+    ]))
+
+    marketPrices.increase(Flower.RED)
+    expect(marketPrices.getPrice(Flower.RED)).to.eq(MarketPrices.MAX_PRICE)
+  })
+
+  it('decrease', () => {
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices([
+      { flower: Flower.RED, price: 5 },
+    ]))
+
+    marketPrices.decrease(Flower.RED)
+    expect(marketPrices.getPrice(Flower.RED)).to.eq(4)
+  })
+
+  it('decrease - capped at min', () => {
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices([
+      { flower: Flower.RED, price: MarketPrices.MIN_PRICE },
+    ]))
+
+    marketPrices.decrease(Flower.RED)
+    expect(marketPrices.getPrice(Flower.RED)).to.eq(MarketPrices.MIN_PRICE)
+  })
+
   it('toPersistence/fromPersistence', () => {
     const marketPrices = MarketPrices.new()
     marketPrices.setPrice(Flower.RED, marketPrices.getPrice(Flower.RED) + 1)

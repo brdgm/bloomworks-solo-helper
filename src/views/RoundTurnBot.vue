@@ -9,7 +9,7 @@
   <BotClaimMilestones :milestones="navigationState.botClaimMilestones" v-if="navigationState.botClaimMilestones.length"/>
 
   <div class="actions">
-    <BotAction v-for="(action, index) in actions" :key="index" :action="action"
+    <BotAction v-for="(action, index) in botActions.actions" :key="index" :action="action"
         :navigationState="navigationState" :currentCard="currentCard"/>
   </div>
 
@@ -31,11 +31,11 @@ import FooterButtons from '@/components/structure/FooterButtons.vue'
 import { useStateStore } from '@/store/state'
 import SideBar from '@/components/round/SideBar.vue'
 import DebugInfo from '@/components/round/DebugInfo.vue'
-import Card, { CardAction } from '@/services/Card'
+import Card from '@/services/Card'
 import Player from '@/services/enum/Player'
-import Action from '@/services/enum/Action'
 import BotClaimMilestones from '@/components/round/BotClaimMilestones.vue'
 import BotAction from '@/components/round/BotAction.vue'
+import BotActions from '@/services/BotActions'
 
 export default defineComponent({
   name: 'RoundTurnBot',
@@ -54,8 +54,9 @@ export default defineComponent({
 
     const navigationState = new NavigationState(route, state)
     const { round, turn } = navigationState
+    const botActions = new BotActions(navigationState)
 
-    return { t, router, navigationState, state, round, turn }
+    return { t, router, navigationState, state, round, turn, botActions }
   },
   computed: {
     backButtonRouteTo() : string {
@@ -64,22 +65,6 @@ export default defineComponent({
         return `/round/${this.round}/turn/${this.turn - 1}/player`
       }
       return `/round/${this.round}/turn/${this.turn - 1}/bot`
-    },
-    actions() : CardAction[] {
-      if (this.navigationState.botTurn == 0) {
-        return this.navigationState.soloBoardPassAction.action.map(action => {
-          if (action == Action.BILLBOARD) {
-            const { floor } = this.navigationState.soloBoardPassAction
-            return { action, floor }
-          }
-          else {
-            return { action }
-          }
-        })
-      }
-      else {
-        return this.navigationState.botPersistence.cardDeck.currentCard?.actions || []
-      }
     },
     currentCard() : Card|undefined {
       if (this.navigationState.botTurn == 0) {

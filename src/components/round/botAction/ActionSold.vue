@@ -15,7 +15,8 @@
 import { defineComponent, PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import NavigationState from '@/util/NavigationState'
-import Card, { CardAction } from '@/services/Card'
+import Card from '@/services/Card'
+import { BotAction } from '@/services/BotActions'
 import ActionBox from '../ActionBox.vue'
 import AppIcon from '@/components/structure/AppIcon.vue'
 
@@ -32,7 +33,7 @@ export default defineComponent({
   },
   props: {
     action: {
-      type: Object as PropType<CardAction>,
+      type: Object as PropType<BotAction>,
       required: true
     },
     navigationState: {
