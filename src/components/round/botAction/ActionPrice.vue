@@ -51,9 +51,7 @@ export default defineComponent({
     FlowerSelection,
     FlowerIcon
   },
-  emits: {
-    ready: (_ready: boolean) => true
-  },
+  emits: ['ready'],
   setup(props) {
     const { t } = useI18n()
 
@@ -112,12 +110,12 @@ export default defineComponent({
         this.navigationState.marketPrices.increase(flower)
       }
       this.done = true
-      this.$emit('ready', true)
+      this.$emit('ready')
     }
   },
   mounted() {
     if (this.managedByApp) {
-      this.$emit('ready', true)
+      this.$emit('ready')
     }
   }
 })

@@ -11,7 +11,7 @@
   <div class="actions">
     <BotAction v-for="(action, index) in botActions.actions" :key="index" :action="action"
         :navigationState="navigationState" :currentCard="currentCard"
-        @ready="(ready: boolean) => actionReady(index, ready)"/>
+        @ready="actionReady(index)"/>
   </div>
 
   <div class="row mt-3" v-if="!allActionsReady">
@@ -88,8 +88,8 @@ export default defineComponent({
     }
   },
   methods: {
-    actionReady(index: number, ready: boolean) : void {
-      this.actionsReadyState[index] = ready
+    actionReady(index: number) : void {
+      this.actionsReadyState[index] = true
     },
     next() : void {
       if (this.navigationState.botTurn > 0) {
