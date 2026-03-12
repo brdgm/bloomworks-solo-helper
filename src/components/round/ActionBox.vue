@@ -8,7 +8,7 @@
   <ModalDialog :id="modalId" :title="instructionTitle" :scrollable="true" :size-lg="modalSizeLg">
     <template #body>
       <slot name="instruction"></slot>
-      <p v-if="managedByApp" class="fst-italic" v-html="t('rules.action.managedByApp')"/>
+      <p v-if="managedByApp" class="alert alert-secondary fst-italic" v-html="t('rules.action.managedByApp')"/>
     </template>
   </ModalDialog>
 </template>

@@ -111,8 +111,8 @@
       },
       "plant": {
         "title": "Plant",
-        "plant": "Lady Pei added the most expensive flower to her garden.",
-        "reducePrice": "The price of that flower was reduced by 1."
+        "plant": "Lady Pei adds the most expensive flower to her garden.",
+        "reducePrice": "The price of that flower is reduced by 1."
       },
       "price": {
         "title": "Price",
