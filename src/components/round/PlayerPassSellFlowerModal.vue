@@ -4,23 +4,8 @@
       <p v-html="t('roundTurnPlayer.passConfirm')"></p>
       <div class="mt-3">
         <div class="fw-bold">{{t('roundTurnPlayer.sellFlower.title')}}</div>
-        <div class="d-flex flex-wrap gap-2 mt-2">
-          <button v-for="flower in allFlowers" :key="flower" type="button"
-              class="btn flower-btn btn-outline-secondary"
-              @click="addSellFlower(flower)">
-            <FlowerIcon :flower="flower"/>
-          </button>
-        </div>
-        <div v-if="sellFlowers.length > 0" class="mt-2">
-          <div>{{t('roundTurnPlayer.sellFlower.selectedFlowers')}}</div>
-          <div class="d-flex flex-wrap gap-1 align-items-center">
-            <span v-for="(flower, index) in sellFlowers" :key="index" class="sell-flower-item">
-              <FlowerIcon :flower="flower"/>
-            </span>
-            <button class="btn btn-sm btn-outline-secondary ms-2" @click="resetSellFlowers">
-              {{t('action.reset')}}
-            </button>
-          </div>
+        <div class="mt-2">
+          <FlowerSelection v-model="sellFlowers" :market-prices="marketPrices"/>
         </div>
       </div>
       <div class="mt-3">
@@ -49,7 +34,7 @@
 import { defineComponent, type PropType, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ModalDialog from '@brdgm/brdgm-commons/src/components/structure/ModalDialog.vue'
-import FlowerIcon from '@/components/structure/FlowerIcon.vue'
+import FlowerSelection from '@/components/structure/FlowerSelection.vue'
 import Flower from '@/services/enum/Flower'
 import MarketPrices from '@/services/MarketPrices'
 import getSellFlowerRevenue from '@/util/getSellFlowerRevenue'
@@ -59,7 +44,7 @@ export default defineComponent({
   name: 'PlayerPassSellFlowerModal',
   components: {
     ModalDialog,
-    FlowerIcon
+    FlowerSelection
   },
   props: {
     marketPrices: {
@@ -78,9 +63,6 @@ export default defineComponent({
     return { t, sellFlowers }
   },
   computed: {
-    allFlowers() : Flower[] {
-      return this.marketPrices.flowerOrder
-    },
     sellFlowerTotalRevenue() : number {
       const countByFlower = this.countByFlower
       let total = 0
@@ -102,12 +84,6 @@ export default defineComponent({
     }
   },
   methods: {
-    addSellFlower(flower: Flower) : void {
-      this.sellFlowers.push(flower)
-    },
-    resetSellFlowers() : void {
-      this.sellFlowers = []
-    },
     pass() : void {
       for (const [flower, count] of this.countByFlower) {
         const currentPrice = this.marketPrices.getPrice(flower)
@@ -120,12 +96,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.flower-btn {
-  padding: 0.4rem 0.6rem;
-}
-.sell-flower-item {
-  display: inline-flex;
-}
 .revenue {
   color: darkgreen;
   margin-left: 0.25rem;

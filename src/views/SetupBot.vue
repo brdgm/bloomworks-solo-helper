@@ -9,7 +9,7 @@
       <li v-html="t('setupBot.instructions.startingMoney', {startingMoney})"></li>
       <li>
         <span v-html="t('setupBot.instructions.chooseSetupCard')"></span>
-        <PlayerFlowerSelection v-model="playerFlowers"/>
+        <DistinctFlowerSelection v-model="playerFlowers"/>
       </li>
       <li v-html="t('setupBot.instructions.marketPricesManaged')"></li>
     </ol>
@@ -38,7 +38,7 @@ import BotMode from '@/services/enum/BotMode'
 import MarketPrices from '@/services/MarketPrices'
 import Flower from '@/services/enum/Flower'
 import Season from '@/services/enum/Season'
-import PlayerFlowerSelection from '@/components/setup/PlayerFlowerSelection.vue'
+import DistinctFlowerSelection from '@/components/setup/DistinctFlowerSelection.vue'
 import BotGarden from '@/services/BotGarden'
 import CardDeck from '@/services/CardDeck'
 import BotPersistenceWrapper from '@/services/BotPersistenceWrapper'
@@ -48,7 +48,7 @@ export default defineComponent({
   name: 'SetupBot',
   components: {
     FooterButtons,
-    PlayerFlowerSelection
+    DistinctFlowerSelection
   },
   setup() {
     const { t } = useI18n()

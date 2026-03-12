@@ -23,7 +23,7 @@ import { useStateStore } from '@/store/state'
 import MarketPrices from '@/services/MarketPrices'
 
 export default defineComponent({
-  name: 'PlayerFlowerSelection',
+  name: 'DistinctFlowerSelection',
   components: {
     FlowerIcon
   },
