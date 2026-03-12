@@ -50,7 +50,7 @@
   "roundTurnPlayer": {
     "selectAction": "Select your action:",
     "makeDelivery": "Make Delivery",
-    "deliveredToFloor": "Delivered to Floor ${floor}",
+    "deliveredToFloor": "Delivered to Floor {floor}",
     "otherAction": "Other Action",
     "passConfirm": "Do you really want to pass?",
     "sellFlower": {
