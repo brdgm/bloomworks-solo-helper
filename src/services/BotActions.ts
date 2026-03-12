@@ -6,6 +6,7 @@ import BotAction from '@/components/round/BotAction.vue'
 import Action from './enum/Action'
 import Season from './enum/Season'
 import NavigationState from '@/util/NavigationState'
+import DefinedWindows from './DefinedWindows'
 
 /**
  * Collects the bot's actions and manages the automatic actions.
@@ -14,12 +15,14 @@ export default class BotActions {
 
   private readonly _marketPrices : MarketPrices
   private readonly _botGarden : BotGarden
+  private readonly _definedWindows : DefinedWindows
   private readonly _season : Season
   private readonly _actions : BotAction[]
 
   public constructor(navigationState: NavigationState) {
     this._marketPrices = navigationState.marketPrices
     this._botGarden = navigationState.botPersistence.garden
+    this._definedWindows = navigationState.botPersistence.definedWindows
     this._season = navigationState.season
 
     const actions = this.getCardActions(navigationState)
@@ -81,6 +84,18 @@ export default class BotActions {
           if (mostExpensiveFlower) {
             this._marketPrices.decrease(mostExpensiveFlower)
             botAction.vp = this._marketPrices.getPrice(mostExpensiveFlower)
+          }
+          break
+
+        case Action.PRICE:
+          // if windows is already defined: increase price of flowers in that window by 1, otherwise wait for user input
+          if (action.windowSelection) {
+            const flowers = this._definedWindows.getDefinedWindow(action.windowSelection)
+            if (flowers) {
+              for (const flower of flowers) {
+                this._marketPrices.increase(flower)
+              }
+            }
           }
           break
       }

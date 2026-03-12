@@ -1,7 +1,9 @@
 import BotActions from '@/services/BotActions'
+import DefinedWindows from '@/services/DefinedWindows'
 import Action from '@/services/enum/Action'
 import Flower from '@/services/enum/Flower'
 import Season from '@/services/enum/Season'
+import WindowSelection from '@/services/enum/WindowSelection'
 import { expect } from 'chai'
 import mockBotGarden from '../helper/mockBotGarden'
 import mockCardDeck from '../helper/mockCardDeck'
@@ -130,6 +132,48 @@ describe('services/BotActions', () => {
       expect(navigationState.marketPrices.getPrice(Flower.RED)).to.eq(7)
       // VP equals the price after decrease
       expect(action.vp).to.eq(7)
+    })
+  })
+
+  describe('PRICE action', () => {
+    it('increases price for each flower in defined window', () => {
+      const cardDeck = mockCardDeck({ pile: ['price-1'] })
+      cardDeck.draw()
+      const definedWindows = DefinedWindows.new()
+      definedWindows.setDefinedWindow(WindowSelection.WINDOW_3R, [Flower.RED, Flower.BLUE])
+      const navigationState = mockNavigationState({
+        marketPrices: [
+          { flower: Flower.RED, price: 4 },
+          { flower: Flower.BLUE, price: 3 },
+        ],
+        definedWindows,
+        cardDeck
+      })
+
+      const botActions = new BotActions(navigationState)
+
+      expect(botActions.actions.length).to.eq(1)
+      expect(botActions.actions[0].action).to.eq(Action.PRICE)
+      expect(navigationState.marketPrices.getPrice(Flower.RED)).to.eq(5)
+      expect(navigationState.marketPrices.getPrice(Flower.BLUE)).to.eq(4)
+    })
+
+    it('window not yet defined - no price changes', () => {
+      const cardDeck = mockCardDeck({ pile: ['price-1'] })
+      cardDeck.draw()
+      const definedWindows = DefinedWindows.new()
+      const navigationState = mockNavigationState({
+        marketPrices: [
+          { flower: Flower.RED, price: 4 },
+        ],
+        definedWindows,
+        cardDeck
+      })
+
+      const botActions = new BotActions(navigationState)
+
+      expect(botActions.actions[0].action).to.eq(Action.PRICE)
+      expect(navigationState.marketPrices.getPrice(Flower.RED)).to.eq(4)
     })
   })
 
