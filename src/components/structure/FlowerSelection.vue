@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="d-flex flex-wrap gap-2">
+    <div class="d-flex flex-wrap gap-2" v-if="!maxReached">
       <button v-for="flower in allFlowers" :key="flower" type="button"
           class="btn flower-btn btn-outline-secondary"
           :disabled="maxReached"

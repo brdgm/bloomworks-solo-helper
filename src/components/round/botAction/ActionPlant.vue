@@ -31,7 +31,7 @@ export default defineComponent({
     FlowerIcon
   },
   emits: {
-    ready: () => true
+    ready: (_ready: boolean) => true
   },
   setup() {
     const { t } = useI18n()
@@ -52,7 +52,7 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.$emit('ready')
+    this.$emit('ready', true)
   }
 })
 </script>

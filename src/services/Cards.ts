@@ -53,7 +53,7 @@ const cards : Card[] = [
     actions: [{
       action:Action.PRICE,
       windowSelection: WindowSelection.WINDOW_3L,
-      priceSelection: PriceSelection.LEAST_EXPENSIVE
+      priceSelection: PriceSelection.CHEAPEST
     }]
   },
   {
@@ -71,7 +71,7 @@ const cards : Card[] = [
     actions: [{
       action:Action.PRICE,
       windowSelection: WindowSelection.WINDOW_2L,
-      priceSelection: PriceSelection.LEAST_EXPENSIVE
+      priceSelection: PriceSelection.CHEAPEST
     }]
   },
   {

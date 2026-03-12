@@ -62,7 +62,8 @@
     }
   },
   "roundTurnBot": {
-    "bonusActions": "Bonus Actions"
+    "bonusActions": "Bonus Actions",
+    "actionsNotReady": "Please complete the actions."
   },
   "botClaimMilestones": {
     "botClaim": "Lady Pei claims a milestone:",
@@ -104,7 +105,17 @@
         "reducePrice": "The price of that flower was reduced by 1."
       },
       "price": {
-        "title": "Price"
+        "title": "Price",
+        "selectFlowers": "Select the flowers defined for this window:",
+        "or": "or",
+        "windowDefined": "Done",
+        "windowUndefined": "Window is undefined",
+        "priceIncreased": "Price increased for flower: | Price increased for flowers:",
+        "definedWindowInstruction": "If the given window is defined, the price for <i>each flower</i> in that box is increased.",
+        "undefinedWindowInstruction": {
+          "cheapest": "If the window is not defined, the price of the <i>cheapest</i> flower is increased.",
+          "most-expensive": "If the window is not defined, the price os the <i>most expensive</i> flower is increased."
+        }
       },
       "sold": {
         "title": "Sold"

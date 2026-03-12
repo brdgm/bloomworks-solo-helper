@@ -1,7 +1,7 @@
 <template>
   <div class="actionItem">
     <component :is="componentName" :action="action" :navigationState="navigationState" :currentCard="currentCard"
-        @ready="$emit('ready')"/>
+        @ready="(ready: boolean) => $emit('ready', ready)"/>
   </div>
 </template>
 
@@ -35,7 +35,7 @@ export default defineComponent({
     ActionXp
   },
   emits: {
-    ready: () => true
+    ready: (_ready: boolean) => true
   },
   setup() {
     const { t } = useI18n()

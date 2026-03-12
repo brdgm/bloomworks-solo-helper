@@ -53,6 +53,22 @@ export default class MarketPrices {
   }
 
   /**
+   * Gets the cheapest flower, and if tied, the one that comes first in the current order.
+   * @returns Flower
+   */
+  public getCheapestFlower() : Flower {
+    let cheapestFlower = this._prices.value[0].flower
+    let lowestPrice = this._prices.value[0].price
+    for (const item of this._prices.value) {
+      if (item.price < lowestPrice) {
+        cheapestFlower = item.flower
+        lowestPrice = item.price
+      }
+    }
+    return cheapestFlower
+  }
+
+  /**
    * Set price, clamped to min/max bounds.
    */
   public setPrice(flower : Flower, newPrice : number) : void {

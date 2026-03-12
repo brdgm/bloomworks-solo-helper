@@ -11,10 +11,14 @@
   <div class="actions">
     <BotAction v-for="(action, index) in botActions.actions" :key="index" :action="action"
         :navigationState="navigationState" :currentCard="currentCard"
-        @ready="actionReady(index)"/>
+        @ready="(ready: boolean) => actionReady(index, ready)"/>
   </div>
 
-  <button class="btn btn-primary btn-lg mt-4" @click="next" v-if="allActionsReady">
+  <div class="row mt-3" v-if="!allActionsReady">
+    <div class="col alert alert-warning" v-html="t('roundTurnBot.actionsNotReady')"/>
+  </div>
+
+  <button class="btn btn-primary btn-lg mt-4" @click="next" :disabled="!allActionsReady">
     {{t('action.next')}}
   </button>
 
@@ -84,8 +88,8 @@ export default defineComponent({
     }
   },
   methods: {
-    actionReady(index: number) : void {
-      this.actionsReadyState[index] = true
+    actionReady(index: number, ready: boolean) : void {
+      this.actionsReadyState[index] = ready
     },
     next() : void {
       if (this.navigationState.botTurn > 0) {

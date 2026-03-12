@@ -2,7 +2,7 @@
  * Price selection
  */
 enum PriceSelection {
-  LEAST_EXPENSIVE = 'least-expensive',
+  CHEAPEST = 'cheapest',
   MOST_EXPENSIVE = 'most-expensive'
 }
 export default PriceSelection

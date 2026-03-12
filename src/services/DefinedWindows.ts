@@ -32,6 +32,10 @@ export default class DefinedWindows {
     }
   }
 
+  public removeDefinedWindow(windowSelection: WindowSelection) : void {
+    this._definedWindows.value = this._definedWindows.value.filter(dw => dw.windowSelection !== windowSelection)
+  }
+
   /**
    * Gets persistence view.
    */

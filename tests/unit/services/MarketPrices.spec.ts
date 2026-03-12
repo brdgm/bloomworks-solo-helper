@@ -111,6 +111,28 @@ describe('services/MarketPrices', () => {
     expect(marketPrices.getMostExpensiveFlower()).to.eq(Flower.ORANGE)
   })
 
+  it('getCheapestFlower', () => {
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices([
+      { flower: Flower.RED, price: 5 },
+      { flower: Flower.PURPLE, price: 2 },
+      { flower: Flower.YELLOW, price: 7 },
+    ]))
+
+    expect(marketPrices.getCheapestFlower()).to.eq(Flower.PURPLE)
+  })
+
+  it('getCheapestFlower - tied, first in order wins', () => {
+    const marketPrices = MarketPrices.fromPersistence([
+      { flower: Flower.ORANGE, price: 6 },
+      { flower: Flower.BLUE, price: 3 },
+      { flower: Flower.RED, price: 3 },
+      { flower: Flower.YELLOW, price: 5 },
+      { flower: Flower.PURPLE, price: 3 },
+    ])
+
+    expect(marketPrices.getCheapestFlower()).to.eq(Flower.BLUE)
+  })
+
   it('increase', () => {
     const marketPrices = MarketPrices.fromPersistence(mockMarketPrices([
       { flower: Flower.RED, price: 5 },

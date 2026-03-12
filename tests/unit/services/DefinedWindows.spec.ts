@@ -62,4 +62,37 @@ describe('services/DefinedWindows', () => {
     persistence[0].flowers.push(Flower.BLUE)
     expect(dw.getDefinedWindow(WindowSelection.WINDOW_2L)).to.deep.eq([Flower.YELLOW])
   })
+
+  it('removeDefinedWindow', () => {
+    const dw = DefinedWindows.new()
+    dw.setDefinedWindow(WindowSelection.WINDOW_1L, [Flower.RED, Flower.BLUE])
+    dw.setDefinedWindow(WindowSelection.WINDOW_2L, [Flower.YELLOW])
+    dw.setDefinedWindow(WindowSelection.WINDOW_3R, [Flower.PURPLE, Flower.ORANGE])
+
+    dw.removeDefinedWindow(WindowSelection.WINDOW_2L)
+
+    expect(dw.definedWindows.length).to.eq(2)
+    expect(dw.getDefinedWindow(WindowSelection.WINDOW_1L)).to.deep.eq([Flower.RED, Flower.BLUE])
+    expect(dw.getDefinedWindow(WindowSelection.WINDOW_2L)).to.be.undefined
+    expect(dw.getDefinedWindow(WindowSelection.WINDOW_3R)).to.deep.eq([Flower.PURPLE, Flower.ORANGE])
+  })
+
+  it('removeDefinedWindow-nonExisting', () => {
+    const dw = DefinedWindows.new()
+    dw.setDefinedWindow(WindowSelection.WINDOW_1L, [Flower.RED])
+
+    dw.removeDefinedWindow(WindowSelection.WINDOW_2R)
+
+    expect(dw.definedWindows.length).to.eq(1)
+    expect(dw.getDefinedWindow(WindowSelection.WINDOW_1L)).to.deep.eq([Flower.RED])
+  })
+
+  it('removeDefinedWindow-onlyEntry', () => {
+    const dw = DefinedWindows.new()
+    dw.setDefinedWindow(WindowSelection.WINDOW_1R, [Flower.YELLOW, Flower.PURPLE])
+
+    dw.removeDefinedWindow(WindowSelection.WINDOW_1R)
+
+    expect(dw.definedWindows.length).to.eq(0)
+  })
 })
