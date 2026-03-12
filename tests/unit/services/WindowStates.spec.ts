@@ -96,4 +96,30 @@ describe('services/WindowStates', () => {
 
     expect(dw.windowStates.length).to.eq(0)
   })
+
+  it('addDelivery', () => {
+    const dw = WindowStates.new()
+    dw.setWindowState(WindowSelection.WINDOW_2L, [Flower.RED, Flower.BLUE], [Player.BOT])
+
+    dw.addDelivery(WindowSelection.WINDOW_2L, Player.PLAYER)
+
+    expect(dw.getWindowState(WindowSelection.WINDOW_2L)?.deliveries).to.deep.eq([Player.BOT, Player.PLAYER])
+  })
+
+  it('addDelivery-multiple', () => {
+    const dw = WindowStates.new()
+    dw.setWindowState(WindowSelection.WINDOW_3R, [Flower.PURPLE, Flower.ORANGE, Flower.YELLOW], [])
+
+    dw.addDelivery(WindowSelection.WINDOW_3R, Player.PLAYER)
+    dw.addDelivery(WindowSelection.WINDOW_3R, Player.BOT)
+    dw.addDelivery(WindowSelection.WINDOW_3R, Player.PLAYER)
+
+    expect(dw.getWindowState(WindowSelection.WINDOW_3R)?.deliveries).to.deep.eq([Player.PLAYER, Player.BOT, Player.PLAYER])
+  })
+
+  it('addDelivery-nonExisting', () => {
+    const dw = WindowStates.new()
+
+    expect(() => dw.addDelivery(WindowSelection.WINDOW_1L, Player.PLAYER)).to.throw('Window state for 1L not found.')
+  })
 })

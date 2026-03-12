@@ -80,6 +80,14 @@
     "bonusActions": "Bonus Actions",
     "actionsNotReady": "Please complete the actions."
   },
+  "playerMakeDelivery": {
+    "floor": "Floor {floor}",
+    "windowLeft": "Left",
+    "windowRight": "Right",
+    "deliverHere": "Deliver here",
+    "selectFlowers": "Select {count} flower(s) for this window:",
+    "confirm": "Confirm Delivery"
+  },
   "botClaimMilestones": {
     "botClaim": "Lady Pei claims a milestone:",
     "fifthFloor": "Fifth Floor"

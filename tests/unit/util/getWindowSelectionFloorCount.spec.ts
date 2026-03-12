@@ -26,4 +26,16 @@ describe('util/getWindowSelectionFloorCount', () => {
   it('WINDOW_3R', () => {
     expect(getWindowSelectionFloorCount(WindowSelection.WINDOW_3R)).to.eq(3)
   })
+
+  it('WINDOW_4L', () => {
+    expect(getWindowSelectionFloorCount(WindowSelection.WINDOW_4L)).to.eq(4)
+  })
+
+  it('WINDOW_4R', () => {
+    expect(getWindowSelectionFloorCount(WindowSelection.WINDOW_4R)).to.eq(4)
+  })
+
+  it('WINDOW_5', () => {
+    expect(getWindowSelectionFloorCount(WindowSelection.WINDOW_5)).to.eq(5)
+  })
 })

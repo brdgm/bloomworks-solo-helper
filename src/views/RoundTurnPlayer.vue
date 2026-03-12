@@ -4,32 +4,34 @@
 
   <BotClaimMilestones :milestones="navigationState.botClaimMilestones" v-if="navigationState.botClaimMilestones.length"/>
 
-  <p class="mt-4" v-html="t('roundTurnPlayer.selectAction')"/>
+  <template v-if="!showDeliveryActions">
+    <p class="mt-4" v-html="t('roundTurnPlayer.selectAction')"/>
 
-  <div class="actions">
-    <button class="btn btn-primary btn-lg" v-if="!showDeliveryActions" @click="showDeliveryActions = true">
-      {{t('roundTurnPlayer.makeDelivery')}}
-    </button>
-    <div class="deliveryActions" v-if="showDeliveryActions">
-      <button class="btn btn-primary btn-lg" v-for="floor of floors" :key="floor" @click="deliverToFloor(floor)">
-        {{t('roundTurnPlayer.deliveredToFloor', {floor})}}
+    <div class="actions">
+      <button class="btn btn-primary btn-lg" @click="showDeliveryActions = true">
+        {{t('roundTurnPlayer.makeDelivery')}}
       </button>
-    </div>
-    <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#buyFlowerModal">
-      {{t('roundTurnPlayer.buyFlower.title')}}
-    </button>
-    <button class="btn btn-primary btn-lg" @click="next">
-      {{t('roundTurnPlayer.otherAction')}}
-    </button>
-    <div>
-      <button class="btn btn-outline-danger btn-lg passButton" data-bs-toggle="modal" data-bs-target="#passModal">
-        {{t('action.pass')}}<SoloBoardPassActionInfo :soloBoardPassAction="soloBoardPassAction"/>
+      <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#buyFlowerModal">
+        {{t('roundTurnPlayer.buyFlower.title')}}
       </button>
-      <div class="small mt-1 fst-italic passNextTurnInfo">
-        <span>{{t('roundTurnPlayer.passInfo.nextTurn')}}</span><SoloBoardPassActionInfo :soloBoardPassAction="soloBoardPassActionNextTurn" :small="true"/>
+      <button class="btn btn-primary btn-lg" @click="next">
+        {{t('roundTurnPlayer.otherAction')}}
+      </button>
+      <div>
+        <button class="btn btn-outline-danger btn-lg passButton" data-bs-toggle="modal" data-bs-target="#passModal">
+          {{t('action.pass')}}<SoloBoardPassActionInfo :soloBoardPassAction="soloBoardPassAction"/>
+        </button>
+        <div class="small mt-1 fst-italic passNextTurnInfo">
+          <span>{{t('roundTurnPlayer.passInfo.nextTurn')}}</span><SoloBoardPassActionInfo :soloBoardPassAction="soloBoardPassActionNextTurn" :small="true"/>
+        </div>
       </div>
     </div>
-  </div>
+  </template>
+
+  <PlayerMakeDelivery v-if="showDeliveryActions"
+      :windowStates="navigationState.botPersistence.windowStates"
+      :marketPrices="navigationState.marketPrices"
+      @deliver="deliverToFloor"/>
 
   <PlayerBuyFlowerModal :marketPrices="navigationState.marketPrices" @next="next"/>
   <PlayerPassSellFlowerModal :marketPrices="navigationState.marketPrices" :soloBoardPassAction="soloBoardPassAction" @pass="pass"/>
@@ -54,6 +56,7 @@ import getSoloBoardPassAction, { SoloBoardPassAction } from '@/util/getSoloBoard
 import SoloBoardPassActionInfo from '@/components/round/SoloBoardPassActionInfo.vue'
 import Player from '@/services/enum/Player'
 import BotClaimMilestones from '@/components/round/BotClaimMilestones.vue'
+import PlayerMakeDelivery from '@/components/round/PlayerMakeDelivery.vue'
 
 export default defineComponent({
   name: 'RoundTurnPlayer',
@@ -64,6 +67,7 @@ export default defineComponent({
     PlayerBuyFlowerModal,
     PlayerPassSellFlowerModal,
     BotClaimMilestones,
+    PlayerMakeDelivery,
     DebugInfo
   },
   setup() {
@@ -86,9 +90,6 @@ export default defineComponent({
         return `/round/${this.round}/turn/${this.turn - 1}/player`
       }
       return ''
-    },
-    floors() : number[] {
-      return [5,4,3,2,1]
     },
     soloBoardPassAction() : SoloBoardPassAction {
       return this.navigationState.soloBoardPassAction
@@ -139,11 +140,6 @@ export default defineComponent({
   flex-direction: column;
   gap: 1rem;
   max-width: 18rem;
-}
-.deliveryActions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
 }
 .passButton {
   display: flex;

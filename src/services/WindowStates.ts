@@ -34,6 +34,14 @@ export default class WindowStates {
     }
   }
 
+  public addDelivery(windowSelection: WindowSelection, player: Player) : void {
+    const existing = this._windowStates.value.find(dw => dw.windowSelection === windowSelection)
+    if (!existing) {
+      throw new Error(`Window state for ${windowSelection} not found.`)
+    }
+    existing.deliveries.push(player)
+  }
+
   public removeWindowState(windowSelection: WindowSelection) : void {
     this._windowStates.value = this._windowStates.value.filter(dw => dw.windowSelection !== windowSelection)
   }

@@ -14,5 +14,10 @@ export default function getWindowSelectionFloorCount(windowSelection: WindowSele
     case WindowSelection.WINDOW_3L:
     case WindowSelection.WINDOW_3R:
       return 3
+    case WindowSelection.WINDOW_4L:
+    case WindowSelection.WINDOW_4R:
+      return 4
+    case WindowSelection.WINDOW_5:
+      return 5
   }
 }
