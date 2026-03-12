@@ -35,6 +35,16 @@
       "description": "Select the 3 or 4 <b>flower colors</b> you planted in your garden.",
       "flowerPriorityNote": "The order of flowers reflects Lady Pei's flower priority.",
       "validationHint": "Please select the flower colors you planted in your garden."
+    },
+    "soloModeRules": {
+      "title": "Solo Mode Rules",
+      "turnStructure": "The turn structure in a solo game is different: You take all of your actions of a Season at once, and then Lady Pei executes her actions. The more actions you are taking, the more actions Lady Pei will execute.",
+      "excessActions": "If you take more than 5 actions in a season, Lady Pei will \"discard\" three cards from her internal solo deck for each of your action beyond 5. This will let her claim Milestones sooner.",
+      "milestones": "When Lady Pei claims a milestone (as displayed by the application, this can even happen during your own turns), put one of her marker to the highest available point value. She doesn't need to fulfill the conditions.",
+      "noBonuses": "In general, Lady Pei does not receive the bonuses displayed on the window tiles when delivering, and does not interact with neighbors.",
+      "actionBoxTypes": "When Lady Pei executes her actions, some are displayed in a grey box, and some in a blue box. The actions for grey boxes are executed automatically by the application and shown only for information. For the blue boxes, you have to execute the action for her and follow the instructions.",
+      "autoActions": "Some actions start as blue boxes, but are automatically executed as grey actions later when the application learns the board state.",
+      "clickForDetails": "You can click on each action box to see rules details."
     }
   },
   "roundTurnPlayer": {

@@ -16,6 +16,27 @@
     <p v-html="t('setupBot.instructions.botComponentsNotRequired')"/>
   </div>
 
+  <div class="row">
+    
+  </div>
+
+  <div class="row">
+    <div class="col">
+       <div class="alert alert-info">
+          <h5>{{t('setupBot.soloModeRules.title')}}</h5>
+          <ul>
+            <li v-html="t('setupBot.soloModeRules.turnStructure')"/>
+            <li v-html="t('setupBot.soloModeRules.excessActions')"/>
+            <li v-html="t('setupBot.soloModeRules.milestones')"/>
+            <li v-html="t('setupBot.soloModeRules.noBonuses')"/>
+            <li v-html="t('setupBot.soloModeRules.actionBoxTypes')"/>
+            <li v-html="t('setupBot.soloModeRules.autoActions')"/>
+            <li v-html="t('setupBot.soloModeRules.clickForDetails')"/>
+          </ul>
+       </div>
+    </div>
+  </div>
+
   <div class="row" v-if="!isPlayerFlowerSelectionValid">
     <div class="col">
        <p v-if="!isPlayerFlowerSelectionValid" class="alert alert-warning" v-html="t('setupBot.playerFlowerSelection.validationHint')"></p>
