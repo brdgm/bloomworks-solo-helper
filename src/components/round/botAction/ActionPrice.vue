@@ -27,6 +27,9 @@ export default defineComponent({
     ActionBox,
     AppIcon
   },
+  emits: {
+    ready: () => true
+  },
   setup() {
     const { t } = useI18n()
     return { t }
@@ -49,6 +52,9 @@ export default defineComponent({
     iconName(): string {
       return `price-${this.action.windowSelection?.toLocaleLowerCase()}`
     }
+  },
+  mounted() {
+    this.$emit('ready')
   }
 })
 </script>

@@ -10,10 +10,11 @@
 
   <div class="actions">
     <BotAction v-for="(action, index) in botActions.actions" :key="index" :action="action"
-        :navigationState="navigationState" :currentCard="currentCard"/>
+        :navigationState="navigationState" :currentCard="currentCard"
+        @ready="actionReady(index)"/>
   </div>
 
-  <button class="btn btn-primary btn-lg mt-4" @click="next">
+  <button class="btn btn-primary btn-lg mt-4" @click="next" v-if="allActionsReady">
     {{t('action.next')}}
   </button>
 
@@ -58,7 +59,16 @@ export default defineComponent({
 
     return { t, router, navigationState, state, round, turn, botActions }
   },
+  data() {
+    return {
+      actionsReadyState: [] as boolean[]
+    }
+  },
   computed: {
+    allActionsReady() : boolean {
+      return this.botActions.actions.length > 0
+          && this.actionsReadyState.filter(r => r).length >= this.botActions.actions.length
+    },
     backButtonRouteTo() : string {
       if (this.navigationState.botTurn == 0 
           || (this.navigationState.botTurn == 1 && this.navigationState.soloBoardPassAction.action.length == 0)) {
@@ -74,6 +84,9 @@ export default defineComponent({
     }
   },
   methods: {
+    actionReady(index: number) : void {
+      this.actionsReadyState[index] = true
+    },
     next() : void {
       if (this.navigationState.botTurn > 0) {
         this.navigationState.botPersistence.cardDeck.checkCurrentCardRemove()

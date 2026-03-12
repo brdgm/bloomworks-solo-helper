@@ -34,6 +34,9 @@ export default defineComponent({
     AppIcon,
     FlowerPriority
   },
+  emits: {
+    ready: () => true
+  },
   setup() {
     const { t } = useI18n()
     return { t }
@@ -51,6 +54,9 @@ export default defineComponent({
       type: Object as PropType<Card>,
       required: false
     }
+  },
+  mounted() {
+    this.$emit('ready')
   }
 })
 </script>
