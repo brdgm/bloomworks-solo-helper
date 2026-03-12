@@ -1,6 +1,7 @@
 <template>
   <h1>{{t('setup.title')}}</h1>
 
+  <PlayerColorSetup/>
   <MilestoneSeasonOrder/>
   <BotModeSelection/>
 
@@ -17,6 +18,7 @@ import { useI18n } from 'vue-i18n'
 import FooterButtons from '@/components/structure/FooterButtons.vue'
 import BotModeSelection from '@/components/setup/BotModeSelection.vue'
 import MilestoneSeasonOrder from '@/components/setup/MilestoneSeasonOrder.vue'
+import PlayerColorSetup from '@/components/setup/PlayerColorSetup.vue'
 import { useStateStore } from '@/store/state'
 import MarketPrices from '@/services/MarketPrices'
 
@@ -25,6 +27,7 @@ export default defineComponent({
   components: {
     BotModeSelection,
     MilestoneSeasonOrder,
+    PlayerColorSetup,
     FooterButtons
   },
   setup() {

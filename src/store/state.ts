@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { name } from '@/../package.json'
 import BotMode from '@/services/enum/BotMode'
 import Player from '@/services/enum/Player'
+import PlayerColor from '@/services/enum/PlayerColor'
 import Flower from '@/services/enum/Flower'
 import Season from '@/services/enum/Season'
 import Milestone from '@/services/enum/Milestone'
@@ -13,7 +14,9 @@ export const useStateStore = defineStore(`${name}.state`, {
       language: 'en',
       baseFontSize: 1,
       setup: {
-        botMode: BotMode.BASE
+        botMode: BotMode.BASE,
+        playerColor: PlayerColor.WHITE,
+        botColor: PlayerColor.DARK_BLUE
       },
       rounds: []
     } as State
@@ -50,7 +53,9 @@ export interface State {
   gameStatsSend?: boolean
 }
 export interface Setup {
-  botMode: BotMode,
+  botMode: BotMode
+  playerColor: PlayerColor
+  botColor: PlayerColor
   milestoneSeasonOrder?: Season[]
   initialMarketPrices?: FlowerPrice[]
   initialBotPersistence?: BotPersistence

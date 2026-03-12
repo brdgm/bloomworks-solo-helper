@@ -18,6 +18,11 @@
       "base": "Base Mode (without Player Power)",
       "advanced": "Advanced Mode (with Player Power)",
       "advancedNote": "Choose any Player Power you wish to play. See if you can beat Lady Pei with every character!"
+    },
+    "playerColors": {
+      "title": "Player Colors",
+      "playerColor": "Your Color",
+      "botColor": "Lady Pei's Color"
     }
   },
   "setupBot": {
