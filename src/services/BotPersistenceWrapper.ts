@@ -5,7 +5,7 @@ import Flower from './enum/Flower'
 import CardDeck from './CardDeck'
 import BotGarden from './BotGarden'
 import Milestone from './enum/Milestone'
-import DefinedWindows from './DefinedWindows'
+import WindowStates from './WindowStates'
 
 /**
  * Bot persistence wrapper.
@@ -15,13 +15,13 @@ export default class BotPersistenceWrapper {
   private readonly _cardDeck : CardDeck
   private readonly _garden : BotGarden
   private readonly _claimedMilestones
-  private readonly _definedWindows : DefinedWindows
+  private readonly _windowStates : WindowStates
 
-  public constructor(cardDeck : CardDeck, garden : BotGarden, claimedMilestones : Milestone[], definedWindows : DefinedWindows) {
+  public constructor(cardDeck : CardDeck, garden : BotGarden, claimedMilestones : Milestone[], windowStates : WindowStates) {
     this._cardDeck = cardDeck
     this._garden = garden
     this._claimedMilestones = ref(claimedMilestones)
-    this._definedWindows = definedWindows
+    this._windowStates = windowStates
   }
 
   public get cardDeck() : CardDeck {
@@ -40,8 +40,8 @@ export default class BotPersistenceWrapper {
     this._claimedMilestones.value = claimedMilestones
   }
 
-  public get definedWindows() : DefinedWindows {
-    return this._definedWindows
+  public get windowStates() : WindowStates {
+    return this._windowStates
   }
 
   /**
@@ -52,7 +52,7 @@ export default class BotPersistenceWrapper {
       cardDeck: this._cardDeck.toPersistence(),
       garden: this._garden.toPersistence(),
       claimedMilestones: cloneDeep(this._claimedMilestones.value),
-      definedWindows: this._definedWindows.toPersistence()
+      windowStates: this._windowStates.toPersistence()
     }
   }
 
@@ -64,7 +64,7 @@ export default class BotPersistenceWrapper {
       CardDeck.fromPersistence(persistence.cardDeck),
       BotGarden.fromPersistence(persistence.garden, flowerOrder),
       cloneDeep(persistence.claimedMilestones),
-      DefinedWindows.fromPersistence(persistence.definedWindows)
+      WindowStates.fromPersistence(persistence.windowStates ?? [])
     )
   }
 

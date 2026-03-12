@@ -83,7 +83,7 @@ export interface BotPersistence {
   garden: GardenSeason[]
   cardDeck: CardDeckPersistence
   claimedMilestones: Milestone[]
-  definedWindows: DefinedWindow[]
+  windowStates: WindowState[]
 }
 
 export interface GardenSeason {
@@ -98,7 +98,8 @@ export interface CardDeckPersistence {
   discard: string[]
 }
 
-export interface DefinedWindow {
+export interface WindowState {
   windowSelection: WindowSelection
   flowers: Flower[]
+  deliveries: Player[]
 }

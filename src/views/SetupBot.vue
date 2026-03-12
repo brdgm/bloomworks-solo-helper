@@ -63,7 +63,7 @@ import DistinctFlowerSelection from '@/components/setup/DistinctFlowerSelection.
 import BotGarden from '@/services/BotGarden'
 import CardDeck from '@/services/CardDeck'
 import BotPersistenceWrapper from '@/services/BotPersistenceWrapper'
-import DefinedWindows from '@/services/DefinedWindows'
+import WindowStates from '@/services/WindowStates'
 
 export default defineComponent({
   name: 'SetupBot',
@@ -102,7 +102,7 @@ export default defineComponent({
         CardDeck.new(),
         BotGarden.new(this.playerFlowers, this.flowerOrder),
         [],
-        DefinedWindows.new()
+        WindowStates.new()
       ).toPersistence()
       this.state.storeRound({round:1, year:1, season:Season.AUTUMN, turns:[]})
       this.$router.push('/round/1/turn/1/player')

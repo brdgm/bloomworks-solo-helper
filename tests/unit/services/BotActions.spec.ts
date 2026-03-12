@@ -1,5 +1,5 @@
 import BotActions from '@/services/BotActions'
-import DefinedWindows from '@/services/DefinedWindows'
+import WindowStates from '@/services/WindowStates'
 import Action from '@/services/enum/Action'
 import Flower from '@/services/enum/Flower'
 import Season from '@/services/enum/Season'
@@ -139,14 +139,14 @@ describe('services/BotActions', () => {
     it('increases price for each flower in defined window', () => {
       const cardDeck = mockCardDeck({ pile: ['price-1'] })
       cardDeck.draw()
-      const definedWindows = DefinedWindows.new()
-      definedWindows.setDefinedWindow(WindowSelection.WINDOW_3R, [Flower.RED, Flower.BLUE])
+      const windowStates = WindowStates.new()
+      windowStates.setWindowState(WindowSelection.WINDOW_3R, [Flower.RED, Flower.BLUE], [])
       const navigationState = mockNavigationState({
         marketPrices: [
           { flower: Flower.RED, price: 4 },
           { flower: Flower.BLUE, price: 3 },
         ],
-        definedWindows,
+        windowStates,
         cardDeck
       })
 
@@ -161,12 +161,12 @@ describe('services/BotActions', () => {
     it('window not yet defined - no price changes', () => {
       const cardDeck = mockCardDeck({ pile: ['price-1'] })
       cardDeck.draw()
-      const definedWindows = DefinedWindows.new()
+      const windowStates = WindowStates.new()
       const navigationState = mockNavigationState({
         marketPrices: [
           { flower: Flower.RED, price: 4 },
         ],
-        definedWindows,
+        windowStates,
         cardDeck
       })
 

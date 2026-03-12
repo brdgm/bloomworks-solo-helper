@@ -56,9 +56,9 @@ export default defineComponent({
     const { t } = useI18n()
 
     // window already defined?
-    const definedFlowers = props.action.windowSelection ? props.navigationState.botPersistence.definedWindows.getDefinedWindow(props.action.windowSelection) : undefined
-    const selectedFlowers = ref(definedFlowers ?? [])
-    const managedByApp = (definedFlowers != undefined)
+    const windowState = props.action.windowSelection ? props.navigationState.botPersistence.windowStates.getWindowState(props.action.windowSelection) : undefined
+    const selectedFlowers = ref(windowState?.flowers ?? [])
+    const managedByApp = (windowState != undefined)
 
     return { t, selectedFlowers, managedByApp }
   },
@@ -92,7 +92,7 @@ export default defineComponent({
   methods: {
     windowIsDefined() : void {
       if (this.action.windowSelection) {
-        this.navigationState.botPersistence.definedWindows.setDefinedWindow(this.action.windowSelection, this.selectedFlowers)
+        this.navigationState.botPersistence.windowStates.setWindowState(this.action.windowSelection, this.selectedFlowers, [])
       }
       this.doIncreasePrices()
     },
