@@ -104,6 +104,7 @@ export interface CardDeckPersistence {
 }
 
 export interface WindowState {
+  floor: number
   windowSelection: WindowSelection
   flowers: Flower[]
   deliveries: Player[]

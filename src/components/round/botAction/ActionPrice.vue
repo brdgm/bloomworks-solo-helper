@@ -38,9 +38,9 @@ import { BotAction } from '@/services/BotActions'
 import ActionBox from '../ActionBox.vue'
 import AppIcon from '@/components/structure/AppIcon.vue'
 import FlowerSelection from '@/components/structure/FlowerSelection.vue'
-import getWindowSelectionFloorCount from '@/util/getWindowSelectionFloorCount'
 import PriceSelection from '@/services/enum/PriceSelection'
 import FlowerIcon from '@/components/structure/FlowerIcon.vue'
+import WindowSelection from '@/services/enum/WindowSelection'
 
 export default defineComponent({
   name: 'ActionPrice',
@@ -56,11 +56,13 @@ export default defineComponent({
     const { t } = useI18n()
 
     // window already defined?
-    const windowState = props.action.windowSelection ? props.navigationState.botPersistence.windowStates.getWindowState(props.action.windowSelection) : undefined
+    const floor = props.action.floor ?? 1
+    const windowSelection = props.action.windowSelection ?? WindowSelection.LEFT
+    const windowState = props.navigationState.botPersistence.windowStates.getWindowState(floor, windowSelection)
     const selectedFlowers = ref(windowState?.flowers ?? [])
     const managedByApp = (windowState != undefined)
 
-    return { t, selectedFlowers, managedByApp }
+    return { t, floor, windowSelection, selectedFlowers, managedByApp }
   },
   props: {
     action: {
@@ -83,17 +85,15 @@ export default defineComponent({
   },
   computed: {
     iconName(): string {
-      return `price-${this.action.windowSelection?.toLocaleLowerCase()}`
+      return `price-${this.floor}${this.windowSelection.toLocaleLowerCase()}`
     },
     flowerCount() : number {
-      return this.action.windowSelection ? getWindowSelectionFloorCount(this.action.windowSelection) : 0
+      return this.floor
     }
   },
   methods: {
     windowIsDefined() : void {
-      if (this.action.windowSelection) {
-        this.navigationState.botPersistence.windowStates.setWindowState(this.action.windowSelection, this.selectedFlowers, [])
-      }
+      this.navigationState.botPersistence.windowStates.setWindowState(this.floor, this.windowSelection, this.selectedFlowers, [])
       this.doIncreasePrices()
     },
     windowIsUndefined() : void {

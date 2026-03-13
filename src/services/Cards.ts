@@ -13,37 +13,38 @@ const cards : Card[] = [
   {
     id: 'window-box-1',
     cardType: CardType.STANDARD,
-    actions: [{action:Action.WINDOW_BOX}],
+    actions: [{action: Action.WINDOW_BOX}],
     remove: true
   },
   {
     id: 'window-box-2',
     cardType: CardType.STANDARD,
-    actions: [{action:Action.WINDOW_BOX}],
+    actions: [{action: Action.WINDOW_BOX}],
     remove: true
   },
   {
     id: 'window-box-3',
     cardType: CardType.STANDARD,
-    actions: [{action:Action.WINDOW_BOX}],
+    actions: [{action: Action.WINDOW_BOX}],
     remove: true
   },
   {
     id: 'window-box-4',
     cardType: CardType.STANDARD,
-    actions: [{action:Action.WINDOW_BOX}]
+    actions: [{action: Action.WINDOW_BOX}]
   },
   {
     id: 'delivery-1',
     cardType: CardType.STANDARD,
-    actions: [{action:Action.DELIVERY}]
+    actions: [{action: Action.DELIVERY}]
   },
   {
     id: 'price-1',
     cardType: CardType.STANDARD,
     actions: [{
-      action:Action.PRICE,
-      windowSelection: WindowSelection.WINDOW_3R,
+      action: Action.PRICE,
+      floor: 3,
+      windowSelection: WindowSelection.RIGHT,
       priceSelection: PriceSelection.MOST_EXPENSIVE
     }]
   },
@@ -51,8 +52,9 @@ const cards : Card[] = [
     id: 'price-2',
     cardType: CardType.STANDARD,
     actions: [{
-      action:Action.PRICE,
-      windowSelection: WindowSelection.WINDOW_3L,
+      action: Action.PRICE,
+      floor: 3,
+      windowSelection: WindowSelection.LEFT,
       priceSelection: PriceSelection.CHEAPEST
     }]
   },
@@ -60,8 +62,9 @@ const cards : Card[] = [
     id: 'price-3',
     cardType: CardType.STANDARD,
     actions: [{
-      action:Action.PRICE,
-      windowSelection: WindowSelection.WINDOW_2R,
+      action: Action.PRICE,
+      floor: 2,
+      windowSelection: WindowSelection.RIGHT,
       priceSelection: PriceSelection.MOST_EXPENSIVE
     }]
   },
@@ -69,8 +72,9 @@ const cards : Card[] = [
     id: 'price-4',
     cardType: CardType.STANDARD,
     actions: [{
-      action:Action.PRICE,
-      windowSelection: WindowSelection.WINDOW_2L,
+      action: Action.PRICE,
+      floor: 2,
+      windowSelection: WindowSelection.LEFT,
       priceSelection: PriceSelection.CHEAPEST
     }]
   },
@@ -78,8 +82,9 @@ const cards : Card[] = [
     id: 'price-5',
     cardType: CardType.STANDARD,
     actions: [{
-      action:Action.PRICE,
-      windowSelection: WindowSelection.WINDOW_1R,
+      action: Action.PRICE,
+      floor: 1,
+      windowSelection: WindowSelection.RIGHT,
       priceSelection: PriceSelection.MOST_EXPENSIVE
     }],
     remove: true
@@ -88,8 +93,9 @@ const cards : Card[] = [
     id: 'price-6',
     cardType: CardType.STANDARD,
     actions: [{
-      action:Action.PRICE,
-      windowSelection: WindowSelection.WINDOW_1L,
+      action: Action.PRICE,
+      floor: 1,
+      windowSelection: WindowSelection.LEFT,
       priceSelection: PriceSelection.MOST_EXPENSIVE
     }],
     remove: true

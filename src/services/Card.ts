@@ -13,7 +13,7 @@ export default interface Card {
 
 export interface CardAction {
   action: Action
+  floor?: number
   windowSelection?: WindowSelection
   priceSelection?: PriceSelection
-  floor?: number
 }

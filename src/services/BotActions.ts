@@ -89,8 +89,8 @@ export default class BotActions {
 
         case Action.PRICE:
           // if windows is already defined: increase price of flowers in that window by 1, otherwise wait for user input
-          if (action.windowSelection) {
-            const windowState = this._windowStates.getWindowState(action.windowSelection)
+          if (action.floor && action.windowSelection) {
+            const windowState = this._windowStates.getWindowState(action.floor, action.windowSelection)
             if (windowState) {
               for (const flower of windowState.flowers) {
                 this._marketPrices.increase(flower)

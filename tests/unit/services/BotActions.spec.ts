@@ -140,7 +140,7 @@ describe('services/BotActions', () => {
       const cardDeck = mockCardDeck({ pile: ['price-1'] })
       cardDeck.draw()
       const windowStates = WindowStates.new()
-      windowStates.setWindowState(WindowSelection.WINDOW_3R, [Flower.RED, Flower.BLUE], [])
+      windowStates.setWindowState(3, WindowSelection.RIGHT, [Flower.RED, Flower.BLUE], [])
       const navigationState = mockNavigationState({
         marketPrices: [
           { flower: Flower.RED, price: 4 },

@@ -21,30 +21,30 @@ export default class WindowStates {
     return this._windowStates.value
   }
 
-  public getWindowState(windowSelection: WindowSelection) : WindowState|undefined {
-    return this._windowStates.value.find(dw => dw.windowSelection === windowSelection)
+  public getWindowState(floor: number, windowSelection: WindowSelection) : WindowState|undefined {
+    return this._windowStates.value.find(dw => dw.floor === floor && dw.windowSelection === windowSelection)
   }
 
-  public setWindowState(windowSelection: WindowSelection, flowers: Flower[], deliveries: Player[]) : void {
-    const existing = this._windowStates.value.find(dw => dw.windowSelection === windowSelection)
+  public setWindowState(floor: number, windowSelection: WindowSelection, flowers: Flower[], deliveries: Player[]) : void {
+    const existing = this._windowStates.value.find(dw => dw.floor === floor && dw.windowSelection === windowSelection)
     if (existing) {
       existing.flowers = flowers
       existing.deliveries = deliveries
     } else {
-      this._windowStates.value.push({ windowSelection, flowers, deliveries })
+      this._windowStates.value.push({ floor, windowSelection, flowers, deliveries })
     }
   }
 
-  public addDelivery(windowSelection: WindowSelection, player: Player) : void {
-    const existing = this._windowStates.value.find(dw => dw.windowSelection === windowSelection)
+  public addDelivery(floor: number, windowSelection: WindowSelection, player: Player) : void {
+    const existing = this._windowStates.value.find(dw => dw.floor === floor && dw.windowSelection === windowSelection)
     if (!existing) {
-      throw new Error(`Window state for ${windowSelection} not found.`)
+      throw new Error(`Window state for floor ${floor} and ${windowSelection} not found.`)
     }
     existing.deliveries.push(player)
   }
 
-  public removeWindowState(windowSelection: WindowSelection) : void {
-    this._windowStates.value = this._windowStates.value.filter(dw => dw.windowSelection !== windowSelection)
+  public removeWindowState(floor: number, windowSelection: WindowSelection) : void {
+    this._windowStates.value = this._windowStates.value.filter(dw => dw.floor !== floor || dw.windowSelection !== windowSelection)
   }
 
   /**
@@ -60,7 +60,7 @@ export default class WindowStates {
    */
   public static new() : WindowStates {
     return new WindowStates([
-      { windowSelection: WindowSelection.WINDOW_5, flowers: getAllEnumValues(Flower), deliveries: [] }
+      { floor: 5, windowSelection: WindowSelection.LEFT, flowers: getAllEnumValues(Flower), deliveries: [] }
     ])
   }
 
