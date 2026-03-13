@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import WindowSelection from './enum/WindowSelection'
 import Flower from './enum/Flower'
 import Player from './enum/Player'
+import getAllEnumValues from '@brdgm/brdgm-commons/src/util/enum/getAllEnumValues'
 
 /**
  * Stores flowers of already defined windows.
@@ -54,11 +55,13 @@ export default class WindowStates {
   }
 
   /**
-   * Initialize with empty instance.
+   * Initialize with empty instance, only containing 5th floor state.
    * @returns WindowStates
    */
   public static new() : WindowStates {
-    return new WindowStates([])
+    return new WindowStates([
+      { windowSelection: WindowSelection.WINDOW_5, flowers: getAllEnumValues(Flower), deliveries: [] }
+    ])
   }
 
   /**

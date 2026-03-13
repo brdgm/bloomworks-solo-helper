@@ -2,10 +2,10 @@
  * Flower
  */
 enum Flower {
-  RED = 'red',
-  PURPLE = 'purple',
-  YELLOW = 'yellow',
+  ORANGE = 'orange',
   BLUE = 'blue',
-  ORANGE = 'orange'
+  YELLOW = 'yellow',
+  PURPLE = 'purple',
+  RED = 'red'
 }
 export default Flower

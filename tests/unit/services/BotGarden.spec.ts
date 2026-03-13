@@ -77,9 +77,9 @@ describe('services/BotGarden', () => {
       garden.plant(Flower.RED, Season.SPRING)
 
       // First goes to SUMMER (next after SPRING, has 1 flower < 2 capacity)
-      expect(findSeason(garden, Season.SUMMER).flowers).to.eql([Flower.YELLOW, Flower.BLUE])
+      expect(findSeason(garden, Season.SUMMER).flowers).to.eql([Flower.BLUE, Flower.YELLOW])
       // Second goes to AUTUMN (SUMMER now full)
-      expect(findSeason(garden, Season.AUTUMN).flowers).to.eql([Flower.RED, Flower.PURPLE])
+      expect(findSeason(garden, Season.AUTUMN).flowers).to.eql([Flower.PURPLE, Flower.RED])
     })
 
     it('adds big extension when all base spaces full', () => {
@@ -94,7 +94,7 @@ describe('services/BotGarden', () => {
 
       const summer = findSeason(garden, Season.SUMMER)
       expect(summer.bigExtension).to.eq(1)
-      expect(summer.flowers).to.eql([Flower.RED, Flower.YELLOW, Flower.BLUE])
+      expect(summer.flowers).to.eql([Flower.BLUE, Flower.YELLOW, Flower.RED])
     })
 
     it('adds big extension to next eligible season when first already has one', () => {
@@ -110,7 +110,7 @@ describe('services/BotGarden', () => {
       // SUMMER is fully extended and full, so big extension goes to AUTUMN
       const autumn = findSeason(garden, Season.AUTUMN)
       expect(autumn.bigExtension).to.eq(1)
-      expect(autumn.flowers).to.eql([Flower.RED, Flower.YELLOW, Flower.BLUE])
+      expect(autumn.flowers).to.eql([Flower.BLUE, Flower.YELLOW, Flower.RED])
     })
 
     it('respects max 3 total big extensions', () => {
@@ -124,7 +124,7 @@ describe('services/BotGarden', () => {
       // WINTER has base space available — no new big extension needed
       garden.plant(Flower.YELLOW, Season.AUTUMN)
 
-      expect(findSeason(garden, Season.WINTER).flowers).to.eql([Flower.RED, Flower.YELLOW])
+      expect(findSeason(garden, Season.WINTER).flowers).to.eql([Flower.YELLOW, Flower.RED])
       expect(findSeason(garden, Season.WINTER).bigExtension).to.eq(0)
     })
 
@@ -140,7 +140,7 @@ describe('services/BotGarden', () => {
 
       // SUMMER has big extension with 3/5 flowers — still has room
       const summer = findSeason(garden, Season.SUMMER)
-      expect(summer.flowers).to.eql([Flower.RED, Flower.PURPLE, Flower.YELLOW, Flower.BLUE])
+      expect(summer.flowers).to.eql([Flower.BLUE, Flower.YELLOW, Flower.PURPLE, Flower.RED])
       expect(summer.bigExtension).to.eq(1)
     })
 

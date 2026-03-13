@@ -4,10 +4,12 @@ import Player from '@/services/enum/Player'
 import WindowSelection from '@/services/enum/WindowSelection'
 import { expect } from 'chai'
 
+const INITIAL_WINDOW_5 = { windowSelection: WindowSelection.WINDOW_5, flowers: [Flower.ORANGE, Flower.BLUE, Flower.YELLOW, Flower.PURPLE, Flower.RED], deliveries: [] }
+
 describe('services/WindowStates', () => {
   it('new', () => {
     const dw = WindowStates.new()
-    expect(dw.windowStates).to.deep.eq([])
+    expect(dw.windowStates).to.deep.eq([INITIAL_WINDOW_5])
   })
 
   it('setWindowState-new', () => {
@@ -15,7 +17,7 @@ describe('services/WindowStates', () => {
     dw.setWindowState(WindowSelection.WINDOW_1L, [Flower.RED, Flower.BLUE], [])
 
     expect(dw.getWindowState(WindowSelection.WINDOW_1L)).to.deep.eq({ windowSelection: WindowSelection.WINDOW_1L, flowers: [Flower.RED, Flower.BLUE], deliveries: [] })
-    expect(dw.windowStates.length).to.eq(1)
+    expect(dw.windowStates.length).to.eq(2)
   })
 
   it('setWindowState-update', () => {
@@ -24,7 +26,7 @@ describe('services/WindowStates', () => {
     dw.setWindowState(WindowSelection.WINDOW_2R, [Flower.YELLOW, Flower.ORANGE], [Player.PLAYER])
 
     expect(dw.getWindowState(WindowSelection.WINDOW_2R)).to.deep.eq({ windowSelection: WindowSelection.WINDOW_2R, flowers: [Flower.YELLOW, Flower.ORANGE], deliveries: [Player.PLAYER] })
-    expect(dw.windowStates.length).to.eq(1)
+    expect(dw.windowStates.length).to.eq(2)
   })
 
   it('getWindowState-undefined', () => {
@@ -39,12 +41,13 @@ describe('services/WindowStates', () => {
 
     const persistence = dw.toPersistence()
     expect(persistence).to.deep.eq([
+      INITIAL_WINDOW_5,
       { windowSelection: WindowSelection.WINDOW_1L, flowers: [Flower.RED], deliveries: [] },
       { windowSelection: WindowSelection.WINDOW_3R, flowers: [Flower.BLUE, Flower.PURPLE], deliveries: [Player.PLAYER, Player.BOT] }
     ])
 
     // verify it's a deep clone
-    persistence[0].flowers.push(Flower.ORANGE)
+    persistence[1].flowers.push(Flower.ORANGE)
     expect(dw.getWindowState(WindowSelection.WINDOW_1L)?.flowers).to.deep.eq([Flower.RED])
   })
 
@@ -72,7 +75,7 @@ describe('services/WindowStates', () => {
 
     dw.removeWindowState(WindowSelection.WINDOW_2L)
 
-    expect(dw.windowStates.length).to.eq(2)
+    expect(dw.windowStates.length).to.eq(3)
     expect(dw.getWindowState(WindowSelection.WINDOW_1L)?.flowers).to.deep.eq([Flower.RED, Flower.BLUE])
     expect(dw.getWindowState(WindowSelection.WINDOW_2L)).to.be.undefined
     expect(dw.getWindowState(WindowSelection.WINDOW_3R)?.flowers).to.deep.eq([Flower.PURPLE, Flower.ORANGE])
@@ -84,7 +87,7 @@ describe('services/WindowStates', () => {
 
     dw.removeWindowState(WindowSelection.WINDOW_2R)
 
-    expect(dw.windowStates.length).to.eq(1)
+    expect(dw.windowStates.length).to.eq(2)
     expect(dw.getWindowState(WindowSelection.WINDOW_1L)?.flowers).to.deep.eq([Flower.RED])
   })
 
@@ -94,7 +97,7 @@ describe('services/WindowStates', () => {
 
     dw.removeWindowState(WindowSelection.WINDOW_1R)
 
-    expect(dw.windowStates.length).to.eq(0)
+    expect(dw.windowStates.length).to.eq(1)
   })
 
   it('addDelivery', () => {
