@@ -59,57 +59,75 @@ export default class BotActions {
    * Process card actions to bot actions (executing the automatic managed ones).
    */
   private process(actions: CardAction[]): BotAction[] {
-    const botActions: BotAction[] = []
-    for (const action of actions) {
-      const botAction: BotAction = action
+    return actions.map(action => this.processAction(action))
+  }
 
-      switch (action.action) {
-
-        case Action.PLANT:
-          // plant most expensive flower in the garden, reduce price by 1
-          botAction.flower = this._marketPrices.getMostExpensiveFlower()
-          this._botGarden.plant(botAction.flower, this._season)
-          this._marketPrices.decrease(botAction.flower)
-          break
-
-        case Action.SOLD:
-          // get distinct list of flowers in current season, reduce price by 1 for each
-          const distinctFlowers = [...new Set(this.getFlowersOfCurrentSeason())]
-          for (const flower of distinctFlowers) {
-            this._marketPrices.decrease(flower)
-          }
-          break
-
-        case Action.PAID:
-          // identify the most expensive flower in this season, reduce price by 1 and gain that number of VP
-          const mostExpensiveFlower = this.getMostExpensiveFlowerOfCurrentSeason()
-          if (mostExpensiveFlower) {
-            this._marketPrices.decrease(mostExpensiveFlower)
-            botAction.vp = this._marketPrices.getPrice(mostExpensiveFlower)
-          }
-          break
-
-        case Action.PRICE:
-          // if windows is already defined: increase price of flowers in that window by 1, otherwise increase 1 least/most expensive flower
-          const windowState = this._windowStates.getWindowState(action.floor ?? 1, action.windowSelection ?? WindowSelection.LEFT)
-          if (windowState) {
-            botAction.flowers = windowState.flowers
-          }
-          else if (action.priceSelection == PriceSelection.MOST_EXPENSIVE) {
-            botAction.flowers = [this._marketPrices.getMostExpensiveFlower()]
-          }
-          else {
-            botAction.flowers = [this._marketPrices.getCheapestFlower()]
-          }
-          for (const flower of botAction.flowers) {
-            this._marketPrices.increase(flower)
-          }
-          break
-      }
-
-      botActions.push(botAction)
+  private processAction(action: CardAction): BotAction {
+    const botAction: BotAction = action
+    switch (action.action) {
+      case Action.PLANT:
+        this.processPlant(botAction)
+        break
+      case Action.SOLD:
+        this.processSold()
+        break
+      case Action.PAID:
+        this.processPaid(botAction)
+        break
+      case Action.PRICE:
+        this.processPrice(botAction)
+        break
     }
-    return botActions
+    return botAction
+  }
+
+  /**
+   * Plant most expensive flower in the garden, reduce price by 1
+   */
+  private processPlant(botAction: BotAction): void {
+    botAction.flower = this._marketPrices.getMostExpensiveFlower()
+    this._botGarden.plant(botAction.flower, this._season)
+    this._marketPrices.decrease(botAction.flower)
+  }
+
+  /**
+   * Get distinct list of flowers in current season, reduce price by 1 for each
+   */
+  private processSold(): void {
+    const distinctFlowers = [...new Set(this.getFlowersOfCurrentSeason())]
+    for (const flower of distinctFlowers) {
+      this._marketPrices.decrease(flower)
+    }
+  }
+
+  /**
+   * Identify the most expensive flower in this season, reduce price by 1 and gain that number of VP
+   */
+  private processPaid(botAction: BotAction): void {
+    const mostExpensiveFlower = this.getMostExpensiveFlowerOfCurrentSeason()
+    if (mostExpensiveFlower) {
+      this._marketPrices.decrease(mostExpensiveFlower)
+      botAction.vp = this._marketPrices.getPrice(mostExpensiveFlower)
+    }
+  }
+
+  /**
+   * If window is already defined: increase price of flowers in that window by 1, otherwise increase 1 least/most expensive flower
+   */
+  private processPrice(botAction: BotAction): void {
+    const windowState = this._windowStates.getWindowState(botAction.floor ?? 1, botAction.windowSelection ?? WindowSelection.LEFT)
+    if (windowState) {
+      botAction.flowers = windowState.flowers
+    }
+    else if (botAction.priceSelection == PriceSelection.MOST_EXPENSIVE) {
+      botAction.flowers = [this._marketPrices.getMostExpensiveFlower()]
+    }
+    else {
+      botAction.flowers = [this._marketPrices.getCheapestFlower()]
+    }
+    for (const flower of botAction.flowers) {
+      this._marketPrices.increase(flower)
+    }
   }
 
   private getFlowersOfCurrentSeason(): Flower[] {
