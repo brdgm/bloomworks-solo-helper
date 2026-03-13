@@ -42,8 +42,8 @@ describe('services/WindowStates', () => {
     const persistence = dw.toPersistence()
     expect(persistence).to.deep.eq([
       INITIAL_WINDOW_5,
-      { floor: 1, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED], deliveries: [] },
-      { floor: 3, windowSelection: WindowSelection.RIGHT, flowers: [Flower.BLUE, Flower.PURPLE], deliveries: [Player.PLAYER, Player.BOT] }
+      { floor: 3, windowSelection: WindowSelection.RIGHT, flowers: [Flower.BLUE, Flower.PURPLE], deliveries: [Player.PLAYER, Player.BOT] },
+      { floor: 1, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED], deliveries: [] }
     ])
 
     // verify it's a deep clone
@@ -124,5 +124,28 @@ describe('services/WindowStates', () => {
     const dw = WindowStates.new()
 
     expect(() => dw.addDelivery(1, WindowSelection.LEFT, Player.PLAYER)).to.throw('Window state for floor 1 and l not found.')
+  })
+
+  it('sorted-by-floor-desc-and-left-first', () => {
+    const dw = WindowStates.new()
+    dw.setWindowState(1, WindowSelection.RIGHT, [Flower.RED], [])
+    dw.setWindowState(3, WindowSelection.LEFT, [Flower.BLUE], [])
+    dw.setWindowState(3, WindowSelection.RIGHT, [Flower.YELLOW], [])
+    dw.setWindowState(1, WindowSelection.LEFT, [Flower.PURPLE], [])
+    dw.setWindowState(2, WindowSelection.LEFT, [Flower.ORANGE], [])
+
+    const states = dw.windowStates
+    expect(states.map(s => `${s.floor}${s.windowSelection}`)).to.deep.eq(['5l', '3l', '3r', '2l', '1l', '1r'])
+  })
+
+  it('fromPersistence-sorted', () => {
+    const persistence = [
+      { floor: 1, windowSelection: WindowSelection.RIGHT, flowers: [Flower.RED], deliveries: [] },
+      { floor: 3, windowSelection: WindowSelection.LEFT, flowers: [Flower.BLUE], deliveries: [] },
+      { floor: 2, windowSelection: WindowSelection.LEFT, flowers: [Flower.YELLOW], deliveries: [] }
+    ]
+
+    const dw = WindowStates.fromPersistence(persistence)
+    expect(dw.windowStates.map(s => `${s.floor}${s.windowSelection}`)).to.deep.eq(['3l', '2l', '1r'])
   })
 })
