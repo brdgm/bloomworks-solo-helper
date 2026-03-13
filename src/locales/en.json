@@ -77,11 +77,9 @@
     },
     "playerMakeDelivery": {
       "floor": "Floor {floor}",
-      "windowLeft": "Left",
-      "windowRight": "Right",
       "deliverHere": "Deliver here",
-      "selectFlowers": "Select {count} flower(s) for this window:",
-      "confirm": "Confirm Delivery"
+      "selectFlowersTitle": "Select Flowers",
+      "selectFlowers": "Select {count} flower for this window: | Select {count} flowers for this window:"
     }
   },
   "roundTurnBot": {

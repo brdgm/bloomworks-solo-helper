@@ -31,7 +31,8 @@
   <PlayerMakeDelivery v-if="showDeliveryActions"
       :windowStates="navigationState.botPersistence.windowStates"
       :marketPrices="navigationState.marketPrices"
-      @deliver="deliverToFloor"/>
+      @deliver="deliverToFloor"
+      @cancel="showDeliveryActions = false"/>
 
   <PlayerBuyFlowerModal :marketPrices="navigationState.marketPrices" @next="next"/>
   <PlayerPassSellFlowerModal :marketPrices="navigationState.marketPrices" :soloBoardPassAction="soloBoardPassAction" @pass="pass"/>

@@ -1,36 +1,46 @@
 <template>
   <div class="mt-4">
-    <div v-for="floor in floors" :key="floor.number" class="floor mb-3">
-      <h5>{{t('roundTurnPlayer.playerMakeDelivery.floor', {floor: floor.number})}}</h5>
-      <div class="d-flex flex-wrap gap-3">
-        <div v-for="window in floor.windows" :key="window.selection" class="window-box border rounded p-2">
-          <div v-if="floor.windows.length > 1" class="fw-bold small mb-1">{{window.label}}</div>
-          <div v-if="getDisplayFlowers(floor.number, window.selection).length > 0"
-              class="d-flex flex-wrap gap-1 align-items-center">
-            <FlowerIcon v-for="(flower, i) in getDisplayFlowers(floor.number, window.selection)"
-                :key="'f'+i" :flower="flower"/>
+    <div v-for="floor in floorNumbers" :key="floor" class="floor mb-3">
+      <h5>{{t('roundTurnPlayer.playerMakeDelivery.floor', {floor})}}</h5>
+      <div class="floor-windows">
+        <div v-for="window in getWindowSelections(floor)" :key="window" class="window-box border rounded p-2">
+          <div class="flex-grow-1">
+            <div v-if="getDisplayFlowers(floor, window).length > 0" class="icon-row flowers">
+              <FlowerIcon v-for="(flower, i) in getDisplayFlowers(floor, window)" :key="'f'+i" :flower="flower" class="flower-icon"/>
+            </div>
+            <div v-if="getDisplayDeliveries(floor, window).length > 0" class="icon-row players">
+              <PlayerColorIcon v-for="(player, i) in getDisplayDeliveries(floor, window)"
+                  :key="'d'+i" :player="player" class="player-icon"/>
+            </div>
           </div>
-          <div v-if="getDisplayDeliveries(floor.number, window.selection).length > 0"
-              class="d-flex flex-wrap gap-1 align-items-center mt-1">
-            <PlayerColorIcon v-for="(player, i) in getDisplayDeliveries(floor.number, window.selection)"
-                :key="'d'+i" :player="player"/>
-          </div>
-          <div v-if="canDeliver(floor.number, window.selection)" class="mt-2">
-            <template v-if="selectingFloor === floor.number && selectingWindow === window.selection">
-              <p class="small mb-1" v-html="t('roundTurnPlayer.playerMakeDelivery.selectFlowers', {count: floor.number})"/>
-              <FlowerSelection v-model="selectedFlowers" :marketPrices="marketPrices" :max="floor.number"/>
-              <button v-if="selectedFlowers.length === floor.number"
-                  class="btn btn-success btn-sm mt-2" @click="confirmDelivery(floor.number, window.selection)">
-                {{t('roundTurnPlayer.playerMakeDelivery.confirm')}}
-              </button>
-            </template>
-            <button v-else class="btn btn-outline-primary btn-sm" @click="deliverHere(floor.number, window.selection)">
+          <div v-if="canDeliver(floor, window)" class="mt-2">
+            <button class="btn btn-outline-primary btn-sm" @click="deliverHere(floor, window)">
               {{t('roundTurnPlayer.playerMakeDelivery.deliverHere')}}
             </button>
           </div>
         </div>
       </div>
     </div>
+
+    <ModalDialog id="deliveryModal" :title="t('roundTurnPlayer.playerMakeDelivery.selectFlowersTitle')">
+      <template #body>
+        <p class="small mb-1" v-html="t('roundTurnPlayer.playerMakeDelivery.selectFlowers', {count: selectingFloor ?? 0})"/>
+        <FlowerSelection v-model="selectedFlowers" :marketPrices="marketPrices" :max="selectingFloor ?? 0"/>
+      </template>
+      <template #footer>
+        <button :disabled="selectedFlowers.length !== selectingFloor"
+            class="btn btn-primary" @click="confirmDelivery">
+          {{t('action.ok')}}
+        </button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">
+          {{t('action.cancel')}}
+        </button>
+      </template>
+    </ModalDialog>
+
+    <button class="btn btn-secondary btn-sm mt-2" @click="$emit('cancel')">
+      {{t('action.cancel')}}
+    </button>
   </div>
 </template>
 
@@ -45,20 +55,22 @@ import MarketPrices from '@/services/MarketPrices'
 import FlowerIcon from '@/components/structure/FlowerIcon.vue'
 import PlayerColorIcon from '@/components/structure/PlayerColorIcon.vue'
 import FlowerSelection from '@/components/structure/FlowerSelection.vue'
+import ModalDialog from '@brdgm/brdgm-commons/src/components/structure/ModalDialog.vue'
+import getAllEnumValues from '@brdgm/brdgm-commons/src/util/enum/getAllEnumValues'
+import showModal from '@brdgm/brdgm-commons/src/util/modal/showModal'
+import { Modal } from 'bootstrap'
 
-interface FloorInfo {
-  number: number
-  windows: { selection: WindowSelection, label: string }[]
-}
+const FLOOR_NUMBERS = [5, 4, 3, 2, 1]
 
 export default defineComponent({
   name: 'PlayerMakeDelivery',
   components: {
     FlowerIcon,
     PlayerColorIcon,
-    FlowerSelection
+    FlowerSelection,
+    ModalDialog
   },
-  emits: ['deliver'],
+  emits: ['deliver', 'cancel'],
   props: {
     windowStates: {
       type: Object as PropType<WindowStates>,
@@ -77,31 +89,15 @@ export default defineComponent({
     return { t, selectingFloor, selectingWindow, selectedFlowers }
   },
   computed: {
-    floors() : FloorInfo[] {
-      return [
-        { number: 5, windows: [
-          { selection: WindowSelection.LEFT, label: '' }
-        ]},
-        { number: 4, windows: [
-          { selection: WindowSelection.LEFT, label: this.t('roundTurnPlayer.playerMakeDelivery.windowLeft') },
-          { selection: WindowSelection.RIGHT, label: this.t('roundTurnPlayer.playerMakeDelivery.windowRight') }
-        ]},
-        { number: 3, windows: [
-          { selection: WindowSelection.LEFT, label: this.t('roundTurnPlayer.playerMakeDelivery.windowLeft') },
-          { selection: WindowSelection.RIGHT, label: this.t('roundTurnPlayer.playerMakeDelivery.windowRight') }
-        ]},
-        { number: 2, windows: [
-          { selection: WindowSelection.LEFT, label: this.t('roundTurnPlayer.playerMakeDelivery.windowLeft') },
-          { selection: WindowSelection.RIGHT, label: this.t('roundTurnPlayer.playerMakeDelivery.windowRight') }
-        ]},
-        { number: 1, windows: [
-          { selection: WindowSelection.LEFT, label: this.t('roundTurnPlayer.playerMakeDelivery.windowLeft') },
-          { selection: WindowSelection.RIGHT, label: this.t('roundTurnPlayer.playerMakeDelivery.windowRight') }
-        ]}
-      ]
+    floorNumbers() : number[] {
+      return FLOOR_NUMBERS
     }
   },
   methods: {
+    getWindowSelections(floor: number) : WindowSelection[] {
+      if (floor === 5) return [WindowSelection.LEFT]
+      return getAllEnumValues(WindowSelection)
+    },
     getDisplayFlowers(floor: number, windowSelection: WindowSelection) : Flower[] {
       const state = this.windowStates.getWindowState(floor, windowSelection)
       return state?.flowers ?? []
@@ -125,12 +121,19 @@ export default defineComponent({
         this.selectingFloor = floor
         this.selectingWindow = windowSelection
         this.selectedFlowers = []
+        showModal('deliveryModal')
       }
     },
-    confirmDelivery(floor: number, windowSelection: WindowSelection) : void {
-      this.windowStates.setWindowState(floor, windowSelection, [...this.selectedFlowers], [Player.PLAYER])
+    confirmDelivery() : void {
+      if (this.selectingFloor == null || this.selectingWindow == null) return
+      this.windowStates.setWindowState(this.selectingFloor, this.selectingWindow, [...this.selectedFlowers], [Player.PLAYER])
+      const floor = this.selectingFloor
       this.selectingFloor = null
       this.selectingWindow = null
+      const modalElement = document.querySelector('#deliveryModal')
+      if (modalElement) {
+        Modal.getInstance(modalElement)?.hide()
+      }
       this.$emit('deliver', floor)
     }
   }
@@ -138,7 +141,31 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.floor-windows {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
 .window-box {
-  min-width: 8rem;
+  display: flex;
+  flex-direction: column;
+  width: 8rem;
+}
+.icon-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.flowers {
+  gap: 0.1rem;
+}
+.players {
+  gap: 0.2rem;
+}
+.flower-icon {
+  width: 1.25rem;
+}
+.player-icon {
+  width: 1rem;
 }
 </style>

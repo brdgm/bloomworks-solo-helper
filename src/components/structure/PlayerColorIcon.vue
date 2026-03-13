@@ -1,6 +1,6 @@
 <template>
-  <svg width="28" height="20" viewBox="0 0 28 20">
-    <rect x="0.5" y="0.5" width="27" height="19" rx="3" :fill="color" stroke="#aaa" stroke-width="0.5"/>
+  <svg viewBox="0 0 20 20">
+    <rect x="0.5" y="0.5" width="19" height="19" :fill="color" stroke="#aaa" stroke-width="0.5"/>
   </svg>
 </template>
 
