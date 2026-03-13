@@ -9,6 +9,7 @@ import NavigationState from '@/util/NavigationState'
 import WindowStates from './WindowStates'
 import WindowSelection from './enum/WindowSelection'
 import PriceSelection from './enum/PriceSelection'
+import { cloneDeep } from 'lodash'
 
 /**
  * Collects the bot's actions and manages the automatic actions.
@@ -63,7 +64,7 @@ export default class BotActions {
   }
 
   private processAction(action: CardAction): BotAction {
-    const botAction: BotAction = action
+    const botAction: BotAction = cloneDeep(action)
     switch (action.action) {
       case Action.PLANT:
         this.processPlant(botAction)
