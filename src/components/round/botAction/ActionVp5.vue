@@ -1,8 +1,8 @@
 <template>
-  <ActionBox :instruction-title="t('rules.action.vp5.title')" :currentCard="currentCard">
+  <ActionBox :instruction-title="t('rules.action.vp5.title')" :currentCard="currentCard" :vp="action.vp">
     <template #action>
       <div class="action">
-        <AppIcon type="action" name="vp5" class="icon"/>
+        <AppIcon type="action" name="vp-5" class="icon"/>
       </div>
     </template>
     <template #instruction>

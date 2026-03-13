@@ -30,7 +30,6 @@
             <li v-html="t('setupBot.soloModeRules.milestones')"/>
             <li v-html="t('setupBot.soloModeRules.noBonuses')"/>
             <li v-html="t('setupBot.soloModeRules.actionBoxTypes')"/>
-            <li v-html="t('setupBot.soloModeRules.autoActions')"/>
             <li v-html="t('setupBot.soloModeRules.clickForDetails')"/>
           </ul>
        </div>

@@ -1,8 +1,9 @@
 <template>
-  <ActionBox :instruction-title="t('rules.action.paid.title')" :currentCard="currentCard" :managedByApp="true">
+  <ActionBox :instruction-title="t('rules.action.paid.title')" :currentCard="currentCard" :managedByApp="true" :vp="action.vp">
     <template #action>
       <div class="action">
-        <AppIcon type="action" name="paid" class="icon"/>
+        <AppIcon type="action" name="paid" class="icon"/>:
+        <FlowerIcon v-if="action.flower" :flower="action.flower"/>
       </div>
     </template>
     <template #instruction>
@@ -19,13 +20,15 @@ import Card from '@/services/Card'
 import { BotAction } from '@/services/BotActions'
 import ActionBox from '../ActionBox.vue'
 import AppIcon from '@/components/structure/AppIcon.vue'
+import FlowerIcon from '@/components/structure/FlowerIcon.vue'
 
 export default defineComponent({
   name: 'ActionPaid',
   inheritAttrs: false,
   components: {
     ActionBox,
-    AppIcon
+    AppIcon,
+    FlowerIcon
   },
   emits: ['ready'],
   setup() {

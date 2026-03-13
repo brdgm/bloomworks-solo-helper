@@ -38,4 +38,44 @@ describe('services/CardDeck', () => {
     expect(deck.pile.length).to.eq(5)
   })
 
+  it('deckShuffleCount increments on reshuffle', () => {
+    const deck = CardDeck.fromPersistence({pile:['plant-1'],discard:['sold-1']})
+
+    expect(deck.deckShuffleCount).to.eq(0)
+    deck.draw() // draws plant-1, pile now empty
+    expect(deck.deckShuffleCount).to.eq(0)
+    deck.draw() // pile empty → reshuffle discard + advanced cards
+    expect(deck.deckShuffleCount).to.eq(1)
+  })
+
+  it('checkCurrentCardRemove - removes card marked for removal', () => {
+    const deck = CardDeck.fromPersistence({pile:['window-box-1'],discard:[]})
+
+    deck.draw()
+    expect(deck.currentCard?.id).to.eq('window-box-1')
+    expect(deck.discard.length).to.eq(1)
+
+    deck.checkCurrentCardRemove()
+    expect(deck.currentCard).to.be.undefined
+    expect(deck.discard.length).to.eq(0)
+  })
+
+  it('checkCurrentCardRemove - keeps card not marked for removal', () => {
+    const deck = CardDeck.fromPersistence({pile:['plant-1'],discard:[]})
+
+    deck.draw()
+    expect(deck.currentCard?.id).to.eq('plant-1')
+
+    deck.checkCurrentCardRemove()
+    expect(deck.currentCard?.id).to.eq('plant-1')
+    expect(deck.discard.length).to.eq(1)
+  })
+
+  it('checkCurrentCardRemove - no current card', () => {
+    const deck = CardDeck.fromPersistence({pile:[],discard:[]})
+
+    deck.checkCurrentCardRemove()
+    expect(deck.currentCard).to.be.undefined
+  })
+
 })

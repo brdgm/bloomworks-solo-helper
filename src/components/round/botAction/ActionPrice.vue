@@ -2,10 +2,11 @@
   <ActionBox :instruction-title="t('rules.action.price.title')" :currentCard="currentCard" :managedByApp="true">
     <template #action>
       <div class="action">
-        <AppIcon type="action" :name="iconName" class="icon"/>
+        <AppIcon type="action" :name="iconName" class="icon"/>:
+        <div>
+          <FlowerIcon v-for="flower in flowers" :key="flower" :flower="flower"/>
+        </div>
       </div>
-      <div class="mt-2 mb-1" v-html="t('rules.action.price.priceIncreased', flowers.length)"></div>
-      <FlowerIcon v-for="flower in flowers" :key="flower" :flower="flower"/>
     </template>
     <template #instruction>
       <p v-html="t('rules.action.price.definedWindowInstruction')"/>

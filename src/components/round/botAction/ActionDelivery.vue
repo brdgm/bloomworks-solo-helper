@@ -1,12 +1,19 @@
 <template>
-  <ActionBox :instruction-title="t('rules.action.delivery.title')" :currentCard="currentCard">
+  <ActionBox :instruction-title="t('rules.action.delivery.title')" :currentCard="currentCard" :vp="action.vp" :xp="action.xp">
     <template #action>
       <div class="action">
-        <AppIcon type="action" name="delivery" class="icon"/>
+        <AppIcon type="action" name="delivery" class="icon"/>:
+        <div class="windowSelection">{{action.floor}}{{action.windowSelection?.toUpperCase()}}</div>
       </div>
     </template>
     <template #instruction>
-      <p v-html="t('rules.action.delivery.instruction')"/>
+      <p>
+        <span v-html="t('rules.action.delivery.selectWindow')"></span><br/>
+        <span class="fw-bold" v-html="t('rules.action.delivery.selectedWindow', {floor:action.floor,selection:t(`windowSelection.${action.windowSelection}`)})"></span><br/>
+        <FlowerIcon v-for="flower in action.flowers ?? []" :key="flower" :flower="flower"/>
+      </p>
+      <p v-html="t('rules.action.delivery.gainVPandXP', {vp:action.vp})"/>
+      <p v-html="t('rules.action.delivery.placeMarker')"/>
     </template>
   </ActionBox>
 </template>
@@ -62,5 +69,9 @@ export default defineComponent({
 }
 .icon {
   height: 5rem;
+}
+.windowSelection {
+  font-weight: bold;
+  font-size: 1.5rem;
 }
 </style>

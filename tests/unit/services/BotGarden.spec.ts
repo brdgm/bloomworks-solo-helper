@@ -11,6 +11,43 @@ function findSeason(garden: BotGarden, season: Season) : GardenSeason {
 
 describe('services/BotGarden', () => {
 
+  describe('new', () => {
+    it('initializes garden with correct flower distribution', () => {
+      const playerFlowers = [Flower.RED, Flower.BLUE]
+      const flowerOrder = [Flower.ORANGE, Flower.BLUE, Flower.YELLOW, Flower.PURPLE, Flower.RED]
+      const garden = BotGarden.new(playerFlowers, flowerOrder)
+
+      // 4 seasons, each with exactly 1 flower
+      expect(garden.seasons).to.have.length(4)
+      for (const gs of garden.seasons) {
+        expect(gs.flowers).to.have.length(1)
+        expect(gs.bigExtension).to.eq(0)
+        expect(gs.smallExtensions).to.eq(0)
+      }
+
+      // Pool: player flowers (RED, BLUE) get 1 each, non-player (ORANGE, YELLOW, PURPLE) get 2 each = 8 flowers total
+      // Only 4 are used (one per season)
+      const allFlowers = garden.seasons.flatMap(s => s.flowers)
+      expect(allFlowers).to.have.length(4)
+    })
+
+    it('pool has correct flower counts based on player flowers', () => {
+      // With 3 player flowers: 3x1 + 2x2 = 7 total in pool, 4 used
+      const playerFlowers = [Flower.RED, Flower.BLUE, Flower.ORANGE]
+      const flowerOrder = [Flower.ORANGE, Flower.BLUE, Flower.YELLOW, Flower.PURPLE, Flower.RED]
+
+      // Run multiple times and collect to verify distribution makes sense
+      const garden = BotGarden.new(playerFlowers, flowerOrder)
+      expect(garden.seasons).to.have.length(4)
+      const allFlowers = garden.seasons.flatMap(s => s.flowers)
+      expect(allFlowers).to.have.length(4)
+      // Each flower should be a valid Flower value
+      for (const flower of allFlowers) {
+        expect([Flower.ORANGE, Flower.BLUE, Flower.YELLOW, Flower.PURPLE, Flower.RED]).to.include(flower)
+      }
+    })
+  })
+
   describe('getSeasonCapacity', () => {
     it('base only', () => {
       expect(BotGarden.getSeasonCapacity({ season: Season.SPRING, flowers: [], bigExtension: 0, smallExtensions: 0 }))

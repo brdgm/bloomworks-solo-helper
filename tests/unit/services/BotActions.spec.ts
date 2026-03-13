@@ -612,6 +612,248 @@ describe('services/BotActions', () => {
     })
   })
 
+  describe('multi-action cards', () => {
+    it('processes all actions from a card with multiple PLANT actions', () => {
+      const cardDeck = mockCardDeck({ pile: ['plant-3'] })
+      cardDeck.draw()
+      const navigationState = mockNavigationState({
+        marketPrices: [
+          { flower: Flower.RED, price: 8 },
+          { flower: Flower.BLUE, price: 5 },
+        ],
+        season: Season.AUTUMN,
+        cardDeck
+      })
+
+      const botActions = new BotActions(navigationState)
+
+      expect(botActions.actions.length).to.eq(2)
+      expect(botActions.actions[0].action).to.eq(Action.PLANT)
+      expect(botActions.actions[1].action).to.eq(Action.PLANT)
+      // first plant picks RED (most expensive at 8), price drops to 7
+      expect(botActions.actions[0].flower).to.eq(Flower.RED)
+      // second plant picks RED again (still most expensive at 7 vs BLUE at 5), price drops to 6
+      expect(botActions.actions[1].flower).to.eq(Flower.RED)
+      expect(navigationState.marketPrices.getPrice(Flower.RED)).to.eq(6)
+    })
+  })
+
+  describe('DELIVERY VP and XP', () => {
+    it('sets VP based on flower match count of 1', () => {
+      const cardDeck = mockCardDeck({ pile: ['delivery-1'] })
+      cardDeck.draw()
+      const garden = mockBotGarden({
+        seasons: [
+          { season: Season.AUTUMN, flowers: [Flower.RED] }
+        ]
+      })
+      const windowStates = WindowStates.new()
+      windowStates.setWindowState(2, WindowSelection.LEFT, [Flower.RED, Flower.BLUE], [])
+      const navigationState = mockNavigationState({
+        season: Season.AUTUMN,
+        garden,
+        windowStates,
+        cardDeck
+      })
+
+      const botActions = new BotActions(navigationState)
+
+      const action = botActions.actions[0]
+      expect(action.action).to.eq(Action.DELIVERY)
+      expect(action.vp).to.eq(2) // 1 match → 2 VP
+      expect(action.xp).to.eql([Flower.RED])
+    })
+
+    it('sets VP based on flower match count of 2', () => {
+      const cardDeck = mockCardDeck({ pile: ['delivery-1'] })
+      cardDeck.draw()
+      const garden = mockBotGarden({
+        seasons: [
+          { season: Season.AUTUMN, flowers: [Flower.RED, Flower.BLUE] }
+        ]
+      })
+      const windowStates = WindowStates.new()
+      windowStates.setWindowState(2, WindowSelection.LEFT, [Flower.RED, Flower.BLUE], [])
+      const navigationState = mockNavigationState({
+        season: Season.AUTUMN,
+        garden,
+        windowStates,
+        cardDeck
+      })
+
+      const botActions = new BotActions(navigationState)
+
+      const action = botActions.actions[0]
+      expect(action.vp).to.eq(4) // 2 matches → 4 VP
+      expect(action.xp).to.eql([Flower.RED, Flower.BLUE])
+    })
+
+    it('sets VP based on flower match count of 3', () => {
+      const cardDeck = mockCardDeck({ pile: ['delivery-1'] })
+      cardDeck.draw()
+      const garden = mockBotGarden({
+        seasons: [
+          { season: Season.AUTUMN, flowers: [Flower.RED, Flower.BLUE, Flower.PURPLE] }
+        ]
+      })
+      const windowStates = WindowStates.new()
+      windowStates.setWindowState(3, WindowSelection.LEFT, [Flower.RED, Flower.BLUE, Flower.PURPLE], [])
+      const navigationState = mockNavigationState({
+        season: Season.AUTUMN,
+        garden,
+        windowStates,
+        cardDeck
+      })
+
+      const botActions = new BotActions(navigationState)
+
+      const action = botActions.actions[0]
+      expect(action.vp).to.eq(7) // 3 matches → 7 VP
+      expect(action.xp).to.eql([Flower.RED, Flower.BLUE, Flower.PURPLE])
+    })
+
+    it('sets VP based on flower match count of 5 (full match)', () => {
+      const cardDeck = mockCardDeck({ pile: ['delivery-1'] })
+      cardDeck.draw()
+      const garden = mockBotGarden({
+        seasons: [
+          { season: Season.AUTUMN, flowers: [Flower.ORANGE, Flower.BLUE, Flower.YELLOW, Flower.PURPLE, Flower.RED] }
+        ]
+      })
+      const windowStates = WindowStates.new()
+      // floor 5 already has all 5 flowers defined by default
+      const navigationState = mockNavigationState({
+        season: Season.AUTUMN,
+        garden,
+        windowStates,
+        cardDeck
+      })
+
+      const botActions = new BotActions(navigationState)
+
+      const action = botActions.actions[0]
+      expect(action.vp).to.eq(16) // 5 matches → 16 VP
+    })
+
+    it('sets VP to 0 when no flowers match', () => {
+      const cardDeck = mockCardDeck({ pile: ['delivery-1'] })
+      cardDeck.draw()
+      const garden = mockBotGarden({
+        seasons: [
+          { season: Season.AUTUMN, flowers: [Flower.YELLOW] }
+        ]
+      })
+      const windowStates = WindowStates.new()
+      windowStates.setWindowState(1, WindowSelection.LEFT, [Flower.RED], [])
+      const navigationState = mockNavigationState({
+        season: Season.AUTUMN,
+        garden,
+        windowStates,
+        cardDeck
+      })
+
+      const botActions = new BotActions(navigationState)
+
+      const action = botActions.actions[0]
+      // floor 1 has RED, garden has YELLOW → 0 matches but floor 5 might be better
+      // floor 5 has all 5 flowers, garden has YELLOW → 1 match → 2 VP
+      // Actually the best match is floor 5 (1 match vs floor 1 with 0 match)
+      expect(action.vp).to.eq(2)
+    })
+
+    it('XP only includes flowers present in current season', () => {
+      const cardDeck = mockCardDeck({ pile: ['delivery-1'] })
+      cardDeck.draw()
+      const garden = mockBotGarden({
+        seasons: [
+          { season: Season.AUTUMN, flowers: [Flower.RED] }
+        ]
+      })
+      const windowStates = WindowStates.new()
+      windowStates.setWindowState(3, WindowSelection.LEFT, [Flower.RED, Flower.BLUE, Flower.PURPLE], [])
+      const navigationState = mockNavigationState({
+        season: Season.AUTUMN,
+        garden,
+        windowStates,
+        cardDeck
+      })
+
+      const botActions = new BotActions(navigationState)
+
+      const action = botActions.actions[0]
+      // garden has RED, window has RED,BLUE,PURPLE → only RED is in current season
+      expect(action.xp).to.eql([Flower.RED])
+    })
+  })
+
+  describe('WINDOW_BOX VP and XP', () => {
+    it('sets VP and XP when defining a window box', () => {
+      const cardDeck = mockCardDeck({ pile: ['window-box-1'] })
+      cardDeck.draw()
+      const garden = mockBotGarden({
+        seasons: [
+          { season: Season.AUTUMN, flowers: [Flower.RED, Flower.BLUE, Flower.PURPLE] }
+        ]
+      })
+      const windowStates = WindowStates.new()
+      const navigationState = mockNavigationState({
+        marketPrices: [
+          { flower: Flower.RED, price: 5 },
+          { flower: Flower.BLUE, price: 3 },
+          { flower: Flower.PURPLE, price: 7 },
+        ],
+        season: Season.AUTUMN,
+        garden,
+        windowStates,
+        cardDeck
+      })
+
+      const botActions = new BotActions(navigationState)
+
+      const action = botActions.actions[0]
+      expect(action.action).to.eq(Action.WINDOW_BOX)
+      // 3 flowers in garden, 3 in window → 3 matches → 7 VP
+      expect(action.vp).to.eq(7)
+      // XP = distinct flowers in window
+      expect(action.xp).to.include.members([Flower.PURPLE, Flower.RED, Flower.BLUE])
+      expect(action.xp).to.have.length(3)
+    })
+
+    it('VP reflects only matching flowers from current season', () => {
+      const cardDeck = mockCardDeck({ pile: ['window-box-1'] })
+      cardDeck.draw()
+      const garden = mockBotGarden({
+        seasons: [
+          { season: Season.AUTUMN, flowers: [Flower.RED, Flower.BLUE, Flower.PURPLE, Flower.YELLOW] }
+        ]
+      })
+      const windowStates = WindowStates.new()
+      // fill floor 4
+      windowStates.setWindowState(4, WindowSelection.LEFT, [Flower.RED, Flower.BLUE, Flower.PURPLE, Flower.YELLOW], [])
+      windowStates.setWindowState(4, WindowSelection.RIGHT, [Flower.RED, Flower.BLUE, Flower.PURPLE, Flower.YELLOW], [])
+      const navigationState = mockNavigationState({
+        marketPrices: [
+          { flower: Flower.RED, price: 3 },
+          { flower: Flower.BLUE, price: 8 },
+          { flower: Flower.PURPLE, price: 5 },
+          { flower: Flower.YELLOW, price: 1 },
+        ],
+        season: Season.AUTUMN,
+        garden,
+        windowStates,
+        cardDeck
+      })
+
+      const botActions = new BotActions(navigationState)
+
+      const action = botActions.actions[0]
+      expect(action.action).to.eq(Action.WINDOW_BOX)
+      // floor 3 with flowers [BLUE, PURPLE, RED] (sorted by price)
+      // garden has all 4 flowers, 3 match window → 7 VP
+      expect(action.vp).to.eq(7)
+    })
+  })
+
   it('no current card returns empty actions', () => {
     const cardDeck = mockCardDeck()
     const navigationState = mockNavigationState({ cardDeck })

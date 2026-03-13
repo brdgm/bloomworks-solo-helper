@@ -11,6 +11,8 @@ import WindowSelection from './enum/WindowSelection'
 import PriceSelection from './enum/PriceSelection'
 import { cloneDeep } from 'lodash'
 import Player from './enum/Player'
+import getFlowerMatchCount from '@/util/getFlowerMatchCount'
+import getDistinctFlowers from '@/util/getDistinctFlowers'
 
 /**
  * Collects the bot's actions and manages the automatic actions.
@@ -71,7 +73,7 @@ export default class BotActions {
         this.processPlant(botAction)
         break
       case Action.SOLD:
-        this.processSold()
+        this.processSold(botAction)
         break
       case Action.PAID:
         this.processPaid(botAction)
@@ -93,6 +95,9 @@ export default class BotActions {
           this.processDelivery(botAction)
         }
         break
+      case Action.VP_5:
+        this.processVP5(botAction)
+        break
     }
     return botAction
   }
@@ -109,9 +114,9 @@ export default class BotActions {
   /**
    * Get distinct list of flowers in current season, reduce price by 1 for each
    */
-  private processSold(): void {
-    const distinctFlowers = [...new Set(this.getFlowersOfCurrentSeason())]
-    for (const flower of distinctFlowers) {
+  private processSold(botAction: BotAction): void {
+    botAction.flowers = getDistinctFlowers(this.getFlowersOfCurrentSeason())
+    for (const flower of botAction.flowers) {
       this._marketPrices.decrease(flower)
     }
   }
@@ -120,10 +125,10 @@ export default class BotActions {
    * Identify the most expensive flower in this season, reduce price by 1 and gain that number of VP
    */
   private processPaid(botAction: BotAction): void {
-    const mostExpensiveFlower = this.getMostExpensiveFlowerOfCurrentSeason()
-    if (mostExpensiveFlower) {
-      this._marketPrices.decrease(mostExpensiveFlower)
-      botAction.vp = this._marketPrices.getPrice(mostExpensiveFlower)
+    botAction.flower = this.getMostExpensiveFlowerOfCurrentSeason()
+    if (botAction.flower) {
+      this._marketPrices.decrease(botAction.flower)
+      botAction.vp = this._marketPrices.getPrice(botAction.flower)
     }
   }
 
@@ -147,6 +152,13 @@ export default class BotActions {
   }
 
   /**
+   * Bot gets 5 VP.
+   */
+  private processVP5(botAction: BotAction): void {
+    botAction.vp = 5
+  }
+
+  /**
    * Executes bot delivery.
    * @return true If the delivery was successful
    */
@@ -156,6 +168,9 @@ export default class BotActions {
     if (window) {
       botAction.floor = window.floor
       botAction.windowSelection = window.windowSelection
+      // for VP and XP, only the flowers actually present in the current season are counted
+      botAction.vp = this.getVPFromMatchingFlowers(window.flowers, currentSeasonFlowers)
+      botAction.xp = window.flowers.filter(flower => currentSeasonFlowers.includes(flower))
       this._windowStates.addDelivery(window.floor, window.windowSelection, Player.BOT)
       return true
     }
@@ -172,10 +187,27 @@ export default class BotActions {
     if (window) {
       botAction.floor = window.floor
       botAction.windowSelection = window.windowSelection
+      botAction.flowers = window.flowers
+      botAction.vp = this.getVPFromMatchingFlowers(window.flowers, currentSeasonFlowers)
+      botAction.xp = getDistinctFlowers(window.flowers)
       this._windowStates.setWindowState(window.floor, window.windowSelection, window.flowers, [Player.BOT])
       return true
     }
     return false
+  }
+
+  /**
+   * Get VPs for matching flowers on delivery.
+   */
+  private getVPFromMatchingFlowers(flowers: Flower[], flowersToMatch: Flower[]): number {
+    switch (getFlowerMatchCount(flowers, flowersToMatch)) {
+      case 1: return 2
+      case 2: return 4
+      case 3: return 7
+      case 4: return 10
+      case 5: return 16
+      default: return 0
+    }
   }
 
   private getFlowersOfCurrentSeason(): Flower[] {
@@ -201,4 +233,5 @@ export interface BotAction extends CardAction {
   flower?: Flower
   flowers?: Flower[]
   vp?: number
+  xp?: Flower[]
 }

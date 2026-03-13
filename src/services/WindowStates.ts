@@ -6,6 +6,7 @@ import Flower from './enum/Flower'
 import Player from './enum/Player'
 import getAllEnumValues from '@brdgm/brdgm-commons/src/util/enum/getAllEnumValues'
 import MarketPrices from './MarketPrices'
+import getFlowerMatchCount from '@/util/getFlowerMatchCount'
 
 /**
  * Stores flowers of already defined windows.
@@ -57,8 +58,8 @@ export default class WindowStates {
     // get all defined windows that are not fully delivered yet, already ordered in bot's priority
     const windows = this._windowStates.value.filter(w => w.deliveries.length < 4)
       .toSorted((a, b) => {
-        const matchA = getMatchCount(a.flowers, flowers)
-        const matchB = getMatchCount(b.flowers, flowers)
+        const matchA = getFlowerMatchCount(a.flowers, flowers)
+        const matchB = getFlowerMatchCount(b.flowers, flowers)
         // sort windows by number of matching flowers, higher match has higher priority
         if (matchB !== matchA) return matchB - matchA
         // Sort windows by fewest missing flowers, as tie breaker. This ensures that if there are multiple windows with the same match count, the one with fewer missing flowers is prioritized.
@@ -126,23 +127,4 @@ export default class WindowStates {
     return new WindowStates(cloneDeep(persistence))
   }
 
-}
-
-/**
- * Counts the number of matching flowers, taking duplicates in the flowers to match into account as well.
- * @param flowers Given flowers
- * @param flowersToMatch Flowers to match against
- * @returns number of matching flowers
- */
-function getMatchCount(flowers: Flower[], flowersToMatch: Flower[]) : number {
-  const flowersToMatchCopy = cloneDeep(flowersToMatch)
-  let matchCount = 0
-  for (const flower of flowers) {
-    const index = flowersToMatchCopy.indexOf(flower)
-    if (index >= 0) {
-      matchCount++
-      flowersToMatchCopy.splice(index, 1)
-    }
-  }
-  return matchCount
 }

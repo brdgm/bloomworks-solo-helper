@@ -48,7 +48,6 @@
       "milestones": "When Lady Pei claims a milestone (as displayed by the application, this can even happen during your own turns), put one of her marker to the highest available point value. She doesn't need to fulfill the conditions.",
       "noBonuses": "In general, Lady Pei does not receive the bonuses displayed on the window tiles when delivering, and does not interact with neighbors.",
       "actionBoxTypes": "When Lady Pei executes her actions, some are displayed in a grey box, and some in a blue box. The actions for grey boxes are executed automatically by the application and shown only for information. For the blue boxes, you have to execute the action for her and follow the instructions.",
-      "autoActions": "Some actions start as blue boxes, but are automatically executed as grey actions later when the application learns the board state.",
       "clickForDetails": "You can click on each action box to see rules details."
     }
   },
@@ -84,7 +83,9 @@
   },
   "roundTurnBot": {
     "bonusActions": "Bonus Actions",
-    "actionsNotReady": "Please complete the actions."
+    "actionsNotReady": "Please complete the actions.",
+    "gainVP": "<b>{vp} VP</B>",
+    "gainXP": "XP: "
   },
   "botClaimMilestones": {
     "botClaim": "Lady Pei claims a milestone:",
@@ -108,6 +109,10 @@
     "spring": "Spring",
     "summer": "Summer"
   },
+  "windowSelection": {
+    "l": "left",
+    "r": "right"
+  },
   "rules": {
     "action": {
       "managedByApp": "This action is managed by the application.",
@@ -115,10 +120,15 @@
         "title": "Billboard"
       },
       "delivery": {
-        "title": "Delivery"
+        "title": "Delivery",
+        "selectWindow": "Lady Pei delivers to a window with the most matching flowers (ignoring missing flowers, if required):",
+        "selectedWindow": "Floor {floor}, Window: {selection}",
+        "gainVPandXP": "Lady Pei earns <b>{vp} VP</b> and 1 XP for each color used in the Window Box.",
+        "placeMarker": "Place a marker from Lady Pei in the window above the box."
       },
       "paid": {
-        "title": "Paid"
+        "title": "Paid",
+        "instruction": "The price of the most expensive flower in Lady Pei’s garden this season is decreased by 1. Lady Pei gains VP equal to the new price."
       },
       "plant": {
         "title": "Plant",
@@ -127,7 +137,6 @@
       },
       "price": {
         "title": "Price",
-        "priceIncreased": "Price increased for flower: | Price increased for flowers:",
         "definedWindowInstruction": "If the given window is defined, the price for <i>each flower</i> in that box is increased.",
         "undefinedWindowInstruction": {
           "cheapest": "If the window is not defined, the price of the <i>cheapest</i> flower is increased.",
@@ -135,13 +144,16 @@
         }
       },
       "sold": {
-        "title": "Sold"
+        "title": "Sold",
+        "instruction": "For each flower family in Lady Pei’s Garden this season, the price is decreased by 1."
       },
       "vp5": {
-        "title": "5 VP"
+        "title": "5 VP",
+        "instruction": "Lady Pei gains 5 VP."
       },
       "windowBox": {
-        "title": "Window Box"
+        "title": "Window Box",
+        "defineWindow": "Lady Pei creates the most expensive legal Window Box that could be made from the flowers in her garden in the current season:"
       },
       "xp": {
         "title": "XP",

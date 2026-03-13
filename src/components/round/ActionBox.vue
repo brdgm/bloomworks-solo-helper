@@ -2,6 +2,11 @@
   <div class="actionBox col" @click="showInstructions"
       :class="{'instruction': hasInstruction, 'managedByApp': managedByApp}">
     <slot name="action"></slot>
+    <div v-if="vp" class="vpGain">
+      <span v-html="t('roundTurnBot.gainVP', {vp: vp})"></span><template v-if="xp">,
+      <span v-html="t('roundTurnBot.gainXP')"/>
+      <FlowerIcon v-for="flower in xp" :key="flower" :flower="flower"/></template>
+    </div>
     <div v-if="currentCard?.remove" class="remove"><AppIcon name="x" class="icon"/></div>
   </div>
 
@@ -21,12 +26,15 @@ import { useI18n } from 'vue-i18n'
 import { nanoid } from 'nanoid'
 import Card from '@/services/Card'
 import AppIcon from '../structure/AppIcon.vue'
+import Flower from '@/services/enum/Flower'
+import FlowerIcon from '../structure/FlowerIcon.vue'
 
 export default defineComponent({
   name: 'ActionBox',
   components: {
     ModalDialog,
-    AppIcon
+    AppIcon,
+    FlowerIcon
   },
   setup() {
     const { t } = useI18n()
@@ -37,6 +45,14 @@ export default defineComponent({
     instructionTitle: {
       type: String,
       required: true
+    },
+    vp: {
+      type: Number,
+      required: false
+    },
+    xp: {
+      type: Array as PropType<Flower[]>,
+      required: false
     },
     managedByApp: {
       type: Boolean,
@@ -96,5 +112,11 @@ export default defineComponent({
   .icon {
     width: 0.75rem;
   }
+
+}
+.vpGain {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 1.5rem;
 }
 </style>
