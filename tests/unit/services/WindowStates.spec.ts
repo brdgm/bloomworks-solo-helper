@@ -1,8 +1,10 @@
 import WindowStates from '@/services/WindowStates'
+import MarketPrices from '@/services/MarketPrices'
 import Flower from '@/services/enum/Flower'
 import Player from '@/services/enum/Player'
 import WindowSelection from '@/services/enum/WindowSelection'
 import { expect } from 'chai'
+import mockMarketPrices from '../helper/mockMarketPrices'
 
 const INITIAL_WINDOW_5 = { floor: 5, windowSelection: WindowSelection.LEFT, flowers: [Flower.ORANGE, Flower.BLUE, Flower.YELLOW, Flower.PURPLE, Flower.RED], deliveries: [] }
 
@@ -147,5 +149,257 @@ describe('services/WindowStates', () => {
 
     const dw = WindowStates.fromPersistence(persistence)
     expect(dw.windowStates.map(s => `${s.floor}${s.windowSelection}`)).to.deep.eq(['3l', '2l', '1r'])
+  })
+
+  it('getBestMatchingDeliveryWindow-highestMatchCount', () => {
+    const dw = WindowStates.fromPersistence([
+      { floor: 3, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.YELLOW, Flower.PURPLE], deliveries: [] },
+      { floor: 2, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE], deliveries: [] }
+    ])
+
+    const result = dw.getBestMatchingDeliveryWindow([Flower.RED, Flower.BLUE])
+
+    expect(result?.floor).to.eq(2)
+    expect(result?.windowSelection).to.eq(WindowSelection.LEFT)
+  })
+
+  it('getBestMatchingDeliveryWindow-tieBreaker-fewestMissing', () => {
+    const dw = WindowStates.fromPersistence([
+      { floor: 3, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE, Flower.YELLOW], deliveries: [] },
+      { floor: 2, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE], deliveries: [] }
+    ])
+
+    // both match 2, but floor 2 has 0 missing flowers vs floor 3 has 1 missing
+    const result = dw.getBestMatchingDeliveryWindow([Flower.RED, Flower.BLUE])
+
+    expect(result?.floor).to.eq(2)
+    expect(result?.windowSelection).to.eq(WindowSelection.LEFT)
+  })
+
+  it('getBestMatchingDeliveryWindow-skipsFullyDelivered', () => {
+    const dw = WindowStates.fromPersistence([
+      { floor: 3, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE, Flower.YELLOW], deliveries: [Player.PLAYER, Player.BOT, Player.PLAYER, Player.BOT] },
+      { floor: 2, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.YELLOW], deliveries: [] }
+    ])
+
+    const result = dw.getBestMatchingDeliveryWindow([Flower.RED, Flower.BLUE])
+
+    expect(result?.floor).to.eq(2)
+  })
+
+  it('getBestMatchingDeliveryWindow-noWindowsAvailable', () => {
+    const dw = WindowStates.fromPersistence([
+      { floor: 3, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE, Flower.YELLOW], deliveries: [Player.PLAYER, Player.BOT, Player.PLAYER, Player.BOT] }
+    ])
+
+    const result = dw.getBestMatchingDeliveryWindow([Flower.RED])
+
+    expect(result).to.be.undefined
+  })
+
+  it('getBestMatchingDeliveryWindow-duplicateFlowers', () => {
+    const dw = WindowStates.fromPersistence([
+      { floor: 3, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.RED, Flower.BLUE], deliveries: [] },
+      { floor: 3, windowSelection: WindowSelection.RIGHT, flowers: [Flower.RED, Flower.BLUE, Flower.YELLOW], deliveries: [] }
+    ])
+
+    // only one RED available, so both windows match 1 flower
+    // both have 2 missing → same tie, falls to original order (left first)
+    const result = dw.getBestMatchingDeliveryWindow([Flower.RED])
+
+    expect(result?.floor).to.eq(3)
+    expect(result?.windowSelection).to.eq(WindowSelection.LEFT)
+  })
+
+  it('getBestMatchingDeliveryWindow-duplicateFlowersToMatch', () => {
+    const dw = WindowStates.fromPersistence([
+      { floor: 3, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.RED, Flower.BLUE], deliveries: [] },
+      { floor: 2, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE], deliveries: [] }
+    ])
+
+    // two REDs available: floor 3 matches 2, floor 2 matches 1
+    const result = dw.getBestMatchingDeliveryWindow([Flower.RED, Flower.RED])
+
+    expect(result?.floor).to.eq(3)
+  })
+
+  it('getBestMatchingDeliveryWindow-noMatchingFlowers', () => {
+    const dw = WindowStates.fromPersistence([
+      { floor: 3, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE, Flower.YELLOW], deliveries: [] },
+      { floor: 2, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.ORANGE], deliveries: [] }
+    ])
+
+    // no matching flowers at all → match count 0 for both, tie-breaker: floor 2 has 2 missing, floor 3 has 3 missing
+    const result = dw.getBestMatchingDeliveryWindow([Flower.PURPLE])
+
+    expect(result?.floor).to.eq(2)
+  })
+
+  it('getBestMatchingDeliveryWindow-partiallyDelivered', () => {
+    const dw = WindowStates.fromPersistence([
+      { floor: 3, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE, Flower.YELLOW], deliveries: [Player.PLAYER, Player.BOT, Player.PLAYER] },
+      { floor: 3, windowSelection: WindowSelection.RIGHT, flowers: [Flower.RED, Flower.BLUE, Flower.PURPLE], deliveries: [Player.PLAYER] }
+    ])
+
+    // both match 2, both have 1 missing → same sort key
+    // left comes first in original ordering, so it should be returned
+    const result = dw.getBestMatchingDeliveryWindow([Flower.RED, Flower.BLUE])
+
+    expect(result?.floor).to.eq(3)
+    expect(result?.windowSelection).to.eq(WindowSelection.LEFT)
+  })
+
+  it('getBestMatchingUndefinedWindow-picksHighestUndefined', () => {
+    // only floor 5 left is defined, all others undefined
+    const dw = WindowStates.new()
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
+
+    // 4 flowers → picks floor 4 left (highest undefined floor that fits)
+    const result = dw.getBestMatchingUndefinedWindow([Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.ORANGE], marketPrices)
+
+    expect(result?.floor).to.eq(4)
+    expect(result?.windowSelection).to.eq(WindowSelection.LEFT)
+    expect(result?.flowers).to.have.length(4)
+  })
+
+  it('getBestMatchingUndefinedWindow-skipsLargerFloors', () => {
+    const dw = WindowStates.new()
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
+
+    // only 2 flowers → can't fit floor 4 or 3, picks floor 2 left
+    const result = dw.getBestMatchingUndefinedWindow([Flower.RED, Flower.BLUE], marketPrices)
+
+    expect(result?.floor).to.eq(2)
+    expect(result?.windowSelection).to.eq(WindowSelection.LEFT)
+    expect(result?.flowers).to.deep.eq([Flower.RED, Flower.BLUE])
+  })
+
+  it('getBestMatchingUndefinedWindow-skipsDefinedWindows', () => {
+    const dw = WindowStates.new()
+    dw.setWindowState(4, WindowSelection.LEFT, [Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.ORANGE], [])
+    dw.setWindowState(4, WindowSelection.RIGHT, [Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.PURPLE], [])
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
+
+    // 4 flowers but floor 4 both taken → picks floor 3 left
+    const result = dw.getBestMatchingUndefinedWindow([Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.ORANGE], marketPrices)
+
+    expect(result?.floor).to.eq(3)
+    expect(result?.windowSelection).to.eq(WindowSelection.LEFT)
+    expect(result?.flowers).to.have.length(3)
+  })
+
+  it('getBestMatchingUndefinedWindow-prioritizesExpensiveFlowers', () => {
+    const dw = WindowStates.new()
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices([
+      { flower: Flower.ORANGE, price: 2 },
+      { flower: Flower.BLUE, price: 8 },
+      { flower: Flower.YELLOW, price: 5 },
+      { flower: Flower.PURPLE, price: 3 },
+      { flower: Flower.RED, price: 10 }
+    ]))
+
+    // 4 flowers for a floor-2 window → takes the 2 most expensive (RED=10, BLUE=8)
+    const result = dw.getBestMatchingUndefinedWindow([Flower.ORANGE, Flower.BLUE, Flower.YELLOW, Flower.RED], marketPrices)
+
+    expect(result?.floor).to.eq(4)
+    expect(result?.flowers).to.deep.eq([Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.ORANGE])
+  })
+
+  it('getBestMatchingUndefinedWindow-selectsFlowersForSmallerWindow', () => {
+    const dw = WindowStates.new()
+    dw.setWindowState(4, WindowSelection.LEFT, [Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.ORANGE], [])
+    dw.setWindowState(4, WindowSelection.RIGHT, [Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.PURPLE], [])
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices([
+      { flower: Flower.ORANGE, price: 2 },
+      { flower: Flower.BLUE, price: 8 },
+      { flower: Flower.YELLOW, price: 5 },
+      { flower: Flower.PURPLE, price: 3 },
+      { flower: Flower.RED, price: 10 }
+    ]))
+
+    // 4 flowers, floor 4 both taken → floor 3 picked, takes top 3 by price: RED=10, BLUE=8, YELLOW=5
+    const result = dw.getBestMatchingUndefinedWindow([Flower.ORANGE, Flower.BLUE, Flower.YELLOW, Flower.RED], marketPrices)
+
+    expect(result?.floor).to.eq(3)
+    expect(result?.flowers).to.deep.eq([Flower.RED, Flower.BLUE, Flower.YELLOW])
+  })
+
+  it('getBestMatchingUndefinedWindow-noUndefinedLeft', () => {
+    const dw = WindowStates.fromPersistence([
+      { floor: 5, windowSelection: WindowSelection.LEFT, flowers: [Flower.ORANGE, Flower.BLUE, Flower.YELLOW, Flower.PURPLE, Flower.RED], deliveries: [] },
+      { floor: 4, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.ORANGE], deliveries: [] },
+      { floor: 4, windowSelection: WindowSelection.RIGHT, flowers: [Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.PURPLE], deliveries: [] },
+      { floor: 3, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE, Flower.YELLOW], deliveries: [] },
+      { floor: 3, windowSelection: WindowSelection.RIGHT, flowers: [Flower.RED, Flower.BLUE, Flower.PURPLE], deliveries: [] },
+      { floor: 2, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE], deliveries: [] },
+      { floor: 2, windowSelection: WindowSelection.RIGHT, flowers: [Flower.RED, Flower.YELLOW], deliveries: [] },
+      { floor: 1, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED], deliveries: [] },
+      { floor: 1, windowSelection: WindowSelection.RIGHT, flowers: [Flower.BLUE], deliveries: [] }
+    ])
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
+
+    const result = dw.getBestMatchingUndefinedWindow([Flower.RED, Flower.BLUE], marketPrices)
+
+    expect(result).to.be.undefined
+  })
+
+  it('getBestMatchingUndefinedWindow-tooFewFlowers', () => {
+    // all windows undefined except floor 5 → but only 0 flowers given (empty)
+    const dw = WindowStates.new()
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
+
+    const result = dw.getBestMatchingUndefinedWindow([], marketPrices)
+
+    expect(result).to.be.undefined
+  })
+
+  it('getBestMatchingUndefinedWindow-prefersLeftOverRight', () => {
+    const dw = WindowStates.new()
+    dw.setWindowState(4, WindowSelection.LEFT, [Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.ORANGE], [])
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
+
+    // floor 4 left is taken, so floor 4 right should be picked
+    const result = dw.getBestMatchingUndefinedWindow([Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.ORANGE], marketPrices)
+
+    expect(result?.floor).to.eq(4)
+    expect(result?.windowSelection).to.eq(WindowSelection.RIGHT)
+  })
+
+  it('getBestMatchingUndefinedWindow-duplicateFlowers-samePrices', () => {
+    const dw = WindowStates.new()
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
+
+    // 3 flowers with duplicates, all same price → floor 3 picked, keeps first 3 in sorted order
+    const result = dw.getBestMatchingUndefinedWindow([Flower.RED, Flower.RED, Flower.BLUE], marketPrices)
+
+    expect(result?.floor).to.eq(3)
+    expect(result?.flowers).to.deep.eq([Flower.RED, Flower.RED, Flower.BLUE])
+  })
+
+  it('getBestMatchingUndefinedWindow-duplicateFlowers-differentPrices', () => {
+    const dw = WindowStates.new()
+    dw.setWindowState(4, WindowSelection.LEFT, [Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.ORANGE], [])
+    dw.setWindowState(4, WindowSelection.RIGHT, [Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.PURPLE], [])
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices([
+      { flower: Flower.RED, price: 10 },
+      { flower: Flower.BLUE, price: 3 }
+    ]))
+
+    // 4 flowers with duplicates, floor 4 taken → floor 3, top 3 by price: RED=10, RED=10, BLUE=3
+    const result = dw.getBestMatchingUndefinedWindow([Flower.RED, Flower.BLUE, Flower.RED, Flower.BLUE], marketPrices)
+
+    expect(result?.floor).to.eq(3)
+    expect(result?.flowers).to.deep.eq([Flower.RED, Flower.RED, Flower.BLUE])
+  })
+
+  it('getBestMatchingUndefinedWindow-allDuplicateFlowers', () => {
+    const dw = WindowStates.new()
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
+
+    // 2 identical flowers → floor 2 picked
+    const result = dw.getBestMatchingUndefinedWindow([Flower.YELLOW, Flower.YELLOW], marketPrices)
+
+    expect(result?.floor).to.eq(2)
+    expect(result?.flowers).to.deep.eq([Flower.YELLOW, Flower.YELLOW])
   })
 })

@@ -10,6 +10,7 @@ import WindowStates from './WindowStates'
 import WindowSelection from './enum/WindowSelection'
 import PriceSelection from './enum/PriceSelection'
 import { cloneDeep } from 'lodash'
+import Player from './enum/Player'
 
 /**
  * Collects the bot's actions and manages the automatic actions.
@@ -78,6 +79,20 @@ export default class BotActions {
       case Action.PRICE:
         this.processPrice(botAction)
         break
+      case Action.DELIVERY:
+        if (!this.processDelivery(botAction)) {
+          // switch to window box if delivery is not possible
+          botAction.action = Action.WINDOW_BOX
+          this.processWindowBox(botAction)
+        }
+        break
+      case Action.WINDOW_BOX:
+        if (!this.processWindowBox(botAction)) {
+          // switch to delivery if defining window box is not possible
+          botAction.action = Action.DELIVERY
+          this.processDelivery(botAction)
+        }
+        break
     }
     return botAction
   }
@@ -129,6 +144,38 @@ export default class BotActions {
     for (const flower of botAction.flowers) {
       this._marketPrices.increase(flower)
     }
+  }
+
+  /**
+   * Executes bot delivery.
+   * @return true If the delivery was successful
+   */
+  private processDelivery(botAction: BotAction): boolean {
+    const currentSeasonFlowers = this.getFlowersOfCurrentSeason()
+    const window = this._windowStates.getBestMatchingDeliveryWindow(currentSeasonFlowers)
+    if (window) {
+      botAction.floor = window.floor
+      botAction.windowSelection = window.windowSelection
+      this._windowStates.addDelivery(window.floor, window.windowSelection, Player.BOT)
+      return true
+    }
+    return false
+  }
+
+  /**
+   * Executes bot defining a new window box.
+   * @return true If defining the window box was successful
+   */
+  private processWindowBox(botAction: BotAction): boolean {
+    const currentSeasonFlowers = this.getFlowersOfCurrentSeason()
+    const window = this._windowStates.getBestMatchingUndefinedWindow(currentSeasonFlowers, this._marketPrices)
+    if (window) {
+      botAction.floor = window.floor
+      botAction.windowSelection = window.windowSelection
+      this._windowStates.setWindowState(window.floor, window.windowSelection, window.flowers, [Player.BOT])
+      return true
+    }
+    return false
   }
 
   private getFlowersOfCurrentSeason(): Flower[] {
