@@ -71,7 +71,7 @@ export default defineComponent({
   computed: {
     allActionsReady() : boolean {
       return this.botActions.actions.length > 0
-          && this.actionsReadyState.filter(r => r).length >= this.botActions.actions.length
+          && this.actionsReadyState.filter(Boolean).length >= this.botActions.actions.length
     },
     backButtonRouteTo() : string {
       if (this.navigationState.botTurn == 0 

@@ -84,7 +84,7 @@ export default class WindowStates {
       }
     }
     // get the best-matching undefined window, skipping all windows larger then the given flowers
-    const bestMatch = windows.filter(w => w.floor <= flowers.length)[0]
+    const bestMatch = windows.find(w => w.floor <= flowers.length)
     if (bestMatch) {
       // sort the given flowers by price, higher price first, to prioritize matching more expensive flowers (otherwise keeping the order by bot flower priority)
       const flowersSorted = [...flowers].sort((a, b) => marketPrices.getPrice(b) - marketPrices.getPrice(a))
