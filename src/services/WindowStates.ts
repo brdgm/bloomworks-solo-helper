@@ -57,6 +57,8 @@ export default class WindowStates {
   public getBestMatchingDeliveryWindow(flowers: Flower[]) : WindowState|undefined {
     // get all defined windows that are not fully delivered yet, already ordered in bot's priority
     const windows = this._windowStates.value.filter(w => w.deliveries.length < 4)
+      // do not deliver to the 5th Floor unless match at least two flowers
+      .filter(w => w.floor < 5 || flowers.length >= 2)
       .toSorted((a, b) => {
         const matchA = getFlowerMatchCount(a.flowers, flowers)
         const matchB = getFlowerMatchCount(b.flowers, flowers)

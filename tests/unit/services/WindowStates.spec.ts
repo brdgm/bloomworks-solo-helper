@@ -249,6 +249,55 @@ describe('services/WindowStates', () => {
     expect(result?.windowSelection).to.eq(WindowSelection.LEFT)
   })
 
+  it('getBestMatchingDeliveryWindow-skips5thFloorWithSingleFlower', () => {
+    const dw = WindowStates.fromPersistence([
+      { floor: 5, windowSelection: WindowSelection.LEFT, flowers: [Flower.ORANGE, Flower.BLUE, Flower.YELLOW, Flower.PURPLE, Flower.RED], deliveries: [] },
+      { floor: 2, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE], deliveries: [] }
+    ])
+
+    // only 1 flower → 5th floor should be skipped, picks floor 2
+    const result = dw.getBestMatchingDeliveryWindow([Flower.RED])
+
+    expect(result?.floor).to.eq(2)
+    expect(result?.windowSelection).to.eq(WindowSelection.LEFT)
+  })
+
+  it('getBestMatchingDeliveryWindow-allows5thFloorWithTwoFlowers', () => {
+    const dw = WindowStates.fromPersistence([
+      { floor: 5, windowSelection: WindowSelection.LEFT, flowers: [Flower.ORANGE, Flower.BLUE, Flower.YELLOW, Flower.PURPLE, Flower.RED], deliveries: [] },
+      { floor: 2, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE], deliveries: [] }
+    ])
+
+    // 2 flowers → 5th floor is allowed, both match 2, floor 2 has 0 missing vs floor 5 has 3 missing → floor 2 wins
+    const result = dw.getBestMatchingDeliveryWindow([Flower.RED, Flower.BLUE])
+
+    expect(result?.floor).to.eq(2)
+    expect(result?.windowSelection).to.eq(WindowSelection.LEFT)
+  })
+
+  it('getBestMatchingDeliveryWindow-skips5thFloorWithSingleFlower-noOtherWindows', () => {
+    const dw = WindowStates.fromPersistence([
+      { floor: 5, windowSelection: WindowSelection.LEFT, flowers: [Flower.ORANGE, Flower.BLUE, Flower.YELLOW, Flower.PURPLE, Flower.RED], deliveries: [] }
+    ])
+
+    // only 1 flower and only 5th floor available → no match
+    const result = dw.getBestMatchingDeliveryWindow([Flower.RED])
+
+    expect(result).to.be.undefined
+  })
+
+  it('getBestMatchingDeliveryWindow-allows5thFloorWithTwoFlowers-only5thFloor', () => {
+    const dw = WindowStates.fromPersistence([
+      { floor: 5, windowSelection: WindowSelection.LEFT, flowers: [Flower.ORANGE, Flower.BLUE, Flower.YELLOW, Flower.PURPLE, Flower.RED], deliveries: [] }
+    ])
+
+    // 2 flowers and only 5th floor → 5th floor is allowed
+    const result = dw.getBestMatchingDeliveryWindow([Flower.RED, Flower.BLUE])
+
+    expect(result?.floor).to.eq(5)
+    expect(result?.windowSelection).to.eq(WindowSelection.LEFT)
+  })
+
   it('getBestMatchingUndefinedWindow-picksHighestUndefined', () => {
     // only floor 5 left is defined, all others undefined
     const dw = WindowStates.new()

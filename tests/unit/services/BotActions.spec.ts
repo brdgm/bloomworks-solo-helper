@@ -755,10 +755,9 @@ describe('services/BotActions', () => {
       const botActions = new BotActions(navigationState)
 
       const action = botActions.actions[0]
-      // floor 1 has RED, garden has YELLOW → 0 matches but floor 5 might be better
-      // floor 5 has all 5 flowers, garden has YELLOW → 1 match → 2 VP
-      // Actually the best match is floor 5 (1 match vs floor 1 with 0 match)
-      expect(action.vp).to.eq(2)
+      // floor 1 has RED, garden has YELLOW → 0 matches
+      // floor 5 is excluded because only 1 flower available (needs >= 2)
+      expect(action.vp).to.eq(0)
     })
 
     it('XP only includes flowers present in current season', () => {
