@@ -15,7 +15,7 @@ export default class WindowStates {
 
   private constructor(windowStates : WindowState[]) {
     this._windowStates = ref(windowStates)
-    this._sort()
+    this.sortFloorsWindows()
   }
 
   public get windowStates() : readonly WindowState[] {
@@ -33,7 +33,7 @@ export default class WindowStates {
       existing.deliveries = deliveries
     } else {
       this._windowStates.value.push({ floor, windowSelection, flowers, deliveries })
-      this._sort()
+      this.sortFloorsWindows()
     }
   }
 
@@ -49,7 +49,7 @@ export default class WindowStates {
     this._windowStates.value = this._windowStates.value.filter(dw => dw.floor !== floor || dw.windowSelection !== windowSelection)
   }
 
-  private _sort() : void {
+  private sortFloorsWindows() : void {
     const selectionOrder = [WindowSelection.LEFT, WindowSelection.RIGHT]
     this._windowStates.value.sort((a, b) =>
       b.floor - a.floor || selectionOrder.indexOf(a.windowSelection) - selectionOrder.indexOf(b.windowSelection)
