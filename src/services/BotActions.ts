@@ -7,6 +7,8 @@ import Action from './enum/Action'
 import Season from './enum/Season'
 import NavigationState from '@/util/NavigationState'
 import WindowStates from './WindowStates'
+import WindowSelection from './enum/WindowSelection'
+import PriceSelection from './enum/PriceSelection'
 
 /**
  * Collects the bot's actions and manages the automatic actions.
@@ -88,14 +90,19 @@ export default class BotActions {
           break
 
         case Action.PRICE:
-          // if windows is already defined: increase price of flowers in that window by 1, otherwise wait for user input
-          if (action.floor && action.windowSelection) {
-            const windowState = this._windowStates.getWindowState(action.floor, action.windowSelection)
-            if (windowState) {
-              for (const flower of windowState.flowers) {
-                this._marketPrices.increase(flower)
-              }
-            }
+          // if windows is already defined: increase price of flowers in that window by 1, otherwise increase 1 least/most expensive flower
+          const windowState = this._windowStates.getWindowState(action.floor ?? 1, action.windowSelection ?? WindowSelection.LEFT)
+          if (windowState) {
+            botAction.flowers = windowState.flowers
+          }
+          else if (action.priceSelection == PriceSelection.MOST_EXPENSIVE) {
+            botAction.flowers = [this._marketPrices.getMostExpensiveFlower()]
+          }
+          else {
+            botAction.flowers = [this._marketPrices.getCheapestFlower()]
+          }
+          for (const flower of botAction.flowers) {
+            this._marketPrices.increase(flower)
           }
           break
       }
@@ -126,5 +133,6 @@ export default class BotActions {
 
 export interface BotAction extends CardAction {
   flower?: Flower
+  flowers?: Flower[]
   vp?: number
 }

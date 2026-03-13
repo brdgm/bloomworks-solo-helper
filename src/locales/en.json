@@ -127,10 +127,6 @@
       },
       "price": {
         "title": "Price",
-        "selectFlowers": "Select the flowers defined for this window:",
-        "or": "or",
-        "windowDefined": "Done",
-        "windowUndefined": "Window is undefined",
         "priceIncreased": "Price increased for flower: | Price increased for flowers:",
         "definedWindowInstruction": "If the given window is defined, the price for <i>each flower</i> in that box is increased.",
         "undefinedWindowInstruction": {

@@ -1,26 +1,11 @@
 <template>
-  <ActionBox :instruction-title="t('rules.action.price.title')" :currentCard="currentCard" :managedByApp="managedByApp">
+  <ActionBox :instruction-title="t('rules.action.price.title')" :currentCard="currentCard" :managedByApp="true">
     <template #action>
       <div class="action">
         <AppIcon type="action" :name="iconName" class="icon"/>
       </div>
-      <div class="mt-3" v-if="managedByApp || done">
-        <div class="mb-2" v-html="t('rules.action.price.priceIncreased', selectedFlowers.length)"></div>
-        <FlowerIcon v-for="flower in selectedFlowers" :key="flower" :flower="flower"/>
-      </div>
-      <div v-else class="mt-3" @click.stop>
-        <p v-html="t('rules.action.price.selectFlowers')"></p>
-        <FlowerSelection v-model="selectedFlowers" :marketPrices="navigationState.marketPrices" :max="flowerCount"/>
-        <div v-if="selectedFlowers.length == flowerCount" class="mt-2">
-          <button class="btn btn-secondary" @click="windowIsDefined()">{{t('rules.action.price.windowDefined')}}</button>
-        </div>
-        <div v-if="selectedFlowers.length == 0">
-          <div>{{t('rules.action.price.or')}}</div>
-          <div class="mt-1">
-            <button class="btn btn-secondary" @click="windowIsUndefined()">{{t('rules.action.price.windowUndefined')}}</button>
-          </div>
-        </div>
-      </div>
+      <div class="mt-2 mb-1" v-html="t('rules.action.price.priceIncreased', flowers.length)"></div>
+      <FlowerIcon v-for="flower in flowers" :key="flower" :flower="flower"/>
     </template>
     <template #instruction>
       <p v-html="t('rules.action.price.definedWindowInstruction')"/>
@@ -37,8 +22,6 @@ import Card from '@/services/Card'
 import { BotAction } from '@/services/BotActions'
 import ActionBox from '../ActionBox.vue'
 import AppIcon from '@/components/structure/AppIcon.vue'
-import FlowerSelection from '@/components/structure/FlowerSelection.vue'
-import PriceSelection from '@/services/enum/PriceSelection'
 import FlowerIcon from '@/components/structure/FlowerIcon.vue'
 import WindowSelection from '@/services/enum/WindowSelection'
 
@@ -48,21 +31,17 @@ export default defineComponent({
   components: {
     ActionBox,
     AppIcon,
-    FlowerSelection,
     FlowerIcon
   },
   emits: ['ready'],
   setup(props) {
     const { t } = useI18n()
 
-    // window already defined?
     const floor = props.action.floor ?? 1
     const windowSelection = props.action.windowSelection ?? WindowSelection.LEFT
-    const windowState = props.navigationState.botPersistence.windowStates.getWindowState(floor, windowSelection)
-    const selectedFlowers = ref(windowState?.flowers ?? [])
-    const managedByApp = (windowState != undefined)
+    const flowers = props.action.flowers ?? []
 
-    return { t, floor, windowSelection, selectedFlowers, managedByApp }
+    return { t, floor, windowSelection, flowers }
   },
   props: {
     action: {
@@ -91,32 +70,8 @@ export default defineComponent({
       return this.floor
     }
   },
-  methods: {
-    windowIsDefined() : void {
-      this.navigationState.botPersistence.windowStates.setWindowState(this.floor, this.windowSelection, this.selectedFlowers, [])
-      this.doIncreasePrices()
-    },
-    windowIsUndefined() : void {
-      if (this.action.priceSelection == PriceSelection.MOST_EXPENSIVE) {
-        this.selectedFlowers = [this.navigationState.marketPrices.getMostExpensiveFlower()]
-      }
-      else {
-        this.selectedFlowers = [this.navigationState.marketPrices.getCheapestFlower()]
-      }
-      this.doIncreasePrices()
-    },
-    doIncreasePrices() : void {
-      for (const flower of this.selectedFlowers) {
-        this.navigationState.marketPrices.increase(flower)
-      }
-      this.done = true
-      this.$emit('ready')
-    }
-  },
   mounted() {
-    if (this.managedByApp) {
-      this.$emit('ready')
-    }
+    this.$emit('ready')
   }
 })
 </script>

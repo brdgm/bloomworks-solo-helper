@@ -158,13 +158,14 @@ describe('services/BotActions', () => {
       expect(navigationState.marketPrices.getPrice(Flower.BLUE)).to.eq(4)
     })
 
-    it('window not yet defined - no price changes', () => {
+    it('window not yet defined - falls back to most expensive flower', () => {
       const cardDeck = mockCardDeck({ pile: ['price-1'] })
       cardDeck.draw()
       const windowStates = WindowStates.new()
       const navigationState = mockNavigationState({
         marketPrices: [
-          { flower: Flower.RED, price: 4 },
+          { flower: Flower.RED, price: 3 },
+          { flower: Flower.BLUE, price: 6 },
         ],
         windowStates,
         cardDeck
@@ -173,7 +174,32 @@ describe('services/BotActions', () => {
       const botActions = new BotActions(navigationState)
 
       expect(botActions.actions[0].action).to.eq(Action.PRICE)
+      expect(botActions.actions[0].flowers).to.eql([Flower.BLUE])
+      // BLUE was most expensive, increased from 6 to 7
+      expect(navigationState.marketPrices.getPrice(Flower.BLUE)).to.eq(7)
+      expect(navigationState.marketPrices.getPrice(Flower.RED)).to.eq(3)
+    })
+
+    it('window not yet defined - falls back to cheapest flower', () => {
+      const cardDeck = mockCardDeck({ pile: ['price-2'] })
+      cardDeck.draw()
+      const windowStates = WindowStates.new()
+      const navigationState = mockNavigationState({
+        marketPrices: [
+          { flower: Flower.RED, price: 3 },
+          { flower: Flower.BLUE, price: 6 },
+        ],
+        windowStates,
+        cardDeck
+      })
+
+      const botActions = new BotActions(navigationState)
+
+      expect(botActions.actions[0].action).to.eq(Action.PRICE)
+      expect(botActions.actions[0].flowers).to.eql([Flower.RED])
+      // RED was cheapest, increased from 3 to 4
       expect(navigationState.marketPrices.getPrice(Flower.RED)).to.eq(4)
+      expect(navigationState.marketPrices.getPrice(Flower.BLUE)).to.eq(6)
     })
   })
 
