@@ -1,12 +1,12 @@
 <template>
   <div class="sidebar">
     <div>
-      <span class="fw-bold">{{t(`season.${season}`)}}</span> {{t('sideBar.round', {round})}}
+      <span class="fw-bold">{{t(`season.${season}`)}}</span> {{t('sideBar.year', {year})}}
 
       <hr/>
 
       <div v-for="price in marketPrices.prices" :key="price.flower" class="flowerPrice"
-          data-bs-toggle="modal" data-bs-target="#marketPriceModal" role="button"
+          :data-bs-toggle="readOnly ? '' : 'modal'" data-bs-target="#marketPriceModal" :role="readOnly ? '' : 'button'"
           @click="openPriceEdit(price.flower, price.price)">
         <FlowerIcon :flower="price.flower"/>
         <div class="price buy">$<span class="value">{{price.price}}</span></div>
@@ -84,11 +84,15 @@ export default defineComponent({
     navigationState: {
       type: NavigationState,
       required: true
+    },
+    readOnly: {
+      type: Boolean,
+      required: false
     }
   },
   computed: {
-    round() : number {
-      return this.navigationState.round
+    year() : number {
+      return this.navigationState.year
     },
     season() : Season {
       return this.navigationState.season
@@ -111,6 +115,9 @@ export default defineComponent({
       return season === this.season
     },
     openPriceEdit(flower: Flower, price: number) {
+      if (this.readOnly) {
+        return
+      }
       this.selectedFlower = flower
       this.editPrice = price
     },

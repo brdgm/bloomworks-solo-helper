@@ -86,12 +86,16 @@
     "gainVP": "<b>{vp} VP</B>",
     "gainXP": "XP: "
   },
+  "roundEnd": {
+    "title": "End of Round",
+    "nextSeason": "Next Season: <b>{season}</b>"
+  },
   "botClaimMilestones": {
     "botClaim": "Lady Pei claims a milestone:",
     "fifthFloor": "Fifth Floor"
   },
   "sideBar": {
-    "round": "Year {round}",
+    "year": "Year {year}",
     "marketPrice": {
       "title": "Market Price",
       "decrease": "Decrease",

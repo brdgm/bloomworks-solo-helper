@@ -14,12 +14,15 @@ import getSoloBoardPassAction, { SoloBoardPassAction } from './getSoloBoardPassA
 import BotPersistenceWrapper from '@/services/BotPersistenceWrapper'
 import Milestone from '@/services/enum/Milestone'
 import getBotClaimMilestone from './getBotClaimMilestone'
+import WindowStates from '@/services/WindowStates'
+import BillboardMarkers from '@/services/BillboardMarkers'
 
 export default class NavigationState {
 
   readonly round : number
   readonly turn : number
   readonly season : Season
+  readonly year : number
   readonly player : Player
 
   readonly playerTurns: number
@@ -35,8 +38,9 @@ export default class NavigationState {
   constructor(route: RouteLocation, state: State) {    
     this.round = getIntRouteParam(route, 'round')
     this.season = getSeason(this.round, state)
-    this.turn = getIntRouteParam(route, 'turn')
-    this.player = route.name=="RoundTurnPlayer" ? Player.PLAYER : Player.BOT
+    this.year = getYear(this.round, state)
+    this.turn = route.name=='RoundEnd' ? TURN_MAX : getIntRouteParam(route, 'turn')
+    this.player = route.name=='RoundTurnPlayer' ? Player.PLAYER : Player.BOT
 
     this.playerTurns = getPlayerTurns(this.round, this.turn, state)
     this.playerDeliveryFloor = getPlayerDeliveryFloor(this.round, this.turn, state)
@@ -90,11 +94,22 @@ export default class NavigationState {
     return this.soloBoardPassAction.botCardCount
   }
 
+  get totalTurns() : number {
+    return this.playerTurn + this.botTurns
+       + 1 // player pass turn
+       + (this.soloBoardPassAction.action.length > 0 ? 1 : 0)  // bot pass turn actions
+  }
+
 }
 
 function getSeason(round: number, state: State) : Season {
   const roundData = state.rounds.find(r => r.round === round)
   return roundData ? roundData.season : Season.AUTUMN
+}
+
+function getYear(round: number, state: State) : number {
+  const roundData = state.rounds.find(r => r.round === round)
+  return roundData ? roundData.year : 1
 }
 
 function getPlayerTurns(round: number, turn: number, state: State) : number {
@@ -130,10 +145,14 @@ function getBotPersistence(round: number, turn: number, state: State) : BotPersi
     return state.setup.initialBotPersistence ?? {
       cardDeck: CardDeck.new().toPersistence(),
       garden: BotGarden.new([], getAllEnumValues(Flower)).toPersistence(),
-      claimedMilestones: []
+      claimedMilestones: [],
+      windowStates: WindowStates.new().toPersistence(),
+      billboardMarkers: BillboardMarkers.new().toPersistence()
     }
   }
 }
+
+const TURN_MAX = 999
 
 /**
  * Get previous turns of round in reverse turn order.

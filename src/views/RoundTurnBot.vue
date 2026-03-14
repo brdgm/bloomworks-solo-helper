@@ -85,7 +85,12 @@ export default defineComponent({
         marketPrices: this.navigationState.marketPrices.toPersistence(),
         botPersistence: this.navigationState.botPersistence.toPersistence()
       })
-      this.router.push(`/round/${this.round}/turn/${this.turn + 1}/bot`)
+      if (this.navigationState.botTurn == this.navigationState.botTurns) {
+        this.router.push(`/round/${this.round}/end`)
+      }
+      else {
+        this.router.push(`/round/${this.round}/turn/${this.turn + 1}/bot`)
+      }
     }
   }
 })
