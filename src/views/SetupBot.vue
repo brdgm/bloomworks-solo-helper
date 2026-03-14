@@ -63,6 +63,7 @@ import BotGarden from '@/services/BotGarden'
 import CardDeck from '@/services/CardDeck'
 import BotPersistenceWrapper from '@/services/BotPersistenceWrapper'
 import WindowStates from '@/services/WindowStates'
+import BillboardMarkers from '@/services/BillboardMarkers'
 
 export default defineComponent({
   name: 'SetupBot',
@@ -101,7 +102,8 @@ export default defineComponent({
         CardDeck.new(),
         BotGarden.new(this.playerFlowers, this.flowerOrder),
         [],
-        WindowStates.new()
+        WindowStates.new(),
+        BillboardMarkers.new()
       ).toPersistence()
       this.state.storeRound({round:1, year:1, season:Season.AUTUMN, turns:[]})
       this.$router.push('/round/1/turn/1/player')

@@ -6,6 +6,7 @@
       <b>Card Deck</b>: {{ navigationState.botPersistence.cardDeck.toPersistence() }}<br/>
       <b>Bot Garden</b>: {{ navigationState.botPersistence.garden.toPersistence() }}<br/>
       <b>Window States</b>: {{ navigationState.botPersistence.windowStates.toPersistence() }}<br/>
+      <b>Billboard Markers</b>: {{ navigationState.botPersistence.billboardMarkers.toPersistence() }}<br/>
       <b>Player Turn:</b> {{ navigationState.playerTurn}}/{{ navigationState.playerTurns }}, <b>Delivery Floor:</b> {{ navigationState.playerDeliveryFloor }}<br/>
       <b>Bot Turn:</b> {{ navigationState.botTurn}}/{{ navigationState.botTurns }}, <b>Claimed Milestones:</b> {{navigationState.botPersistence.claimedMilestones}}<br/>
       <b>Solo Board Pass Action</b>: {{ navigationState.soloBoardPassAction }}

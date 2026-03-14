@@ -89,6 +89,7 @@ export interface BotPersistence {
   cardDeck: CardDeckPersistence
   claimedMilestones: Milestone[]
   windowStates: WindowState[]
+  billboardMarkers: BillboardMarker[]
 }
 
 export interface GardenSeason {
@@ -108,4 +109,9 @@ export interface WindowState {
   windowSelection: WindowSelection
   flowers: Flower[]
   deliveries: Player[]
+}
+
+export interface BillboardMarker {
+  floor: number
+  count: number
 }

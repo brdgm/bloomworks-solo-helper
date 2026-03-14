@@ -6,6 +6,7 @@ import CardDeck from './CardDeck'
 import BotGarden from './BotGarden'
 import Milestone from './enum/Milestone'
 import WindowStates from './WindowStates'
+import BillboardMarkers from './BillboardMarkers'
 
 /**
  * Bot persistence wrapper.
@@ -16,12 +17,14 @@ export default class BotPersistenceWrapper {
   private readonly _garden : BotGarden
   private readonly _claimedMilestones
   private readonly _windowStates : WindowStates
+  private readonly _billboardMarkers : BillboardMarkers
 
-  public constructor(cardDeck : CardDeck, garden : BotGarden, claimedMilestones : Milestone[], windowStates : WindowStates) {
+  public constructor(cardDeck : CardDeck, garden : BotGarden, claimedMilestones : Milestone[], windowStates : WindowStates, billboardMarkers : BillboardMarkers) {
     this._cardDeck = cardDeck
     this._garden = garden
     this._claimedMilestones = ref(claimedMilestones)
     this._windowStates = windowStates
+    this._billboardMarkers = billboardMarkers
   }
 
   public get cardDeck() : CardDeck {
@@ -44,6 +47,10 @@ export default class BotPersistenceWrapper {
     return this._windowStates
   }
 
+  public get billboardMarkers() : BillboardMarkers {
+    return this._billboardMarkers
+  }
+
   /**
    * Gets persistence view.
    */
@@ -52,7 +59,8 @@ export default class BotPersistenceWrapper {
       cardDeck: this._cardDeck.toPersistence(),
       garden: this._garden.toPersistence(),
       claimedMilestones: cloneDeep(this._claimedMilestones.value),
-      windowStates: this._windowStates.toPersistence()
+      windowStates: this._windowStates.toPersistence(),
+      billboardMarkers: this._billboardMarkers.toPersistence()
     }
   }
 
@@ -64,7 +72,8 @@ export default class BotPersistenceWrapper {
       CardDeck.fromPersistence(persistence.cardDeck),
       BotGarden.fromPersistence(persistence.garden, flowerOrder),
       cloneDeep(persistence.claimedMilestones),
-      WindowStates.fromPersistence(persistence.windowStates ?? [])
+      WindowStates.fromPersistence(persistence.windowStates ?? []),
+      BillboardMarkers.fromPersistence(persistence.billboardMarkers ?? [])
     )
   }
 
