@@ -163,32 +163,49 @@ export default defineComponent({
   },
   mounted() {
     // send anonymous game stats - max. once per game
-    /*
     if (!this.state.gameStatsSend) {
-      const totalWarSteps_Automa = 0
       const stats = {
         version,
-        totalVP: this.totalVPPlayer,
-        scoringTrackVP: this.amount.scoringTrackVP[0],
-        prosperityVP: this.amount.prosperityVP[0],
-        populationVP: this.amount.populationVP[0],
-        cultureVP: this.amount.cultureVP[0],
-        influenceSteps: this.amount.influenceSteps[0],
-        politicsSteps: this.amount.politicsSteps[0],
-        warSteps: this.amount.warSteps[0],
-        wonderVPs: this.amount.wonderVPs[0],
-        yellowBuildingVPs: this.amount.yellowBuildingVPs[0],
-        diplomacyCardCount: this.amount.diplomacyCardCount[0],
-        scoringTrackVP_Automa: this.amount.scoringTrackVP[1],
-        warSteps_Automa: this.amount.warSteps[1],
-        totalWarSteps_Automa
+        difficultyLevel: -1,
+        playerPower: 'TODO',
+        playerTotalVP: this.totalVPPlayer,
+        playerScoreTrackVP: toNumber(this.amount.scoreTrackVP[0]),
+        playerMilestonesVP: toNumber(this.amount.milestonesVP[0]),
+        playerBillboardsVP: this.getBillboardVP(0),
+        playerFloricultureVP: this.getFloricultureVP(0),
+        playerExtensionsVP: this.getExtensionsVP(0),
+        playerLeftoverResourcesVP: this.getLeftoverResourcesVP(0),
+        botTotalVP: this.totalVP[1],
+        botScoreTrackVP: toNumber(this.amount.scoreTrackVP[1]),
+        botMilestonesVP: toNumber(this.amount.milestonesVP[1]),
+        botBillboardsVP: this.getBillboardVP(1),
+        botFloricultureVP: this.getFloricultureVP(1),
+        playerBillboardsWon: this.amount.billboardsWon.filter(p => p == Player.PLAYER).length,
+        botBillboardsWon: this.amount.billboardsWon.filter(p => p == Player.BOT).length,
+        playerFloricultureSteps: 0,
+        botFloricultureSteps: 0,
+        playerExtensionSmall: toNumber(this.amount.playerGardenExtensionsSmall),
+        playerExtensionLarge: toNumber(this.amount.playerGardenExtensionsLarge),
+        playerTurnsRound1: 0,
+        playerTurnsRound2: 0,
+        playerTurnsRound3: 0,
+        playerTurnsRound4: 0,
+        playerTurnsRound5: 0,
+        playerTurnsRound6: 0,
+        playerTurnsRound7: 0,
+        playerTurnsRound8: 0,
+        playerTurnsRound9: 0,
+        playerTurnsRound10: 0,
+        playerTurnsRound11: 0,
+        playerTurnsRound12: 0,
+        playerTurnsTotal: 0,
+        botTurnsTotal: 0
       }
       postGameStats(stats,
         import.meta.env.VITE_STATS_FORM_URL,
         import.meta.env.VITE_STATS_FIELD_MAPPING)
-      this.state.gameStatsSend = true
+      // TODO: this.state.gameStatsSend = true
     }
-  */
   }
 })
 </script>
