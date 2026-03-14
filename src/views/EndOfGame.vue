@@ -2,7 +2,7 @@
   <SideBar :navigationState="navigationState" :readOnly="true"/>
   <h1 class="mb-3">{{t('endOfGame.title')}}</h1>
 
-  <FinalScoring :amount="amount"/>
+  <FinalScoring :amount="amount" :navigationState="navigationState"/>
 
   <FooterButtons :backButtonRouteTo="backButtonRouteTo" endGameButtonType="endGame"/>
 </template>

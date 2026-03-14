@@ -451,4 +451,39 @@ describe('services/WindowStates', () => {
     expect(result?.floor).to.eq(2)
     expect(result?.flowers).to.deep.eq([Flower.YELLOW, Flower.YELLOW])
   })
+
+  it('getTotalDeliveriesByPlayer-noDeliveries', () => {
+    const dw = WindowStates.new()
+    dw.setWindowState(2, WindowSelection.LEFT, [Flower.RED, Flower.BLUE], [])
+
+    expect(dw.getTotalDeliveriesByPlayer(Player.PLAYER)).to.eq(0)
+    expect(dw.getTotalDeliveriesByPlayer(Player.BOT)).to.eq(0)
+  })
+
+  it('getTotalDeliveriesByPlayer-singleWindow', () => {
+    const dw = WindowStates.fromPersistence([
+      { floor: 3, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE, Flower.YELLOW], deliveries: [Player.PLAYER, Player.BOT, Player.PLAYER] }
+    ])
+
+    expect(dw.getTotalDeliveriesByPlayer(Player.PLAYER)).to.eq(2)
+    expect(dw.getTotalDeliveriesByPlayer(Player.BOT)).to.eq(1)
+  })
+
+  it('getTotalDeliveriesByPlayer-multipleWindows', () => {
+    const dw = WindowStates.fromPersistence([
+      { floor: 3, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE, Flower.YELLOW], deliveries: [Player.PLAYER, Player.BOT] },
+      { floor: 2, windowSelection: WindowSelection.LEFT, flowers: [Flower.RED, Flower.BLUE], deliveries: [Player.BOT, Player.BOT] },
+      { floor: 1, windowSelection: WindowSelection.RIGHT, flowers: [Flower.RED], deliveries: [Player.PLAYER] }
+    ])
+
+    expect(dw.getTotalDeliveriesByPlayer(Player.PLAYER)).to.eq(2)
+    expect(dw.getTotalDeliveriesByPlayer(Player.BOT)).to.eq(3)
+  })
+
+  it('getTotalDeliveriesByPlayer-emptyState', () => {
+    const dw = WindowStates.fromPersistence([])
+
+    expect(dw.getTotalDeliveriesByPlayer(Player.PLAYER)).to.eq(0)
+    expect(dw.getTotalDeliveriesByPlayer(Player.BOT)).to.eq(0)
+  })
 })

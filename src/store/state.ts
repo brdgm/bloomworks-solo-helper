@@ -7,6 +7,7 @@ import Flower from '@/services/enum/Flower'
 import Season from '@/services/enum/Season'
 import Milestone from '@/services/enum/Milestone'
 import WindowSelection from '@/services/enum/WindowSelection'
+import PlayerPower from '@/services/enum/PlayerPower'
 
 export const useStateStore = defineStore(`${name}.state`, {
   state: () => {
@@ -55,6 +56,7 @@ export interface State {
 }
 export interface Setup {
   botMode: BotMode
+  playerPower?: PlayerPower
   playerColor: PlayerColor
   botColor: PlayerColor
   milestoneSeasonOrder?: Season[]
@@ -78,6 +80,11 @@ export interface RoundTurn {
   playerDeliveryFloor?: number
   playerPass?: boolean
   botPersistence: BotPersistence
+  // stats
+  botBonusTurn?: boolean
+  botPaidCardVP?: number
+  botSoloBoardVP?: number
+  botDeliveryVP?: number
 }
 
 export interface FlowerPrice {

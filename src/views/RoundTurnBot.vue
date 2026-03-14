@@ -28,7 +28,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import NavigationState from '@/util/NavigationState'
 import FooterButtons from '@/components/structure/FooterButtons.vue'
-import { useStateStore } from '@/store/state'
+import { RoundTurn, useStateStore } from '@/store/state'
 import SideBar from '@/components/round/SideBar.vue'
 import DebugInfo from '@/components/round/DebugInfo.vue'
 import Card from '@/services/Card'
@@ -36,6 +36,7 @@ import Player from '@/services/enum/Player'
 import BotClaimMilestones from '@/components/round/BotClaimMilestones.vue'
 import BotAction from '@/components/round/BotAction.vue'
 import BotActions from '@/services/BotActions'
+import recordBotRoundTurnStats from '@/util/recordBotRoundTurnStats'
 
 export default defineComponent({
   name: 'RoundTurnBot',
@@ -78,13 +79,15 @@ export default defineComponent({
       if (this.navigationState.botTurn > 0) {
         this.navigationState.botPersistence.cardDeck.checkCurrentCardRemove()
       }
-      this.state.storeRoundTurn({
+      const turn : RoundTurn = {
         round: this.round,
         turn: this.turn,
         player: Player.BOT,
         marketPrices: this.navigationState.marketPrices.toPersistence(),
         botPersistence: this.navigationState.botPersistence.toPersistence()
-      })
+      }
+      recordBotRoundTurnStats(turn, this.navigationState.botTurn, this.botActions.actions)
+      this.state.storeRoundTurn(turn)
       if (this.navigationState.botTurn == this.navigationState.botTurns) {
         if (this.round == 12) {
           this.router.push(`/round/${this.round}/gameEnd/amounts`)

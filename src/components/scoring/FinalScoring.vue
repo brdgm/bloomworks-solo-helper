@@ -87,6 +87,7 @@ import Player from '@/services/enum/Player'
 import getAllEnumValues from '@brdgm/brdgm-commons/src/util/enum/getAllEnumValues'
 import Flower from '@/services/enum/Flower'
 import getFloricultureTrack from '@/util/getFloricultureTracks'
+import NavigationState from '@/util/NavigationState'
 
 export default defineComponent({
   name: 'FinalScoring',
@@ -101,6 +102,10 @@ export default defineComponent({
   props: {
     amount: {
       type: Object as PropType<FinalScoringAmount>,
+      required: true
+    },
+    navigationState: {
+      type: NavigationState,
       required: true
     }
   },
@@ -164,10 +169,11 @@ export default defineComponent({
   mounted() {
     // send anonymous game stats - max. once per game
     if (!this.state.gameStatsSend) {
+      const allTurns = this.state.rounds.flatMap(r => r.turns)
       const stats = {
         version,
         difficultyLevel: -1,
-        playerPower: 'TODO',
+        playerPower: this.state.setup.playerPower ?? 'none',
         playerTotalVP: this.totalVPPlayer,
         playerScoreTrackVP: toNumber(this.amount.scoreTrackVP[0]),
         playerMilestonesVP: toNumber(this.amount.milestonesVP[0]),
@@ -182,29 +188,37 @@ export default defineComponent({
         botFloricultureVP: this.getFloricultureVP(1),
         playerBillboardsWon: this.amount.billboardsWon.filter(p => p == Player.PLAYER).length,
         botBillboardsWon: this.amount.billboardsWon.filter(p => p == Player.BOT).length,
-        playerFloricultureSteps: 0,
-        botFloricultureSteps: 0,
+        playerFloricultureSteps: getAllEnumValues(Flower).map(flower => toNumber(this.amount.floricultureSteps[flower][0])).reduce((sum, steps) => sum + steps, 0),
+        botFloricultureSteps: getAllEnumValues(Flower).map(flower => toNumber(this.amount.floricultureSteps[flower][1])).reduce((sum, steps) => sum + steps, 0),
         playerExtensionSmall: toNumber(this.amount.playerGardenExtensionsSmall),
         playerExtensionLarge: toNumber(this.amount.playerGardenExtensionsLarge),
-        playerTurnsRound1: 0,
-        playerTurnsRound2: 0,
-        playerTurnsRound3: 0,
-        playerTurnsRound4: 0,
-        playerTurnsRound5: 0,
-        playerTurnsRound6: 0,
-        playerTurnsRound7: 0,
-        playerTurnsRound8: 0,
-        playerTurnsRound9: 0,
-        playerTurnsRound10: 0,
-        playerTurnsRound11: 0,
-        playerTurnsRound12: 0,
-        playerTurnsTotal: 0,
-        botTurnsTotal: 0
+        playerTurnsRound1: allTurns.filter(t => t.round == 1 && t.player == Player.PLAYER && !t.playerPass).length,
+        playerTurnsRound2: allTurns.filter(t => t.round == 2 && t.player == Player.PLAYER && !t.playerPass).length,
+        playerTurnsRound3: allTurns.filter(t => t.round == 3 && t.player == Player.PLAYER && !t.playerPass).length,
+        playerTurnsRound4: allTurns.filter(t => t.round == 4 && t.player == Player.PLAYER && !t.playerPass).length,
+        playerTurnsRound5: allTurns.filter(t => t.round == 5 && t.player == Player.PLAYER && !t.playerPass).length,
+        playerTurnsRound6: allTurns.filter(t => t.round == 6 && t.player == Player.PLAYER && !t.playerPass).length,
+        playerTurnsRound7: allTurns.filter(t => t.round == 7 && t.player == Player.PLAYER && !t.playerPass).length,
+        playerTurnsRound8: allTurns.filter(t => t.round == 8 && t.player == Player.PLAYER && !t.playerPass).length,
+        playerTurnsRound9: allTurns.filter(t => t.round == 9 && t.player == Player.PLAYER && !t.playerPass).length,
+        playerTurnsRound10: allTurns.filter(t => t.round == 10 && t.player == Player.PLAYER && !t.playerPass).length,
+        playerTurnsRound11: allTurns.filter(t => t.round == 11 && t.player == Player.PLAYER && !t.playerPass).length,
+        playerTurnsRound12: allTurns.filter(t => t.round == 12 && t.player == Player.PLAYER && !t.playerPass).length,
+        playerTurnsTotal: allTurns.filter(t => t.player == Player.PLAYER && !t.playerPass).length,
+        botTurnsTotal: allTurns.filter(t => t.player == Player.BOT && !t.botBonusTurn).length,
+        playerDeliveryCount: this.navigationState.botPersistence.windowStates.getTotalDeliveriesByPlayer(Player.PLAYER),
+        botDeliveryCount: this.navigationState.botPersistence.windowStates.getTotalDeliveriesByPlayer(Player.BOT),
+        marketTotalPrice: this.navigationState.marketPrices.getTotalMarketPrice(),
+        botPaidCardVP: allTurns.filter(t => t.player == Player.BOT).reduce((sum, t) => sum + toNumber(t.botPaidCardVP), 0),
+        botSoloBoardVP: allTurns.filter(t => t.player == Player.BOT).reduce((sum, t) => sum + toNumber(t.botSoloBoardVP), 0),
+        botDeliveryVP: allTurns.filter(t => t.player == Player.BOT).reduce((sum, t) => sum + toNumber(t.botDeliveryVP), 0),
+        botFloricultureStarsVP: toNumber(this.amount.scoreTrackVP[1])
+            - allTurns.filter(t => t.player == Player.BOT).reduce((sum, t) => sum + toNumber(t.botDeliveryVP) + toNumber(t.botSoloBoardVP) + toNumber(t.botDeliveryVP), 0)
       }
       postGameStats(stats,
         import.meta.env.VITE_STATS_FORM_URL,
         import.meta.env.VITE_STATS_FIELD_MAPPING)
-      // TODO: this.state.gameStatsSend = true
+      this.state.gameStatsSend = true
     }
   }
 })

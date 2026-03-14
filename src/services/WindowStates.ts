@@ -96,6 +96,13 @@ export default class WindowStates {
   }
 
   /**
+   * Gets the total number of deliveries made by the specified player.
+   */
+  public getTotalDeliveriesByPlayer(player: Player) : number {
+    return this._windowStates.value.reduce((sum, w) => sum + w.deliveries.filter(p => p === player).length, 0)
+  }
+
+  /**
    * Sorts the windows by floor (descending) and window position (left, right).
    */
   private sortFloorsWindows() : void {

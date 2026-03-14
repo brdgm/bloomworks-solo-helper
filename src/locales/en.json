@@ -154,6 +154,26 @@
     "l": "left",
     "r": "right"
   },
+  "playerPower": {
+    "barber": "Barber",
+    "barista": "Barista",
+    "bartender": "Bartender",
+    "construction-worker": "Construction Worker",
+    "courier": "Courier",
+    "day-trader": "Day Trader",
+    "dog-walker": "Dog Walker",
+    "foreman": "Foreman",
+    "grocer": "Grocer",
+    "influencer": "Influencer",
+    "interior-decorator": "Interior Decorator",
+    "kindergarten-teacher": "Kindergarten Teacher",
+    "mover": "Mover",
+    "painter": "Painter",
+    "scientist": "Scientist",
+    "student": "Student",
+    "window-washer": "Window Washer",
+    "yoga-instructor": "Yoga Instructor"
+  },
   "rules": {
     "action": {
       "managedByApp": "This action is managed by the application.",

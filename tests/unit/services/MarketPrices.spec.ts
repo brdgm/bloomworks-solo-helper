@@ -169,6 +169,24 @@ describe('services/MarketPrices', () => {
     expect(marketPrices.getPrice(Flower.RED)).to.eq(MarketPrices.MIN_PRICE)
   })
 
+  it('getTotalMarketPrice', () => {
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices([
+      { flower: Flower.RED, price: 5 },
+      { flower: Flower.PURPLE, price: 3 },
+      { flower: Flower.YELLOW, price: 7 },
+      { flower: Flower.BLUE, price: 2 },
+      { flower: Flower.ORANGE, price: 6 },
+    ]))
+
+    expect(marketPrices.getTotalMarketPrice()).to.eq(23)
+  })
+
+  it('getTotalMarketPrice - all starting price', () => {
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
+
+    expect(marketPrices.getTotalMarketPrice()).to.eq(5 * MarketPrices.STARTING_PRICE)
+  })
+
   it('toPersistence/fromPersistence', () => {
     const marketPrices = MarketPrices.new()
     marketPrices.setPrice(Flower.RED, marketPrices.getPrice(Flower.RED) + 1)

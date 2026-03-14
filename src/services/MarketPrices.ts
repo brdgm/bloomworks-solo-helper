@@ -96,6 +96,14 @@ export default class MarketPrices {
   }
 
   /**
+   * Gets total market price by summing prices of all flowers.
+   * @returns Total market price
+   */
+  public getTotalMarketPrice() : number {
+    return this._prices.value.reduce((total, item) => total + item.price, 0)
+  }
+
+  /**
    * Gets persistence view of market prices.
    */
   public toPersistence() : FlowerPrice[] {
