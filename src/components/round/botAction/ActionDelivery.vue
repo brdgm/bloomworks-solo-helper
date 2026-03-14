@@ -27,13 +27,15 @@ import Card from '@/services/Card'
 import { BotAction } from '@/services/BotActions'
 import ActionBox from '../ActionBox.vue'
 import AppIcon from '@/components/structure/AppIcon.vue'
+import FlowerIcon from '@/components/structure/FlowerIcon.vue'
 
 export default defineComponent({
   name: 'ActionDelivery',
   inheritAttrs: false,
   components: {
     ActionBox,
-    AppIcon
+    AppIcon,
+    FlowerIcon
   },
   setup() {
     const { t } = useI18n()

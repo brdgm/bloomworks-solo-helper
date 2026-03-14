@@ -5,7 +5,7 @@
     <div v-if="vp" class="vpGain">
       <span v-html="t('roundTurnBot.gainVP', {vp: vp})"></span><template v-if="xp">,
       <span v-html="t('roundTurnBot.gainXP')"/>
-      <FlowerIcon v-for="flower in xp" :key="flower" :flower="flower"/></template>
+      <FlowerIcon v-for="flower in xp" :key="flower" :flower="flower" class="xpFlowerIcon"/></template>
     </div>
     <div v-if="currentCard?.remove" class="remove"><AppIcon name="x" class="icon"/></div>
   </div>
@@ -118,5 +118,8 @@ export default defineComponent({
   text-align: center;
   margin-top: 1rem;
   font-size: 1.5rem;
+}
+.xpFlowerIcon {
+  width: 1.5rem;
 }
 </style>
