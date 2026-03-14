@@ -27,7 +27,6 @@ export default defineComponent({
     ActionBox,
     AppIcon
   },
-  emits: ['ready'],
   setup() {
     const { t } = useI18n()
     return { t }
@@ -45,9 +44,6 @@ export default defineComponent({
       type: Object as PropType<Card>,
       required: false
     }
-  },
-  mounted() {
-    this.$emit('ready')
   }
 })
 </script>

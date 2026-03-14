@@ -35,7 +35,6 @@ export default defineComponent({
     ActionBox,
     AppIcon
   },
-  emits: ['ready'],
   setup() {
     const { t } = useI18n()
     return { t }
@@ -58,9 +57,6 @@ export default defineComponent({
     floor(): number {
       return this.action.floor ?? 1
     }
-  },
-  mounted() {
-    this.$emit('ready')
   }
 })
 </script>

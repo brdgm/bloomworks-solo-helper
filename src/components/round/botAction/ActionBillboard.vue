@@ -25,7 +25,6 @@ export default defineComponent({
   components: {
     ActionBox
   },
-  emits: ['ready'],
   setup() {
     const { t } = useI18n()
     return { t }
@@ -43,9 +42,6 @@ export default defineComponent({
       type: Object as PropType<Card>,
       required: false
     }
-  },
-  mounted() {
-    this.$emit('ready')
   }
 })
 </script>

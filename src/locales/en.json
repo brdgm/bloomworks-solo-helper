@@ -83,7 +83,6 @@
   },
   "roundTurnBot": {
     "bonusActions": "Bonus Actions",
-    "actionsNotReady": "Please complete the actions.",
     "gainVP": "<b>{vp} VP</B>",
     "gainXP": "XP: "
   },

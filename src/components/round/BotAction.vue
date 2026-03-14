@@ -1,7 +1,6 @@
 <template>
   <div class="actionItem">
-    <component :is="componentName" :action="action" :navigationState="navigationState" :currentCard="currentCard"
-        @ready="$emit('ready')"/>
+    <component :is="componentName" :action="action" :navigationState="navigationState" :currentCard="currentCard"/>
   </div>
 </template>
 
@@ -34,7 +33,6 @@ export default defineComponent({
     ActionWindowBox,
     ActionXp
   },
-  emits: ['ready'],
   setup() {
     const { t } = useI18n()
     return { t }

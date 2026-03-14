@@ -34,7 +34,6 @@ export default defineComponent({
     AppIcon,
     FlowerIcon
   },
-  emits: ['ready'],
   setup(props) {
     const { t } = useI18n()
 
@@ -70,9 +69,6 @@ export default defineComponent({
     flowerCount() : number {
       return this.floor
     }
-  },
-  mounted() {
-    this.$emit('ready')
   }
 })
 </script>
