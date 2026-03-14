@@ -152,8 +152,6 @@ function getBotPersistence(round: number, turn: number, state: State) : BotPersi
   }
 }
 
-const TURN_MAX = 999
-
 /**
  * Get previous turns of round in reverse turn order.
  * If turn=0 gets all turns.

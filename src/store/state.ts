@@ -118,14 +118,13 @@ export interface BillboardMarker {
 }
 
 export interface FinalScoringAmount {
-  scoringTrackVP: number[]
-  prosperityVP: number[]
-  populationVP: number[]
-  cultureVP: number[]
-  influenceSteps: number[]
-  politicsSteps: number[]
-  warSteps: number[]
-  wonderVPs: number[]
-  yellowBuildingVPs: number[]
-  diplomacyCardCount: number[]
+  scoreTrackVP: number[]
+  milestonesVP: number[]
+  playerBillboardVP: number[]
+  billboardsWon: (Player|undefined)[]
+  floricultureSteps: Record<Flower, number[]>
+  playerGardenExtensionsSmall?: number
+  playerGardenExtensionsLarge?: number
+  playerSprays?: number
+  playerLeftoverMoney?: number
 }

@@ -91,10 +91,42 @@
     "nextSeason": "Next Season: <b>{season}</b>"
   },
   "endOfGameAmounts": {
-    "title": "End of Game Amounts"
+    "title": "End of Game Amounts",
+    "vp": {
+      "title": "VP",
+      "scoreTrack": "Score Track VP",
+      "milestones": "Milestones VP"
+    },
+    "floricultureSteps": {
+      "title": "Floriculture Steps"
+    },
+    "billboards": {
+      "title": "Billboards",
+      "scoreInstructions": "For each billboard, enter the VP of the player, even if won by Lady Pei. Lady Pei will score the player's VP in that case.",
+      "score": "Floor {floor} VP",
+      "wonBy": "Won by:",
+      "tied": "Tied"
+    },
+    "playerStatus": {
+      "title": "Player Status",
+      "gardenExtensionsSmall": "Number of Small Extensions",
+      "gardenExtensionsLarge": "Number of Large Extensions",
+      "sprays": "Number of Sprays",
+      "leftoverMoney": "Leftover Money ($)"
+    }
   },
   "endOfGame": {
-    "title": "End of Game"
+    "title": "End of Game",
+    "vp": {
+      "title": "VP",
+      "scoreTrack": "Score Track",
+      "milestones": "Milestones",
+      "billboards": "Billboards",
+      "floriculture": "Floriculture",
+      "extensions": "Extensions",
+      "leftoverResources": "Leftover Resources",
+      "total": "Total"
+    }
   },
   "botClaimMilestones": {
     "botClaim": "Lady Pei claims a milestone:",

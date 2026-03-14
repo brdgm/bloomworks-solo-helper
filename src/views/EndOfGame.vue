@@ -16,6 +16,8 @@ import FinalScoring from '@/components/scoring/FinalScoring.vue'
 import SideBar from '@/components/round/SideBar.vue'
 import { useRoute } from 'vue-router'
 import NavigationState from '@/util/NavigationState'
+import getAllEnumValues from '@brdgm/brdgm-commons/src/util/enum/getAllEnumValues'
+import Flower from '@/services/enum/Flower'
 
 export default defineComponent({
   name: 'EndOfGame',
@@ -34,16 +36,17 @@ export default defineComponent({
 
     const amount = state.finalScoringAmount ?? 
       {
-        scoringTrackVP: [],
-        prosperityVP: [],
-        populationVP: [],
-        cultureVP: [],
-        influenceSteps: [],
-        politicsSteps: [],
-        warSteps: [],
-        wonderVPs: [],
-        yellowBuildingVPs: [],
-        diplomacyCardCount: []
+        scoreTrackVP: [],
+        milestonesVP: [],
+        floricultureSteps: Object.fromEntries(
+          getAllEnumValues(Flower).map(f => [f, [] as number[]])
+        ) as Record<Flower, number[]>,
+        playerGardenExtensionsSmall: undefined,
+        playerGardenExtensionsLarge: undefined,
+        playerBillboardVP: [],
+        billboardsWon: [],
+        playerSprays: undefined,
+        playerLeftoverMoney: undefined
       } as FinalScoringAmount
 
     return { t, state, navigationState, round, amount }

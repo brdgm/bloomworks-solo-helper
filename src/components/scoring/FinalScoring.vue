@@ -1,142 +1,95 @@
 <template>
-  <div class="scoring-layout">
-    <table>
-      <tbody>
-        <tr>
-          <th scope="col">
-          </th>
-          <th scope="col">
-            <span>{{t('player.player')}}</span>
-          </th>
-          <th scope="col">
-            <span>{{t('player.bot')}}</span>
-          </th>
-        </tr>
-        <tr>
-          <th scope="row">
-            <AppIcon type="final-scoring" name="scoring-track" class="icon"/>
-          </th>
-          <td v-for="index in playerCount" :key="index">
-            {{toNumber(amount.scoringTrackVP[index-1])}}
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">
-            <AppIcon type="final-scoring" name="prosperity" class="icon small"/>
-          </th>
-          <td>
-            {{toNumber(amount.prosperityVP[0])}}
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <th scope="row">
-            <AppIcon type="final-scoring" name="population" class="icon small"/>
-          </th>
-          <td>
-            {{toNumber(amount.populationVP[0])}}
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <th scope="row">
-            <AppIcon type="final-scoring" name="culture" class="icon small"/>
-          </th>
-          <td>
-            {{toNumber(amount.cultureVP[0])}}
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <th scope="row">
-            <AppIcon type="final-scoring" name="influence" class="icon small"/>
-            <span>X </span>
-            <AppIcon type="final-scoring" name="politics" class="icon small"/>
-          </th>
-          <td>
-            {{toNumber(amount.influenceSteps[0]) * toNumber(amount.politicsSteps[0])}}
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <th scope="row">
-            <AppIcon type="final-scoring" name="war" class="icon small"/>
-            <span>X 2</span>
-          </th>
-          <td v-for="index in playerCount" :key="index">
-            {{toNumber(amount.warSteps[index-1]) * 2}}
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">
-            <AppIcon type="final-scoring" name="wonder" class="icon small"/>
-          </th>
-          <td>
-            {{toNumber(amount.wonderVPs[0])}}
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <th scope="row">
-            <AppIcon type="final-scoring" name="yellow-building" class="icon small"/>
-          </th>
-          <td>
-            {{toNumber(amount.yellowBuildingVPs[0])}}
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <th scope="row">
-            <AppIcon type="final-scoring" name="diplomacy-card" class="icon"/>
-            <span>X 3</span>
-          </th>
-          <td>
-            {{toNumber(amount.diplomacyCardCount[0]) * 3}}
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <th scope="row">
-            <AppIcon type="final-scoring" name="total" class="icon small"/>
-          </th>
-          <td v-for="index in playerCount" :key="index">
-            <b>{{toNumber(totalVP[index-1])}}</b>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="finalResult">
-      <p v-html="t('endOfGame.finalScore')"></p>
-      <p class="totalVPPlayer">{{t(`endOfGame.vp`, {count:totalVPPlayer})}}</p>
-      <p v-html="t('endOfGame.scoreTable')"></p>
-      <table class="table">
-        <tbody>
-          <tr v-for="(vp,index) of starVP" :key="index" :class="{'markScore': index == starVPPlayerIndex}">
-            <th scope="row"><span v-for="star of (index+1)" :key="star">★</span></th>
-            <td>{{t(`endOfGame.vp`, {count:vp})}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">
+          <span v-html="t('endOfGame.vp.title')"></span>
+        </th>
+        <th scope="col">
+          <span>{{t('player.player')}}</span>
+        </th>
+        <th scope="col">
+          <span>{{t('player.bot')}}</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">
+          <span v-html="t('endOfGame.vp.scoreTrack')"></span>
+        </th>
+        <td v-for="index in playerCount" :key="index">
+          {{toNumber(amount.scoreTrackVP[index-1])}}
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <span v-html="t('endOfGame.vp.milestones')"></span>
+        </th>
+        <td v-for="index in playerCount" :key="index">
+          {{toNumber(amount.milestonesVP[index-1])}}
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <span v-html="t('endOfGame.vp.billboards')"></span>
+        </th>
+        <td v-for="index in playerCount" :key="index">
+          {{getBillboardVP(index-1)}}
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <span v-html="t('endOfGame.vp.floriculture')"></span>
+        </th>
+        <td v-for="index in playerCount" :key="index">
+          {{getFloricultureVP(index-1)}}
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <span v-html="t('endOfGame.vp.extensions')"></span>
+        </th>
+        <td v-for="index in playerCount" :key="index">
+          {{getExtensionsVP(index-1)}}
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <span v-html="t('endOfGame.vp.leftoverResources')"></span>
+        </th>
+        <td v-for="index in playerCount" :key="index">
+          {{getLeftoverResourcesVP(index-1)}}
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th scope="row">
+          <span v-html="t('endOfGame.vp.total')"></span>
+        </th>
+        <td v-for="index in playerCount" :key="index">
+          <b>{{toNumber(totalVP[index-1])}}</b>
+        </td>
+      </tr>    
+    </tfoot>
+  </table>
 </template>
 
 <script lang="ts">
 import { useStateStore, FinalScoringAmount } from '@/store/state'
 import { defineComponent, PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppIcon from '../structure/AppIcon.vue'
 import toNumber from '@brdgm/brdgm-commons/src/util/form/toNumber'
 import postGameStats from '@brdgm/brdgm-commons/src/util/stats/postGameStats'
 import { version } from '@/../package.json'
+import Player from '@/services/enum/Player'
+import getAllEnumValues from '@brdgm/brdgm-commons/src/util/enum/getAllEnumValues'
+import Flower from '@/services/enum/Flower'
+import getFloricultureTrack from '@/util/getFloricultureTracks'
 
 export default defineComponent({
   name: 'FinalScoring',
-  components: {
-    AppIcon
-  },
   setup() {
     const { t } = useI18n()
     const state = useStateStore()
@@ -155,38 +108,62 @@ export default defineComponent({
     totalVP() : number[] {
       const result = []
       for (let i=0; i<this.playerCount; i++) {
-        result[i] = toNumber(this.amount.scoringTrackVP[i])
-            + toNumber(this.amount.prosperityVP[i])
-            + toNumber(this.amount.populationVP[i])
-            + toNumber(this.amount.cultureVP[i])
-            + (toNumber(this.amount.influenceSteps[i]) * toNumber(this.amount.politicsSteps[i]))
-            + (toNumber(this.amount.warSteps[i]) * 2)
-            + toNumber(this.amount.wonderVPs[i])
-            + toNumber(this.amount.yellowBuildingVPs[i])
-            + (toNumber(this.amount.diplomacyCardCount[i]) * 3)
+        result[i] = toNumber(this.amount.scoreTrackVP[i])
+            + toNumber(this.amount.milestonesVP[i])
+            + this.getBillboardVP(i)
+            + this.getFloricultureVP(i)
+            + this.getExtensionsVP(i)
+            + this.getLeftoverResourcesVP(i)
       }
       return result
     },
     totalVPPlayer() : number {
       return this.totalVP[0] - this.totalVP[1]
-    },
-    starVP() : number[] {
-      return [150, 175, 200, 225, 250, 275, 300]
-    },
-    starVPPlayerIndex() : number {
-      for (let i=0; i<this.starVP.length; i++) {
-        if (this.totalVPPlayer < this.starVP[i]) {
-          return i - 1
-        }
-      }
-      return this.starVP.length - 1
     }
   },
   methods: {
-    toNumber
+    toNumber,
+    getBillboardVP(playerIndex: number) : number {
+      const player = playerIndex == 0 ? Player.PLAYER : Player.BOT
+      let vp = 0
+      for (let floor = 1; floor <= 4; floor++) {
+        const floorVP = toNumber(this.amount.playerBillboardVP[floor-1])
+        if (this.amount.billboardsWon[floor-1] == player) {
+          vp += floorVP
+        }
+      }
+      return vp
+    },
+    getFloricultureVP(playerIndex: number) : number {
+      let vp = 0
+      for (const flower of getAllEnumValues(Flower)) {
+        const steps = toNumber(this.amount.floricultureSteps[flower][playerIndex])
+        vp += getFloricultureTrack(flower as Flower).vp
+            .filter(v => v.step <= steps)
+            .reduce((max, v) => Math.max(max, v.vp), 0)
+      }
+      return vp
+    },
+    getExtensionsVP(playerIndex: number) : number {
+      let vp = 0
+      if (playerIndex == 0) {
+        vp += toNumber(this.amount.playerGardenExtensionsSmall) * 1
+        vp += toNumber(this.amount.playerGardenExtensionsLarge) * 2
+      }
+      return vp
+    },
+    getLeftoverResourcesVP(playerIndex: number) : number {
+      let vp = 0
+      if (playerIndex == 0) {
+        vp += toNumber(this.amount.playerSprays) * 1
+        vp += Math.floor(toNumber(this.amount.playerLeftoverMoney) / 5)
+      }
+      return vp
+    }
   },
   mounted() {
     // send anonymous game stats - max. once per game
+    /*
     if (!this.state.gameStatsSend) {
       const totalWarSteps_Automa = 0
       const stats = {
@@ -211,40 +188,12 @@ export default defineComponent({
         import.meta.env.VITE_STATS_FIELD_MAPPING)
       this.state.gameStatsSend = true
     }
+  */
   }
 })
 </script>
 
 <style lang="scss" scoped>
-.scoring-layout {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  .finalResult {
-    max-width: 500px;
-    .totalVPPlayer {
-      font-size: 40px;
-      text-align: center;
-    }
-    th {
-      color: darkgoldenrod;
-    }
-    .markScore {
-      th, td {
-        background-color: #cfc;
-      }
-    }
-  }
-}
-.icon {
-  height: 2.5rem;
-  margin-right: 0.25rem;
-  object-fit: contain;
-  &.small {
-    width: 2rem;
-    height: 2rem;
-  }
-}
 .table-wrapper {
   overflow-x: auto;
 }
@@ -252,11 +201,17 @@ th, td {
   text-align: center;
   padding: 0.5rem;
 }
-tr:nth-child(even) {
+tbody th {
+  font-weight: normal;
+}
+tbody tr:nth-child(odd) {
   background-color: #f2f2f2;
 }
 th {
   white-space: nowrap;
   vertical-align: middle;
+}
+tfoot {
+  border-top: 1px solid black;
 }
 </style>
