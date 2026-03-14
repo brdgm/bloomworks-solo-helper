@@ -117,7 +117,8 @@
     "action": {
       "managedByApp": "This action is managed by the application.",
       "billboard": {
-        "title": "Billboard"
+        "title": "Billboard",
+        "instruction": "Add a Player Token for Lady Pei on the billboard of <b>floor {floor}</b>."
       },
       "delivery": {
         "title": "Delivery",

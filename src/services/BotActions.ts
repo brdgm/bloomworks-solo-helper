@@ -13,6 +13,7 @@ import { cloneDeep } from 'lodash'
 import Player from './enum/Player'
 import getFlowerMatchCount from '@/util/getFlowerMatchCount'
 import getDistinctFlowers from '@/util/getDistinctFlowers'
+import BillboardMarkers from './BillboardMarkers'
 
 /**
  * Collects the bot's actions and manages the automatic actions.
@@ -22,6 +23,7 @@ export default class BotActions {
   private readonly _marketPrices : MarketPrices
   private readonly _botGarden : BotGarden
   private readonly _windowStates : WindowStates
+  private readonly _billboardMarkers : BillboardMarkers
   private readonly _season : Season
   private readonly _actions : BotAction[]
 
@@ -29,6 +31,7 @@ export default class BotActions {
     this._marketPrices = navigationState.marketPrices
     this._botGarden = navigationState.botPersistence.garden
     this._windowStates = navigationState.botPersistence.windowStates
+    this._billboardMarkers = navigationState.botPersistence.billboardMarkers
     this._season = navigationState.season
 
     const actions = this.getCardActions(navigationState)
@@ -98,6 +101,9 @@ export default class BotActions {
       case Action.VP_5:
         this.processVP5(botAction)
         break
+      case Action.BILLBOARD:
+        this.processBillboard(botAction)
+        break
     }
     return botAction
   }
@@ -156,6 +162,13 @@ export default class BotActions {
    */
   private processVP5(botAction: BotAction): void {
     botAction.vp = 5
+  }
+
+  /**
+   * Add billboard marker.
+   */
+  private processBillboard(botAction: BotAction): void {
+    this._billboardMarkers.addMarker(botAction.floor ?? 1)
   }
 
   /**

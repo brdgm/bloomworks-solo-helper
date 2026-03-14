@@ -1,4 +1,5 @@
 import BotActions from '@/services/BotActions'
+import BillboardMarkers from '@/services/BillboardMarkers'
 import WindowStates from '@/services/WindowStates'
 import Action from '@/services/enum/Action'
 import Flower from '@/services/enum/Flower'
@@ -580,8 +581,10 @@ describe('services/BotActions', () => {
     })
 
     it('BILLBOARD pass action includes floor', () => {
+      const billboardMarkers = BillboardMarkers.new()
       const navigationState = mockNavigationState({
         botTurn: 0,
+        billboardMarkers,
         soloBoardPassAction: {
           income: 0,
           action: [Action.BILLBOARD],
@@ -596,6 +599,7 @@ describe('services/BotActions', () => {
       expect(botActions.actions.length).to.eq(1)
       expect(botActions.actions[0].action).to.eq(Action.BILLBOARD)
       expect(botActions.actions[0].floor).to.eq(3)
+      expect(billboardMarkers.getMarkerCount(3)).to.eq(1)
     })
   })
 
