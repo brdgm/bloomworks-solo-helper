@@ -124,6 +124,7 @@
         "title": "Delivery",
         "selectWindow": "Lady Pei delivers to a window with the most matching flowers (ignoring missing flowers, if required):",
         "selectedWindow": "Floor {floor}, Window: {selection}",
+        "selectedWindowFloorOnly": "Floor {floor}",
         "gainVPandXP": "Lady Pei earns <b>{vp} VP</b> and 1 XP for each color used in the Window Box.",
         "placeMarker": "Place a marker from Lady Pei in the window above the box."
       },

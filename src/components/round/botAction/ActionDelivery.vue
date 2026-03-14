@@ -3,13 +3,14 @@
     <template #action>
       <div class="action">
         <AppIcon type="action" name="delivery" class="icon"/>:
-        <div class="windowSelection">{{action.floor}}{{action.windowSelection?.toUpperCase()}}</div>
+        <div class="windowSelection">{{floor}}{{floor < 5 ? action.windowSelection?.toUpperCase() : ''}}</div>
       </div>
     </template>
     <template #instruction>
       <p>
         <span v-html="t('rules.action.delivery.selectWindow')"></span><br/>
-        <span class="fw-bold" v-html="t('rules.action.delivery.selectedWindow', {floor:action.floor,selection:t(`windowSelection.${action.windowSelection}`)})"></span><br/>
+        <span v-if="floor < 5" class="fw-bold" v-html="t('rules.action.delivery.selectedWindow', {floor,selection:t(`windowSelection.${action.windowSelection}`)})"></span>
+        <span v-else class="fw-bold" v-html="t('rules.action.delivery.selectedWindowFloorOnly', {floor})"></span><br/>
         <FlowerIcon v-for="flower in action.flowers ?? []" :key="flower" :flower="flower"/>
       </p>
       <p v-html="t('rules.action.delivery.gainVPandXP', {vp:action.vp})"/>
@@ -51,6 +52,11 @@ export default defineComponent({
     currentCard: {
       type: Object as PropType<Card>,
       required: false
+    }
+  },
+  computed: {
+    floor(): number {
+      return this.action.floor ?? 1
     }
   },
   mounted() {

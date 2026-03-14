@@ -26,6 +26,7 @@ export default class BotActions {
   private readonly _billboardMarkers : BillboardMarkers
   private readonly _season : Season
   private readonly _actions : BotAction[]
+  private readonly _additionalActions : BotAction[] = []
 
   public constructor(navigationState: NavigationState) {
     this._marketPrices = navigationState.marketPrices
@@ -39,7 +40,7 @@ export default class BotActions {
   }
 
   public get actions(): readonly BotAction[] {
-    return this._actions
+    return [...this._actions, ...this._additionalActions]
   }
 
   /**
@@ -185,6 +186,12 @@ export default class BotActions {
       botAction.vp = this.getVPFromMatchingFlowers(window.flowers, currentSeasonFlowers)
       botAction.xp = window.flowers.filter(flower => currentSeasonFlowers.includes(flower))
       this._windowStates.addDelivery(window.floor, window.windowSelection, Player.BOT)
+
+      // on 5th floor: also add billboard marker to floor with least total markers
+      if (botAction.floor === 5) {
+        const billboardFloor = this._billboardMarkers.addMarkerToFloorWithLeastMarkers(this._windowStates)
+        this._additionalActions.push({ action: Action.BILLBOARD, floor: billboardFloor })
+      }
       return true
     }
     return false

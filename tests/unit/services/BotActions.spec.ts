@@ -725,11 +725,13 @@ describe('services/BotActions', () => {
         ]
       })
       const windowStates = WindowStates.new()
+      const billboardMarkers = BillboardMarkers.new()
       // floor 5 already has all 5 flowers defined by default
       const navigationState = mockNavigationState({
         season: Season.AUTUMN,
         garden,
         windowStates,
+        billboardMarkers,
         cardDeck
       })
 
@@ -737,6 +739,75 @@ describe('services/BotActions', () => {
 
       const action = botActions.actions[0]
       expect(action.vp).to.eq(16) // 5 matches → 16 VP
+      // 5th floor delivery triggers additional billboard marker
+      expect(botActions.actions.length).to.eq(2)
+      expect(botActions.actions[1].action).to.eq(Action.BILLBOARD)
+    })
+
+    it('5th floor delivery adds billboard marker to floor with least total markers', () => {
+      const cardDeck = mockCardDeck({ pile: ['delivery-1'] })
+      cardDeck.draw()
+      const garden = mockBotGarden({
+        seasons: [
+          { season: Season.AUTUMN, flowers: [Flower.ORANGE, Flower.BLUE, Flower.YELLOW, Flower.PURPLE, Flower.RED] }
+        ]
+      })
+      const windowStates = WindowStates.new()
+      // add bot deliveries so floors 3 and 4 have markers
+      windowStates.setWindowState(3, WindowSelection.LEFT, [Flower.RED, Flower.BLUE, Flower.PURPLE], [Player.BOT, Player.BOT])
+      windowStates.setWindowState(4, WindowSelection.LEFT, [Flower.RED, Flower.BLUE, Flower.PURPLE, Flower.YELLOW], [Player.BOT])
+      const billboardMarkers = BillboardMarkers.fromPersistence([
+        { floor: 1, count: 1 },
+        { floor: 2, count: 1 }
+      ])
+      const navigationState = mockNavigationState({
+        season: Season.AUTUMN,
+        garden,
+        windowStates,
+        billboardMarkers,
+        cardDeck
+      })
+
+      const botActions = new BotActions(navigationState)
+
+      // floor totals: 1=1, 2=1, 3=2, 4=1 → tied at 1: floors 1,2,4 → highest wins → floor 4
+      expect(botActions.actions.length).to.eq(2)
+      expect(botActions.actions[0].action).to.eq(Action.DELIVERY)
+      expect(botActions.actions[0].floor).to.eq(5)
+      expect(botActions.actions[1].action).to.eq(Action.BILLBOARD)
+      expect(botActions.actions[1].floor).to.eq(4)
+      expect(billboardMarkers.getMarkerCount(4)).to.eq(1)
+    })
+
+    it('non-5th floor delivery does not add billboard marker', () => {
+      const cardDeck = mockCardDeck({ pile: ['delivery-1'] })
+      cardDeck.draw()
+      const garden = mockBotGarden({
+        seasons: [
+          { season: Season.AUTUMN, flowers: [Flower.RED, Flower.BLUE] }
+        ]
+      })
+      const windowStates = WindowStates.new()
+      windowStates.setWindowState(2, WindowSelection.LEFT, [Flower.RED, Flower.BLUE], [])
+      const billboardMarkers = BillboardMarkers.new()
+      const navigationState = mockNavigationState({
+        season: Season.AUTUMN,
+        garden,
+        windowStates,
+        billboardMarkers,
+        cardDeck
+      })
+
+      const botActions = new BotActions(navigationState)
+
+      expect(botActions.actions.length).to.eq(1)
+      expect(botActions.actions[0].action).to.eq(Action.DELIVERY)
+      expect(botActions.actions[0].floor).to.eq(2)
+      // no additional billboard action
+      expect(billboardMarkers.getMarkerCount(1)).to.eq(0)
+      expect(billboardMarkers.getMarkerCount(2)).to.eq(0)
+      expect(billboardMarkers.getMarkerCount(3)).to.eq(0)
+      expect(billboardMarkers.getMarkerCount(4)).to.eq(0)
     })
 
     it('sets VP to 0 when no flowers match', () => {
