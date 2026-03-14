@@ -39,7 +39,7 @@ export default class NavigationState {
     this.round = getIntRouteParam(route, 'round')
     this.season = getSeason(this.round, state)
     this.year = getYear(this.round, state)
-    this.turn = route.name=='RoundEnd' ? TURN_MAX : getIntRouteParam(route, 'turn')
+    this.turn = getIntRouteParam(route, 'turn')
     this.player = route.name=='RoundTurnPlayer' ? Player.PLAYER : Player.BOT
 
     this.playerTurns = getPlayerTurns(this.round, this.turn, state)

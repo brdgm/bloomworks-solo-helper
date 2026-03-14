@@ -50,6 +50,7 @@ export interface State {
   baseFontSize: number
   setup: Setup
   rounds: Round[]
+  finalScoringAmount?: FinalScoringAmount
   gameStatsSend?: boolean
 }
 export interface Setup {
@@ -114,4 +115,17 @@ export interface WindowState {
 export interface BillboardMarker {
   floor: number
   count: number
+}
+
+export interface FinalScoringAmount {
+  scoringTrackVP: number[]
+  prosperityVP: number[]
+  populationVP: number[]
+  cultureVP: number[]
+  influenceSteps: number[]
+  politicsSteps: number[]
+  warSteps: number[]
+  wonderVPs: number[]
+  yellowBuildingVPs: number[]
+  diplomacyCardCount: number[]
 }

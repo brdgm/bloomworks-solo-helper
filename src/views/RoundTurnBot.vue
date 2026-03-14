@@ -86,7 +86,12 @@ export default defineComponent({
         botPersistence: this.navigationState.botPersistence.toPersistence()
       })
       if (this.navigationState.botTurn == this.navigationState.botTurns) {
-        this.router.push(`/round/${this.round}/end`)
+        if (this.round == 12) {
+          this.router.push(`/round/${this.round}/gameEnd/amounts`)
+        }
+        else {
+          this.router.push(`/round/${this.round}/end`)
+        }
       }
       else {
         this.router.push(`/round/${this.round}/turn/${this.turn + 1}/bot`)

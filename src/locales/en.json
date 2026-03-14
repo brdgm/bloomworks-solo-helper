@@ -90,6 +90,12 @@
     "title": "End of Round",
     "nextSeason": "Next Season: <b>{season}</b>"
   },
+  "endOfGameAmounts": {
+    "title": "End of Game Amounts"
+  },
+  "endOfGame": {
+    "title": "End of Game"
+  },
   "botClaimMilestones": {
     "botClaim": "Lady Pei claims a milestone:",
     "fifthFloor": "Fifth Floor"
