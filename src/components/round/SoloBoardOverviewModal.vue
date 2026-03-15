@@ -4,13 +4,13 @@
       <table class="table table-bordered table-sm solo-board-table">
         <thead>
           <tr>
-            <th>{{t('soloBoardOverview.playerTurns')}}</th>
-            <th v-for="turn in turns" :key="turn" class="turnCount">{{turn}}</th>
+            <th scope="row">{{t('soloBoardOverview.playerTurns')}}</th>
+            <th v-for="turn in turns" :key="turn" class="turnCount" scope="col">{{turn}}</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="floorActions in sortedFloorActions" :key="floorActions.floor">
-            <td class="fw-bold floor-cell">{{floorActions.floor}}</td>
+            <th class="floor-cell" scope="row">{{floorActions.floor}}</th>
             <td v-for="turn in turns" :key="turn" class="cell"
                 :class="{active: turn === playerTurns && floorActions.floor === playerDeliveryFloor}">
               <CellContent :floorAction="floorActions.floorAction[turn]" :floor="floorActions.floor"/>
@@ -19,8 +19,8 @@
         </tbody>
         <tfoot>
           <tr class="bot-card-row">
-            <th class="fw-bold">{{t('soloBoardOverview.botCards')}}</th>
-            <th v-for="turn in turns" :key="turn">
+            <th class="fw-bold" scope="row">{{t('soloBoardOverview.botCards')}}</th>
+            <th v-for="turn in turns" :key="turn" scope="col">
               {{soloBoard.botCardCount[turn]}}
             </th>
           </tr>
@@ -78,6 +78,8 @@ export default defineComponent({
   th, td {
     border-color: #000;
     text-align: center;
+    vertical-align: middle;
+    height: 3rem;
   }
   thead th {
     background-color: #e7c5de;
@@ -90,10 +92,6 @@ export default defineComponent({
     &:first-child {
       background-color: #abd8aa;
     }
-  }
-  th, td {
-    vertical-align: middle;
-    height: 3rem;
   }
   .floor-cell {
     background-color: #f0f0f0;
