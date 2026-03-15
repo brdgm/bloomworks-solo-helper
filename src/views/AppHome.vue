@@ -1,5 +1,12 @@
 <template>
 
+  <!-- TODO: Remove alert -->
+  <div class="row">
+    <div class="col">
+      <p class="alert alert-warning">This is a prototype. The game is not published yet.</p>
+    </div>
+  </div>
+
   <div class="float-end m-2 w-25">
     <a href="https://boardgamegeek.com/boardgame/462920/bloomworks" target="_blank" rel="noopener">
       <img src="../assets/game-bloomworks.webp" class="rounded shadow w-100 mb-3" alt=""/>
@@ -8,12 +15,6 @@
 
   <h1>{{t('home.title')}}</h1>
 
-  <!-- TODO: Remove alert -->
-  <div class="row">
-    <div class="col alert alert-warning">
-      This is a prototype. The game is not published yet.
-    </div>
-  </div>
 
   <p v-html="t('home.play1')"></p>
   <p v-html="t('home.play2')"></p>
