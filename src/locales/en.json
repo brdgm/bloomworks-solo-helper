@@ -47,7 +47,7 @@
       "excessActions": "If you take more than 5 actions in a season, Lady Pei will \"discard\" three cards from her internal solo deck for each of your action beyond 5. This will let her claim Milestones sooner.",
       "milestones": "When Lady Pei claims a milestone (as displayed by the application, this can even happen during your own turns), put one of her marker to the highest available point value. She doesn't need to fulfill the conditions.",
       "noBonuses": "In general, Lady Pei does not receive the bonuses displayed on the window tiles when delivering, and does not interact with neighbors.",
-      "actionBoxTypes": "When Lady Pei executes her actions, some are displayed in a grey box, and some in a blue box. The actions for grey boxes are executed automatically by the application and shown only for information. For the blue boxes, you have to execute the action for her and follow the instructions.",
+      "actionBoxTypes": "When Lady Pei executes her actions, some are displayed in a grey box, and some in a blue box. The actions with grey boxes are executed automatically by the application and shown only for information. For the blue boxes, you have to execute the action for her and follow the instructions.",
       "clickForDetails": "You can click on each action box to see rules details."
     }
   },
@@ -203,7 +203,7 @@
         "definedWindowInstruction": "If the given window is defined, the price for <i>each flower</i> in that box is increased.",
         "undefinedWindowInstruction": {
           "cheapest": "If the window is not defined, the price of the <i>cheapest</i> flower is increased.",
-          "most-expensive": "If the window is not defined, the price os the <i>most expensive</i> flower is increased."
+          "most-expensive": "If the window is not defined, the price of the <i>most expensive</i> flower is increased."
         }
       },
       "sold": {
