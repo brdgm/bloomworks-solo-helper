@@ -7,7 +7,7 @@ import SetupGame from '@/views/SetupGame.vue'
 import SetupBot from '@/views/SetupBot.vue'
 import RoundTurnPlayer from '@/views/RoundTurnPlayer.vue'
 import RoundTurnBot from '@/views/RoundTurnBot.vue'
-import RoundEnd from '@/views/RoundEnd.vue'
+import RoundStart from '@/views/RoundStart.vue'
 import EndOfGameAmounts from '@/views/EndOfGameAmounts.vue'
 import EndOfGame from '@/views/EndOfGame.vue'
 
@@ -30,6 +30,11 @@ const routes: Array<RouteRecordRaw> = [
     component: SetupBot
   },
   {
+    path: '/round/:round/start',
+    name: 'RoundStart',
+    component: RoundStart
+  },
+  {
     path: '/round/:round/turn/:turn/player',
     name: 'RoundTurnPlayer',
     component: RoundTurnPlayer
@@ -38,11 +43,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/round/:round/turn/:turn/bot',
     name: 'RoundTurnBot',
     component: RoundTurnBot
-  },
-  {
-    path: '/round/:round/end',
-    name: 'RoundEnd',
-    component: RoundEnd
   },
   {
     path: '/round/:round/gameEnd/amounts',

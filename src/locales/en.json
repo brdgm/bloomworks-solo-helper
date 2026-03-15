@@ -86,9 +86,8 @@
     "gainVP": "<b>{vp} VP</B>",
     "gainXP": "XP: "
   },
-  "roundEnd": {
-    "title": "End of Round",
-    "nextSeason": "Next Season: <b>{season}</b>"
+  "roundStart": {
+    "harvest": "Harvest your garden."
   },
   "endOfGameAmounts": {
     "title": "End of Game Amounts",

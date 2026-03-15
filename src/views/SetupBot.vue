@@ -106,7 +106,7 @@ export default defineComponent({
         BillboardMarkers.new()
       ).toPersistence()
       this.state.storeRound({round:1, year:1, season:Season.AUTUMN, turns:[]})
-      this.$router.push('/round/1/turn/1/player')
+      this.$router.push('/round/1/start')
     }
   }
 })

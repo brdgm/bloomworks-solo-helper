@@ -37,6 +37,8 @@ import BotClaimMilestones from '@/components/round/BotClaimMilestones.vue'
 import BotAction from '@/components/round/BotAction.vue'
 import BotActions from '@/services/BotActions'
 import recordBotRoundTurnStats from '@/util/recordBotRoundTurnStats'
+import getNextSeason from '@/util/getNextSeason'
+import Season from '@/services/enum/Season'
 
 export default defineComponent({
   name: 'RoundTurnBot',
@@ -93,7 +95,12 @@ export default defineComponent({
           this.router.push(`/round/${this.round}/gameEnd/amounts`)
         }
         else {
-          this.router.push(`/round/${this.round}/end`)
+          const { round, year, season } = this.navigationState
+          const nextSeason = getNextSeason(season)
+          const nextRound = round + 1
+          const nextYear = nextSeason == Season.AUTUMN ? year + 1 : year
+          this.state.storeRound({round:nextRound, year:nextYear, season:nextSeason, turns:[]})
+          this.router.push(`/round/${nextRound}/start`)
         }
       }
       else {

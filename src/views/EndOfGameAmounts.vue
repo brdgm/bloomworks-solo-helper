@@ -1,5 +1,4 @@
 <template>
-  <SideBar :navigationState="navigationState" :readOnly="true"/>
   <h1>{{t('endOfGameAmounts.title')}}</h1>
 
   <FinalAmounts @next="next"/>
@@ -13,7 +12,6 @@ import { useI18n } from 'vue-i18n'
 import FooterButtons from '@/components/structure/FooterButtons.vue'
 import FinalAmounts from '@/components/scoring/FinalAmounts.vue'
 import { useStateStore } from '@/store/state'
-import SideBar from '@/components/round/SideBar.vue'
 import { useRoute } from 'vue-router'
 import NavigationState from '@/util/NavigationState'
 
@@ -21,8 +19,7 @@ export default defineComponent({
   name: 'EndOfGameAmounts',
   components: {
     FooterButtons,
-    FinalAmounts,
-    SideBar
+    FinalAmounts
   },
   setup() {
     const { t } = useI18n()

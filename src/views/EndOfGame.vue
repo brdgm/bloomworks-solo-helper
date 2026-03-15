@@ -1,5 +1,4 @@
 <template>
-  <SideBar :navigationState="navigationState" :readOnly="true"/>
   <h1 class="mb-3">{{t('endOfGame.title')}}</h1>
 
   <FinalScoring :amount="amount" :navigationState="navigationState"/>
@@ -13,7 +12,6 @@ import { useI18n } from 'vue-i18n'
 import FooterButtons from '@/components/structure/FooterButtons.vue'
 import { FinalScoringAmount, useStateStore } from '@/store/state'
 import FinalScoring from '@/components/scoring/FinalScoring.vue'
-import SideBar from '@/components/round/SideBar.vue'
 import { useRoute } from 'vue-router'
 import NavigationState from '@/util/NavigationState'
 import getAllEnumValues from '@brdgm/brdgm-commons/src/util/enum/getAllEnumValues'
@@ -23,8 +21,7 @@ export default defineComponent({
   name: 'EndOfGame',
   components: {
     FooterButtons,
-    FinalScoring,
-    SideBar
+    FinalScoring
   },
   setup() {
     const { t } = useI18n()
