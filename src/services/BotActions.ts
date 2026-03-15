@@ -184,7 +184,7 @@ export default class BotActions {
       botAction.windowSelection = window.windowSelection
       // for VP and XP, only the flowers actually present in the current season are counted
       botAction.vp = this.getVPFromMatchingFlowers(window.flowers, currentSeasonFlowers)
-      botAction.xp = window.flowers.filter(flower => currentSeasonFlowers.includes(flower))
+      botAction.xp = getDistinctFlowers(window.flowers.filter(flower => currentSeasonFlowers.includes(flower)))
       this._windowStates.addDelivery(window.floor, window.windowSelection, Player.BOT)
 
       // on 5th floor: also add billboard marker to floor with least total markers

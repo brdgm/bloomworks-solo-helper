@@ -858,6 +858,33 @@ describe('services/BotActions', () => {
       // garden has RED, window has RED,BLUE,PURPLE → only RED is in current season
       expect(action.xp).to.eql([Flower.RED])
     })
+
+    it('XP contains only distinct flowers even when window has duplicates', () => {
+      const cardDeck = mockCardDeck({ pile: ['delivery-1'] })
+      cardDeck.draw()
+      const garden = mockBotGarden({
+        seasons: [
+          { season: Season.AUTUMN, flowers: [Flower.RED, Flower.RED, Flower.BLUE] }
+        ]
+      })
+      const windowStates = WindowStates.new()
+      // window has duplicate RED
+      windowStates.setWindowState(3, WindowSelection.LEFT, [Flower.RED, Flower.RED, Flower.BLUE], [])
+      const navigationState = mockNavigationState({
+        season: Season.AUTUMN,
+        garden,
+        windowStates,
+        cardDeck
+      })
+
+      const botActions = new BotActions(navigationState)
+
+      const action = botActions.actions[0]
+      expect(action.action).to.eq(Action.DELIVERY)
+      // window has RED,RED,BLUE and garden has RED,RED,BLUE → all present in season
+      // but XP should be distinct: RED, BLUE only
+      expect(action.xp).to.eql([Flower.RED, Flower.BLUE])
+    })
   })
 
   describe('WINDOW_BOX VP and XP', () => {
