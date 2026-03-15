@@ -58,7 +58,7 @@
     "otherAction": "Other Action",
     "passConfirm": "Do you really want to pass?",
     "sellFlower": {
-      "title": "Sell Flowers (optional):",
+      "title": "Sell Flowers:",
       "selectedFlowers": "Selected Flowers:",
       "sellRevenue": "Sell Revenue:",
       "passingBonus": "Passing Bonus:",

@@ -1,6 +1,6 @@
 {
   "name": "@brdgm/bloomworks-solo-helper",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
   "description": "Bloomworks Solo Helper",
   "appDeployName": "bloomworks",
