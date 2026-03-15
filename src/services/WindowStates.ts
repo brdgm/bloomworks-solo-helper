@@ -149,7 +149,7 @@ export default class WindowStates {
 
 function flowersMatch(a: Flower[], b: Flower[]) : boolean {
   if (a.length !== b.length) return false
-  const sortedA = [...a].sort()
-  const sortedB = [...b].sort()
+  const sortedA = [...a].toSorted((x, y) => x.localeCompare(y))
+  const sortedB = [...b].toSorted((x, y) => x.localeCompare(y))
   return sortedA.every((f, i) => f === sortedB[i])
 }
