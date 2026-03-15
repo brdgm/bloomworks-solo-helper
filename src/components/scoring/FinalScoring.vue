@@ -121,9 +121,6 @@ export default defineComponent({
             + this.getLeftoverResourcesVP(i)
       }
       return result
-    },
-    totalVPPlayer() : number {
-      return this.totalVP[0] - this.totalVP[1]
     }
   },
   methods: {
@@ -174,7 +171,7 @@ export default defineComponent({
         version,
         difficultyLevel: -1,
         playerPower: this.state.setup.playerPower ?? 'none',
-        playerTotalVP: this.totalVPPlayer,
+        playerTotalVP: this.totalVP[0],
         playerScoreTrackVP: toNumber(this.amount.scoreTrackVP[0]),
         playerMilestonesVP: toNumber(this.amount.milestonesVP[0]),
         playerBillboardsVP: this.getBillboardVP(0),
@@ -213,7 +210,7 @@ export default defineComponent({
         botSoloBoardVP: allTurns.filter(t => t.player == Player.BOT).reduce((sum, t) => sum + toNumber(t.botSoloBoardVP), 0),
         botDeliveryVP: allTurns.filter(t => t.player == Player.BOT).reduce((sum, t) => sum + toNumber(t.botDeliveryVP), 0),
         botFloricultureStarsVP: toNumber(this.amount.scoreTrackVP[1])
-            - allTurns.filter(t => t.player == Player.BOT).reduce((sum, t) => sum + toNumber(t.botDeliveryVP) + toNumber(t.botSoloBoardVP) + toNumber(t.botDeliveryVP), 0)
+            - allTurns.filter(t => t.player == Player.BOT).reduce((sum, t) => sum + toNumber(t.botPaidCardVP) + toNumber(t.botSoloBoardVP) + toNumber(t.botDeliveryVP), 0)
       }
       postGameStats(stats,
         import.meta.env.VITE_STATS_FORM_URL,
