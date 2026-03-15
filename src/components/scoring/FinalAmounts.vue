@@ -54,11 +54,11 @@
         <td>
           <NumberInput v-model="amount.playerBillboardVP[floor-1]" :max="18"/>
         </td>
-        <td v-for="player in billboardWonSelection" :key="player">
-          <div class="form-check">
+        <td class="wonBy">
+          <div class="form-check" v-for="player in billboardWonSelection" :key="player">
             <label class="form-check-label">
               <input class="form-check-input" type="radio" :name="`billboardWonFloor${floor}`" v-model="amount.billboardsWon[floor-1]" :value="player">
-              {{t(player ? `player.${player}` : 'endOfGameAmounts.billboards.tied')}}
+              <span class="text-nowrap">{{t(player ? `player.${player}` : 'endOfGameAmounts.billboards.tied')}}</span>
             </label>
           </div>
         </td>
@@ -229,5 +229,14 @@ th {
 }
 input[type=text] {
   width: 5rem;
+}
+td.wonBy {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  text-align: left;
+  @media (max-width: 600px) {
+    display: block;
+  }
 }
 </style>

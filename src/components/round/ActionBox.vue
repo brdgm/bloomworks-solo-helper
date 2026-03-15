@@ -3,9 +3,9 @@
       :class="{'instruction': hasInstruction, 'managedByApp': managedByApp}">
     <slot name="action"></slot>
     <div v-if="vp" class="vpGain">
-      <span v-html="t('roundTurnBot.gainVP', {vp: vp})"></span><template v-if="xp">,
-      <span v-html="t('roundTurnBot.gainXP')"/>
-      <FlowerIcon v-for="flower in xp" :key="flower" :flower="flower" class="xpFlowerIcon"/></template>
+      <span class="text-nowrap" v-html="t('roundTurnBot.gainVP', {vp: vp})"></span><template v-if="xp">,
+      <span class="text-nowrap"><span v-html="t('roundTurnBot.gainXP')"/>
+      <FlowerIcon v-for="flower in xp" :key="flower" :flower="flower" class="xpFlowerIcon"/></span></template>
     </div>
     <div v-if="currentCard?.remove" class="remove"><AppIcon name="x" class="icon"/></div>
   </div>

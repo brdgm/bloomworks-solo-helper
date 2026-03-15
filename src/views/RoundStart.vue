@@ -1,6 +1,6 @@
 <template>
   <SideBar :navigationState="navigationState" :readOnly="true"/>
-  <h1>{{t(`season.${season}`)}} {{t('sideBar.year', {year})}}</h1>
+  <h1>{{t('roundStart.title', {season: t(`season.${season}`), year})}}</h1>
 
   <p class="mt-4 mb-5" v-html="t('roundStart.harvest')"></p>
 

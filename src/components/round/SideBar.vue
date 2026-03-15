@@ -8,7 +8,7 @@
       <div v-for="price in marketPrices.prices" :key="price.flower" class="flowerPrice"
           :data-bs-toggle="readOnly ? '' : 'modal'" data-bs-target="#marketPriceModal" :role="readOnly ? '' : 'button'"
           @click="openPriceEdit(price.flower, price.price)">
-        <FlowerIcon :flower="price.flower"/>
+        <FlowerIcon :flower="price.flower" class="flowerIcon"/>
         <div class="price buy">$<span class="value">{{price.price}}</span></div>
         <div class="price sell">$<span class="value">{{price.priceSell}}</span></div>
       </div>
@@ -154,10 +154,15 @@ export default defineComponent({
   hr {
     margin: 0.6rem 0;
   }
+  @media (max-width: 600px) {
+    font-size: 0.8rem;
+    width: 110px;
+  }
 }
 .flowerPrice {
   display: flex;
   gap: 0.5rem;
+  align-items: center;
   margin-bottom: 0.25rem;
   .price {
     &.buy {
@@ -168,6 +173,11 @@ export default defineComponent({
     }
     .value {
       font-weight: bold;
+    }
+  }
+  @media (max-width: 600px) {
+    .flowerIcon {
+      width: 1.5rem;
     }
   }
 }
@@ -187,6 +197,9 @@ export default defineComponent({
   }
   .flowerIcon {
     width: 1.5rem;
+    @media (max-width: 600px) {
+      width: 1.3rem;
+    }
   }
 }
 </style>

@@ -87,6 +87,7 @@
     "gainXP": "XP: "
   },
   "roundStart": {
+    "title": "{season} Year {year}",
     "harvest": "Harvest your garden."
   },
   "endOfGameAmounts": {
@@ -132,7 +133,7 @@
     "fifthFloor": "Fifth Floor"
   },
   "sideBar": {
-    "year": "Year {year}",
+    "year": "Y{year}",
     "marketPrice": {
       "title": "Market Price",
       "decrease": "Decrease",

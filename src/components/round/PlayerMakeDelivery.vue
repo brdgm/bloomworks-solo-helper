@@ -143,7 +143,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .floor-windows {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.75rem;
 }
 .window-box {
