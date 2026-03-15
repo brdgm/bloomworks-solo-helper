@@ -1,5 +1,10 @@
 {
   "gameTitle": "Bloomworks",
+  "soloBoardOverview": {
+    "title": "Solo Board Overview",
+    "playerTurns": "Player Turns",
+    "botCards": "Pei Draws"
+  },
   "home": {
     "title": "Bloomworks Solo Helper",
     "play1": "Play <a href='https://boardgamegeek.com/boardgame/462920/bloomworks' target='_blank' rel='noopener'><b>Bloomworks</b></a> against Lady Pei, the solo opponent.",

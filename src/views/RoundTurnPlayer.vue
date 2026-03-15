@@ -22,7 +22,7 @@
           {{t('action.pass')}}<SoloBoardPassActionInfo :soloBoardPassAction="soloBoardPassAction"/>
         </button>
         <div class="small mt-1 fst-italic passNextTurnInfo">
-          <span>{{t('roundTurnPlayer.passInfo.nextTurn')}}</span><SoloBoardPassActionInfo :soloBoardPassAction="soloBoardPassActionNextTurn" :small="true"/>
+          <a href="#" data-bs-toggle="modal" data-bs-target="#soloBoardOverviewModal">{{t('roundTurnPlayer.passInfo.nextTurn')}}</a><SoloBoardPassActionInfo :soloBoardPassAction="soloBoardPassActionNextTurn" :small="true"/>
         </div>
       </div>
     </div>
@@ -36,6 +36,8 @@
 
   <PlayerBuyFlowerModal :marketPrices="navigationState.marketPrices" @next="next"/>
   <PlayerPassSellFlowerModal :marketPrices="navigationState.marketPrices" :soloBoardPassAction="soloBoardPassAction" @pass="pass"/>
+
+  <SoloBoardOverviewModal :soloBoard="navigationState.soloBoard" :playerTurns="navigationState.playerTurns" :playerDeliveryFloor="navigationState.playerDeliveryFloor"/>
 
   <DebugInfo :navigationState="navigationState"/>
 
@@ -58,6 +60,7 @@ import SoloBoardPassActionInfo from '@/components/round/SoloBoardPassActionInfo.
 import Player from '@/services/enum/Player'
 import BotClaimMilestones from '@/components/round/BotClaimMilestones.vue'
 import PlayerMakeDelivery from '@/components/round/PlayerMakeDelivery.vue'
+import SoloBoardOverviewModal from '@/components/round/SoloBoardOverviewModal.vue'
 
 export default defineComponent({
   name: 'RoundTurnPlayer',
@@ -69,6 +72,7 @@ export default defineComponent({
     PlayerPassSellFlowerModal,
     BotClaimMilestones,
     PlayerMakeDelivery,
+    SoloBoardOverviewModal,
     DebugInfo
   },
   setup() {
@@ -152,5 +156,9 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
+  a {
+    text-decoration: underline dotted;
+    color: #000;
+  }
 }
 </style>
