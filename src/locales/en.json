@@ -1,0 +1,254 @@
+{
+  "gameTitle": "Bloomworks",
+  "home": {
+    "title": "Bloomworks Solo Helper",
+    "play1": "Play <a href='https://boardgamegeek.com/boardgame/462920/bloomworks' target='_blank' rel='noopener'><b>Bloomworks</b></a> against Lady Pei, the solo opponent.",
+    "play2": "This application replaces the Automa cards, the Solo Board, manages the market prices and Lady Pei's garden and guides you through the game flow.",
+    "feedback": "Discussion and Feedback:"
+  },
+  "setup": {
+    "title": "Setup",
+    "milestoneSeasonOrder": {
+      "title": "Milestone Board: Season Order",
+      "description": "Arrange the <b>season tiles</b> on the milestone board in this order:",
+      "randomize": "Randomize"
+    },
+    "botMode": {
+      "title": "Solo Mode",
+      "base": "Base Mode (without Player Power)",
+      "advanced": "Advanced Mode (with Player Power)",
+      "advancedNote": "Choose any Player Power you wish to play. See if you can beat Lady Pei with every character!"
+    },
+    "playerColors": {
+      "title": "Player Colors",
+      "playerColor": "Your Color",
+      "botColor": "Lady Pei's Color"
+    }
+  },
+  "setupBot": {
+    "title": "Game Setup",
+    "instructions": {
+      "intro": "Set up a complete two-player game, with the following changes:",
+      "botUnusedComponents": "Your opponent, Lady Pei, doesn't receive any starting money. Her garden is managed by the application.",
+      "firstPlayer": "You are always the first player.",
+      "startingMoney": "You receive <b>${startingMoney}</b> as starting money.",
+      "chooseSetupCard": "Draw three Setup cards. Choose your Setup card and place the flowers shown into their matching seasons in your garden. Then choose one flower from any family to add to your garden in the Autumn.",
+      "marketPricesManaged": "The flower market prices are managed by this application. Whenever you do an action that affects prices (buying, selling) the price needs to be adjusted in the application. You can do that by clicking on the related price row in the sidebar of the application.",
+      "botComponentsNotRequired": "The Automa card deck and the solo board is not required. You can keep the solo board nearby for reference if you like."      
+    },
+    "playerFlowerSelection": {
+      "description": "Select the 3 or 4 <b>flower colors</b> you planted in your garden.",
+      "flowerPriorityNote": "The order of flowers reflects Lady Pei's flower priority.",
+      "validationHint": "Please select the flower colors you planted in your garden."
+    },
+    "soloModeRules": {
+      "title": "Solo Mode Rules",
+      "turnStructure": "The turn structure in a solo game is different: You take all of your actions of a Season at once, and then Lady Pei executes her actions. The more actions you are taking, the more actions Lady Pei will execute.",
+      "excessActions": "If you take more than 5 actions in a season, Lady Pei will \"discard\" three cards from her internal solo deck for each of your action beyond 5. This will let her claim Milestones sooner.",
+      "milestones": "When Lady Pei claims a milestone (as displayed by the application, this can even happen during your own turns), put one of her marker to the highest available point value. She doesn't need to fulfill the conditions.",
+      "noBonuses": "In general, Lady Pei does not receive the bonuses displayed on the window tiles when delivering, and does not interact with neighbors.",
+      "actionBoxTypes": "When Lady Pei executes her actions, some are displayed in a grey box, and some in a blue box. The actions with grey boxes are executed automatically by the application and shown only for information. For the blue boxes, you have to execute the action for her and follow the instructions.",
+      "clickForDetails": "You can click on each action box to see rules details."
+    }
+  },
+  "roundTurnPlayer": {
+    "selectAction": "Select your action:",
+    "makeDelivery": "Make Delivery",
+    "deliveredToFloor": "Delivered to Floor {floor}",
+    "otherAction": "Other Action",
+    "passConfirm": "Do you really want to pass?",
+    "sellFlower": {
+      "title": "Sell Flowers (optional):",
+      "selectedFlowers": "Selected Flowers:",
+      "sellRevenue": "Sell Revenue:",
+      "passingBonus": "Passing Bonus:",
+      "totalRevenue": "Total Revenue:"
+    },
+    "buyFlower": {
+      "title": "Buy Flower",
+      "selectFlower": "Select Flower:",
+      "numberOfFlowers": "Number of Flowers:",
+      "totalCost": "Total Cost:"
+    },
+    "passInfo": {
+      "nextTurn": "Pass next turn",
+      "billboard": "M{floor}"
+    },
+    "playerMakeDelivery": {
+      "floor": "Floor {floor}",
+      "deliverHere": "Deliver here",
+      "selectFlowersTitle": "Select Flowers",
+      "selectFlowers": "Select {count} flower for this window: | Select {count} flowers for this window:"
+    }
+  },
+  "roundTurnBot": {
+    "bonusActions": "Bonus Actions",
+    "gainVP": "<b>{vp} VP</B>",
+    "gainXP": "XP: "
+  },
+  "roundStart": {
+    "harvest": "Harvest your garden."
+  },
+  "endOfGameAmounts": {
+    "title": "End of Game Amounts",
+    "vp": {
+      "title": "VP",
+      "scoreTrack": "Score Track VP",
+      "milestones": "Milestones VP"
+    },
+    "floricultureSteps": {
+      "title": "Floriculture Steps"
+    },
+    "billboards": {
+      "title": "Billboards",
+      "scoreInstructions": "For each billboard, enter the VP of the player, even if won by Lady Pei. Lady Pei will score the player's VP in that case.",
+      "score": "Floor {floor} VP",
+      "wonBy": "Won by:",
+      "tied": "Tied"
+    },
+    "playerStatus": {
+      "title": "Player Status",
+      "gardenExtensionsSmall": "Number of Small Extensions",
+      "gardenExtensionsLarge": "Number of Large Extensions",
+      "sprays": "Number of Sprays",
+      "leftoverMoney": "Leftover Money ($)"
+    }
+  },
+  "endOfGame": {
+    "title": "End of Game",
+    "vp": {
+      "title": "VP",
+      "scoreTrack": "Score Track",
+      "milestones": "Milestones",
+      "billboards": "Billboards",
+      "floriculture": "Floriculture",
+      "extensions": "Extensions",
+      "leftoverResources": "Leftover Resources",
+      "total": "Total"
+    }
+  },
+  "botClaimMilestones": {
+    "botClaim": "Lady Pei claims a milestone:",
+    "fifthFloor": "Fifth Floor"
+  },
+  "sideBar": {
+    "year": "Year {year}",
+    "marketPrice": {
+      "title": "Market Price",
+      "decrease": "Decrease",
+      "increase": "Increase"
+    }
+  },
+  "player": {
+    "player": "Player",
+    "bot": "Lady Pei"
+  },
+  "season": {
+    "autumn": "Autumn",
+    "winter": "Winter",
+    "spring": "Spring",
+    "summer": "Summer"
+  },
+  "windowSelection": {
+    "l": "left",
+    "r": "right"
+  },
+  "playerPower": {
+    "barber": "Barber",
+    "barista": "Barista",
+    "bartender": "Bartender",
+    "construction-worker": "Construction Worker",
+    "courier": "Courier",
+    "day-trader": "Day Trader",
+    "dog-walker": "Dog Walker",
+    "foreman": "Foreman",
+    "grocer": "Grocer",
+    "influencer": "Influencer",
+    "interior-decorator": "Interior Decorator",
+    "kindergarten-teacher": "Kindergarten Teacher",
+    "mover": "Mover",
+    "painter": "Painter",
+    "scientist": "Scientist",
+    "student": "Student",
+    "window-washer": "Window Washer",
+    "yoga-instructor": "Yoga Instructor"
+  },
+  "rules": {
+    "action": {
+      "managedByApp": "This action is managed by the application.",
+      "billboard": {
+        "title": "Billboard",
+        "instruction": "Add a Player Token for Lady Pei on the billboard of <b>floor {floor}</b>."
+      },
+      "delivery": {
+        "title": "Delivery",
+        "selectWindow": "Lady Pei delivers to a window with the most matching flowers (ignoring missing flowers, if required):",
+        "selectedWindow": "Floor {floor}, Window: {selection}",
+        "selectedWindowFloorOnly": "Floor {floor}",
+        "gainVPandXP": "Lady Pei earns <b>{vp} VP</b> and 1 XP for each color used in the Window Box.",
+        "placeMarker": "Place a marker from Lady Pei in the window above the box."
+      },
+      "paid": {
+        "title": "Paid",
+        "instruction": "The price of the most expensive flower in Lady Pei’s garden this season is decreased by 1. Lady Pei gains VP equal to the new price."
+      },
+      "plant": {
+        "title": "Plant",
+        "plant": "Lady Pei adds the most expensive flower to her garden.",
+        "reducePrice": "The price of that flower is reduced by 1."
+      },
+      "price": {
+        "title": "Price",
+        "definedWindowInstruction": "If the given window is defined, the price for <i>each flower</i> in that box is increased.",
+        "undefinedWindowInstruction": {
+          "cheapest": "If the window is not defined, the price of the <i>cheapest</i> flower is increased.",
+          "most-expensive": "If the window is not defined, the price of the <i>most expensive</i> flower is increased."
+        }
+      },
+      "sold": {
+        "title": "Sold",
+        "instruction": "For each flower family in Lady Pei’s Garden this season, the price is decreased by 1."
+      },
+      "vp5": {
+        "title": "5 VP",
+        "instruction": "Lady Pei gains 5 VP."
+      },
+      "windowBox": {
+        "title": "Window Box",
+        "defineWindow": "Lady Pei creates the most expensive legal Window Box that could be made from the flowers in her garden in the current season:"
+      },
+      "xp": {
+        "title": "XP",
+        "receiveXP": "Lady Pei receives one XP in the Flower Family in which <b>your Player Marker is the greatest distance ahead</b> of Lady Pei’s.",
+        "priority": "If you aren’t ahead of Lady Pei in any tracks, she follows this priority:",
+        "stars": "<b>Stars</b> - Whenever Lady Pei reaches a star on the Floriculture Track or her Garden, she <b>scores points</b> equal to her XP in that flower less your XP in that flower. If you are further along the track than she is, Lady Pei receives no points."
+      }
+    }
+  },
+  "notfound": {
+    "title": "Not Found"
+  },
+  "action": {
+    "playGame": "Play Game",
+    "startGame": "Start Game",
+    "next": "Next",
+    "abortGame": "Abort Game",
+    "abortGameConfirm": "Aborting the running game - are you sure?",
+    "endGame": "End Game",
+    "endGameConfirm": "End this game and return to home screen - are you sure?",
+    "cancel": "Cancel",
+    "backToHome": "Back to Home",
+    "back": "Back",
+    "close": "Close",
+    "ok": "OK",
+    "reset": "Reset",
+    "pass": "Pass"
+  },
+  "footer": {
+    "credits": "Credits"
+  },
+  "serviceWorkerUpdatedRefresh": {
+    "title": "Refresh Application",
+    "notice": "The application was updated - do you want to refresh to use the latest version?"
+  }
+}

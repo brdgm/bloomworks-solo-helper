@@ -1,0 +1,99 @@
+import { shuffle } from 'lodash'
+import Card from './Card'
+import Cards from './Cards'
+import { CardDeckPersistence } from '@/store/state'
+import { ref } from 'vue'
+import CardType from './enum/CardType'
+
+/**
+ * Manages the solo card deck with action cards and advanced reserve cards.
+ */
+export default class CardDeck {
+
+  private readonly _pile
+  private readonly _discard
+  private readonly _deckShuffleCount = ref(0)
+
+  private constructor(pile : Card[], discard : Card[]) {
+    this._pile = ref(pile)
+    this._discard = ref(discard)
+  }
+
+  public get currentCard() : Card|undefined {
+    return this._discard.value.at(0)
+  }
+
+  public get pile() : readonly Card[] {
+    return this._pile.value
+  }
+
+  public get discard() : readonly Card[] {
+    return this._discard.value
+  }
+
+  public get deckShuffleCount() : number {
+    return this._deckShuffleCount.value
+  }
+
+  /**
+   * Draws next card and puts it in the played area.
+   * Shuffles the discard pile back to the pile if the pile is empty and adds two new advanced cards.
+   * @returns Next action card
+   */
+  public draw() : Card {
+    if (this._pile.value.length === 0) {
+      // adds 1 copy of each advanced card to the discard pile
+      this._discard.value.push(...Cards.getAll(CardType.ADVANCED))
+      this._pile.value = shuffle(this._discard.value)
+      this._discard.value = []
+      this._deckShuffleCount.value++
+    }
+    const card = this._pile.value.shift()
+    if (!card) {
+      throw new Error('No cards left to draw.')
+    }
+    this._discard.value.unshift(card)
+    return card
+  }
+
+  /**
+   * Removes the current card from the discard pile if it is marked for removal.
+   */
+  public checkCurrentCardRemove() : void {
+    if (this.currentCard?.remove) {
+      this._discard.value.shift()
+    }
+  }
+
+  /**
+   * Gets persistence view of card deck.
+   */
+  public toPersistence() : CardDeckPersistence {
+    return {
+      pile: this._pile.value.map(card => card.id),
+      discard: this._discard.value.map(card => card.id)
+    }
+  }
+
+  /**
+   * Creates a shuffled new card deck.
+   * @param difficultyLevel DifficultyLevel
+   * @param expansions Expansions
+   * @returns CardDeck
+   */
+  public static new() : CardDeck {
+    const cards = shuffle(Cards.getAll(CardType.STANDARD))
+    return new CardDeck(cards, [])
+  }
+
+  /**
+   * Re-creates card deck from persistence.
+   */
+  public static fromPersistence(persistence : CardDeckPersistence) : CardDeck {
+    return new CardDeck(
+      persistence.pile.map(Cards.get),
+      persistence.discard.map(Cards.get)
+    )
+  }
+
+}

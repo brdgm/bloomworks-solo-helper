@@ -1,0 +1,67 @@
+<template>
+  <ActionBox :instruction-title="t('rules.action.sold.title')" :currentCard="currentCard" :managedByApp="true">
+    <template #action>
+      <div class="action">
+        <AppIcon type="action" name="sold" class="icon"/>:
+        <div>
+          <FlowerIcon v-for="flower in action.flowers ?? []" :key="flower" :flower="flower"/>
+        </div>
+      </div>
+    </template>
+    <template #instruction>
+      <p v-html="t('rules.action.sold.instruction')"/>
+    </template>
+  </ActionBox>
+</template>
+
+<script lang="ts">
+import { defineComponent, PropType } from 'vue'
+import { useI18n } from 'vue-i18n'
+import NavigationState from '@/util/NavigationState'
+import Card from '@/services/Card'
+import { BotAction } from '@/services/BotActions'
+import ActionBox from '../ActionBox.vue'
+import AppIcon from '@/components/structure/AppIcon.vue'
+import FlowerIcon from '@/components/structure/FlowerIcon.vue'
+
+export default defineComponent({
+  name: 'ActionSold',
+  inheritAttrs: false,
+  components: {
+    ActionBox,
+    AppIcon,
+    FlowerIcon
+  },
+  setup() {
+    const { t } = useI18n()
+    return { t }
+  },
+  props: {
+    action: {
+      type: Object as PropType<BotAction>,
+      required: true
+    },
+    navigationState: {
+      type: NavigationState,
+      required: true
+    },
+    currentCard: {
+      type: Object as PropType<Card>,
+      required: false
+    }
+  }
+})
+</script>
+
+<style lang="scss" scoped>
+.action {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.icon {
+  height: 2rem;
+}
+</style>
