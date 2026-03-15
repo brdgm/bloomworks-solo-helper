@@ -85,11 +85,20 @@ export default class WindowStates {
         }
       }
     }
+    // sort the given flowers by price, higher price first, to prioritize matching more expensive flowers (otherwise keeping the order by bot flower priority)
+    const flowersSorted = [...flowers].sort((a, b) => marketPrices.getPrice(b) - marketPrices.getPrice(a))
     // get the best-matching undefined window, skipping all windows larger then the given flowers
-    const bestMatch = windows.find(w => w.floor <= flowers.length)
+    // and skipping windows where the chosen flowers would exactly match the sibling window on that floor
+    const bestMatch = windows.find(w => {
+      if (w.floor > flowers.length) return false
+      const chosenFlowers = flowersSorted.slice(0, w.floor)
+      // check if the sibling window on the same floor has the exact same flower set
+      const siblingSelection = w.windowSelection === WindowSelection.LEFT ? WindowSelection.RIGHT : WindowSelection.LEFT
+      const sibling = this._windowStates.value.find(dw => dw.floor === w.floor && dw.windowSelection === siblingSelection)
+      if (sibling && flowersMatch(chosenFlowers, sibling.flowers)) return false
+      return true
+    })
     if (bestMatch) {
-      // sort the given flowers by price, higher price first, to prioritize matching more expensive flowers (otherwise keeping the order by bot flower priority)
-      const flowersSorted = [...flowers].sort((a, b) => marketPrices.getPrice(b) - marketPrices.getPrice(a))
       bestMatch.flowers = flowersSorted.slice(0, bestMatch.floor)
     }
     return bestMatch
@@ -136,4 +145,11 @@ export default class WindowStates {
     return new WindowStates(cloneDeep(persistence))
   }
 
+}
+
+function flowersMatch(a: Flower[], b: Flower[]) : boolean {
+  if (a.length !== b.length) return false
+  const sortedA = [...a].sort()
+  const sortedB = [...b].sort()
+  return sortedA.every((f, i) => f === sortedB[i])
 }

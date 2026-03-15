@@ -407,8 +407,8 @@ describe('services/WindowStates', () => {
     dw.setWindowState(4, WindowSelection.LEFT, [Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.ORANGE], [])
     const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
 
-    // floor 4 left is taken, so floor 4 right should be picked
-    const result = dw.getBestMatchingUndefinedWindow([Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.ORANGE], marketPrices)
+    // floor 4 left is taken with different flowers, so floor 4 right should be picked
+    const result = dw.getBestMatchingUndefinedWindow([Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.WHITE], marketPrices)
 
     expect(result?.floor).to.eq(4)
     expect(result?.windowSelection).to.eq(WindowSelection.RIGHT)
@@ -450,6 +450,44 @@ describe('services/WindowStates', () => {
 
     expect(result?.floor).to.eq(2)
     expect(result?.flowers).to.deep.eq([Flower.YELLOW, Flower.YELLOW])
+  })
+
+  it('getBestMatchingUndefinedWindow-skipsSiblingWithSameFlowers', () => {
+    const dw = WindowStates.new()
+    dw.setWindowState(4, WindowSelection.LEFT, [Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.ORANGE], [])
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
+
+    // floor 4 right is undefined, but chosen flowers would match the left sibling → skip to floor 3
+    const result = dw.getBestMatchingUndefinedWindow([Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.ORANGE], marketPrices)
+
+    expect(result?.floor).to.eq(3)
+    expect(result?.windowSelection).to.eq(WindowSelection.LEFT)
+    expect(result?.flowers).to.have.length(3)
+  })
+
+  it('getBestMatchingUndefinedWindow-skipsSiblingWithSameFlowersDifferentOrder', () => {
+    const dw = WindowStates.new()
+    dw.setWindowState(3, WindowSelection.LEFT, [Flower.BLUE, Flower.RED, Flower.YELLOW], [])
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
+
+    // floor 3 right is undefined, but chosen flowers [RED, BLUE, YELLOW] match left sibling [BLUE, RED, YELLOW] regardless of order → skip
+    const result = dw.getBestMatchingUndefinedWindow([Flower.RED, Flower.BLUE, Flower.YELLOW], marketPrices)
+
+    expect(result?.floor).to.eq(2)
+    expect(result?.windowSelection).to.eq(WindowSelection.LEFT)
+  })
+
+  it('getBestMatchingUndefinedWindow-allowsSiblingWithDifferentFlowers', () => {
+    const dw = WindowStates.new()
+    dw.setWindowState(3, WindowSelection.LEFT, [Flower.RED, Flower.BLUE, Flower.YELLOW], [])
+    const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
+
+    // floor 3 right is undefined, chosen flowers differ from sibling → allowed
+    const result = dw.getBestMatchingUndefinedWindow([Flower.RED, Flower.BLUE, Flower.ORANGE], marketPrices)
+
+    expect(result?.floor).to.eq(3)
+    expect(result?.windowSelection).to.eq(WindowSelection.RIGHT)
+    expect(result?.flowers).to.deep.eq([Flower.RED, Flower.BLUE, Flower.ORANGE])
   })
 
   it('getTotalDeliveriesByPlayer-noDeliveries', () => {
