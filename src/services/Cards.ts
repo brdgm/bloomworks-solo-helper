@@ -161,16 +161,14 @@ const cards : Card[] = [
     cardType: CardType.ADVANCED,
     actions: [{
       action: Action.DELIVERY
-    }],
-    remove: true
+    }]
   },
   {
     id: 'adv-paid',
     cardType: CardType.ADVANCED,
     actions: [{
       action: Action.PAID
-    }],
-    remove: true
+    }]
   }
 ]
 
