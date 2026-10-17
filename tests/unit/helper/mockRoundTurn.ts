@@ -1,6 +1,7 @@
 import Player from '@/services/enum/Player'
 import { BotPersistence, FlowerPrice, RoundTurn } from '@/store/state'
 import mockMarketPrices from './mockMarketPrices'
+import mockBotPersistence from './mockBotPersistence'
 
 export default function mockRoundTurn(params?: MockRoundTurnParams) : RoundTurn {
   return {
@@ -10,7 +11,7 @@ export default function mockRoundTurn(params?: MockRoundTurnParams) : RoundTurn 
     marketPrices: mockMarketPrices(params?.marketPrices),
     playerDeliveryFloor: params?.playerDeliveryFloor,
     playerPass: params?.playerPass,
-    botPersistence: params?.botPersistence
+    botPersistence: params?.botPersistence ?? mockBotPersistence()
   }
 }
 

@@ -1,4 +1,4 @@
-import { BotPersistence, WindowState } from '@/store/state'
+import { BillboardMarker, BotPersistence, WindowState } from '@/store/state'
 import CardDeck from '@/services/CardDeck'
 import BotGarden from '@/services/BotGarden'
 import Milestone from '@/services/enum/Milestone'
@@ -10,7 +10,8 @@ export default function mockBotPersistence(params?: MockBotPersistenceParams) : 
     cardDeck: (params?.cardDeck ?? mockCardDeck()).toPersistence(),
     garden: (params?.garden ?? mockBotGarden()).toPersistence(),
     claimedMilestones: params?.claimedMilestones ?? [],
-    windowStates: params?.windowStates ?? []
+    windowStates: params?.windowStates ?? [],
+    billboardMarkers: params?.billboardMarkers ?? []
   }
 }
 
@@ -18,5 +19,6 @@ export interface MockBotPersistenceParams {
   cardDeck?: CardDeck,
   garden?: BotGarden,
   claimedMilestones?: Milestone[],
-  windowStates?: WindowState[]
+  windowStates?: WindowState[],
+  billboardMarkers?: BillboardMarker[]
 }

@@ -408,7 +408,7 @@ describe('services/WindowStates', () => {
     const marketPrices = MarketPrices.fromPersistence(mockMarketPrices())
 
     // floor 4 left is taken with different flowers, so floor 4 right should be picked
-    const result = dw.getBestMatchingUndefinedWindow([Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.WHITE], marketPrices)
+    const result = dw.getBestMatchingUndefinedWindow([Flower.RED, Flower.BLUE, Flower.YELLOW, Flower.PURPLE], marketPrices)
 
     expect(result?.floor).to.eq(4)
     expect(result?.windowSelection).to.eq(WindowSelection.RIGHT)
