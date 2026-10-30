@@ -36,6 +36,11 @@
     <a href="https://ko-fi.com/brdgm_me" target="_blank" rel="noopener"><img class="kofi-button" src="@/assets/kofi_button_dark.png" alt="Support me on Ko-fi"/></a>
   </p>
 
+  <a class="karma-games-shop" href="https://store.karma-games.com/" target="_blank" rel="noopener">
+    <img src="@/assets/karma-games-logo.webp" alt="Karma Games Logo"/>
+    <span>Karma Games Store</span>
+  </a>
+
 </template>
 
 <script lang="ts">
@@ -54,7 +59,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .disclaimer {
   clear: both;
-  margin-top: 4rem;
+  margin-top: 2rem;
   font-size: smaller;
 }
 .kofi-button {
@@ -98,6 +103,15 @@ export default defineComponent({
     padding: 10px;
     font-style: italic;
     color: #fff;
+  }
+}
+.karma-games-shop {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: smaller;
+  img {
+    width: 120px;
   }
 }
 </style>
